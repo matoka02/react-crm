@@ -31,7 +31,7 @@ export function clearSearchFilters(searchFilter: any) {
 
 // Creates a filters object for searching
 export function buildSearchFilters(searchFilter: any) {
-  const filters = [];
+  const filters: any[] = [];
   if (searchFilter) {
     Object.keys(searchFilter).forEach(filter => {
       if (filter !== "filters") {
@@ -39,7 +39,7 @@ export function buildSearchFilters(searchFilter: any) {
           if (propName && searchFilter[filter] && searchFilter[filter][propName]) {
             filters.push({
               property: propName,
-              op: SearchFilterOps[filter],
+              op: SearchFilterOps[filter as keyof typeof SearchFilterOps],
               val: searchFilter[filter][propName],
             });
           }
