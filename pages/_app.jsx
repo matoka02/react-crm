@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
     <Provider store={store}>
       <ThemeProvider theme={themeDefault}>
         <CssBaseline />
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </ThemeProvider>
     </Provider>
   );
