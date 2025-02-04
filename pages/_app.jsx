@@ -7,6 +7,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { ThemeProvider } from '@mui/material';
+import themeDefault from '@/theme-default';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN_KEY,
@@ -24,7 +26,11 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   // eslint-disable-next-line react/jsx-props-no-spreading
-  return <Component {...pageProps} />;
+  return (
+    <ThemeProvider theme={themeDefault}>
+      <Component {...pageProps} />;
+    </ThemeProvider>
+  );
 }
 
 export default MyApp;
