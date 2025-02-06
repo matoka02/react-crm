@@ -12,21 +12,34 @@ interface CustomerState {
   customers: Customer[];
   isLoading: boolean;
   error?: string;
+  snackbarOpen: boolean;
+  snackbarMessage: string;
+  searchOpen: boolean;
+  search: {
+    firstname: string;
+    lastname: string;
+  };
 }
 
 const initialState: CustomerState = {
   customers: [],
   isLoading: false,
+  snackbarOpen: false,
+  snackbarMessage: '',
+  searchOpen: false,
+  search: {
+    firstname: '',
+    lastname: '',
+  },
 };
 
-
 export const fetchCustomers = createAsyncThunk(
-  "customer/fetchCustomers",
+  'customer/fetchCustomers',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/customers", { method: HttpMethod.GET });
+      const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error("Error loading clients");
+      if (!response.ok) throw new Error('Error loading clients');
 
       return await response.json();
     } catch (error: any) {
@@ -36,9 +49,22 @@ export const fetchCustomers = createAsyncThunk(
 );
 
 const customerSlice = createSlice({
-  name: "customer",
+  name: 'customer',
   initialState,
-  reducers: {},
+  reducers: {
+    setSnackbarOpen(state, action: PayloadAction<boolean>) {
+      state.snackbarOpen = action.payload;
+    },
+    setSnackbarMessage(state, action: PayloadAction<string>) {
+      state.snackbarMessage = action.payload;
+    },
+    setSearchOpen(state, action: PayloadAction<boolean>) {
+      state.searchOpen = action.payload;
+    },
+    setSearch(state, action: PayloadAction<{ firstname: string; lastname: string }>) {
+      state.search = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCustomers.pending, (state) => {
@@ -56,7 +82,6 @@ const customerSlice = createSlice({
   },
 });
 
+export const { setSnackbarOpen, setSnackbarMessage, setSearchOpen, setSearch } =
+  customerSlice.actions;
 export default customerSlice.reducer;
-
-
-
