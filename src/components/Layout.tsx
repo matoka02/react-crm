@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, styled, Typography, useTheme } from '@mui/material';
+import { Box, Divider, Paper, Typography, useTheme } from '@mui/material';
 import React, { ReactNode } from 'react';
 
 interface LayoutProps {

@@ -4,7 +4,7 @@ import { deleteData, getById, putData } from '@/lib/api';
 
 function handler(req: NextApiRequest, resp: NextApiResponse) {
   const { id } = req.query;
-  const orderId = parseInt(id as string);
+  const orderId = parseInt(id as string, 10);
 
   if (req.method === 'GET') {
     const order = getById('orders', orderId);
@@ -13,11 +13,13 @@ function handler(req: NextApiRequest, resp: NextApiResponse) {
 
   if (req.method === 'PUT') {
     const updatedOrder = putData('orders', orderId, req.body);
-    return updatedOrder ? resp.status(200).json(updatedOrder) : resp.status(404).json({ message: 'Not Found' });
+    return updatedOrder
+      ? resp.status(200).json(updatedOrder)
+      : resp.status(404).json({ message: 'Not Found' });
   }
 
   if (req.method === 'DELETE') {
-    deleteData('orders', orderId)
+    deleteData('orders', orderId);
     return resp.status(200).end;
   }
 
@@ -25,4 +27,3 @@ function handler(req: NextApiRequest, resp: NextApiResponse) {
 }
 
 export default handler;
-

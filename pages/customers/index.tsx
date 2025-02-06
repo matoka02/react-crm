@@ -1,3 +1,7 @@
+import { Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import {
@@ -6,9 +10,7 @@ import {
   setSearchOpen,
   setSnackbarOpen,
 } from '@/stores/customers/customerSlice';
-import { Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch();

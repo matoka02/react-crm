@@ -4,20 +4,24 @@ import { deleteData, getById, putData } from '@/lib/api';
 
 function handler(req: NextApiRequest, resp: NextApiResponse) {
   const { id } = req.query;
-  const productId = parseInt(id as string);
+  const productId = parseInt(id as string, 10);
 
   if (req.method === 'GET') {
     const product = getById('products', productId);
-    return product ? resp.status(200).json(product) : resp.status(404).json({ message: 'Not Found' });
+    return product
+      ? resp.status(200).json(product)
+      : resp.status(404).json({ message: 'Not Found' });
   }
 
   if (req.method === 'PUT') {
     const updatedProduct = putData('products', productId, req.body);
-    return updatedProduct ? resp.status(200).json(updatedProduct) : resp.status(404).json({ message: 'Not Found' });
+    return updatedProduct
+      ? resp.status(200).json(updatedProduct)
+      : resp.status(404).json({ message: 'Not Found' });
   }
 
   if (req.method === 'DELETE') {
-    deleteData('products', productId)
+    deleteData('products', productId);
     return resp.status(200).end;
   }
 

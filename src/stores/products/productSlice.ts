@@ -22,12 +22,12 @@ const initialState: ProductState = {
 };
 
 export const fetchProducts = createAsyncThunk(
-  "product/fetchProducts",
+  'product/fetchProducts',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/products", { method: HttpMethod.GET });
+      const response = await fetch('/api/products', { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error("Error loading products");
+      if (!response.ok) throw new Error('Error loading products');
 
       return await response.json();
     } catch (error: any) {
@@ -37,7 +37,7 @@ export const fetchProducts = createAsyncThunk(
 );
 
 const productSlice = createSlice({
-  name: "product",
+  name: 'product',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

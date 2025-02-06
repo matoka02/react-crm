@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import React, { useEffect } from 'react';
 import * as Sentry from '@sentry/react';
-import i18n from '../i18n';
+
 import 'dotenv/config';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -9,9 +9,10 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Provider } from 'react-redux';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import i18n from '../i18n';
 import { store } from '@/stores/store';
 import themeDefault from '@/theme-default';
-
+import AboutPage from './about';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN_KEY,
@@ -33,7 +34,9 @@ function MyApp({ Component, pageProps }) {
     <Provider store={store}>
       <ThemeProvider theme={themeDefault}>
         <CssBaseline />
-        <Component {...pageProps} />
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        {/* <Component {...pageProps} /> */}
+        <AboutPage />
       </ThemeProvider>
     </Provider>
   );

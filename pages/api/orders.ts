@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next/dist/types';
 
-import { getSearchFilters } from '@/lib/utils';
 import { getData, postData } from '@/lib/api';
+import { getSearchFilters } from '@/lib/utils';
 
 function handler(req: NextApiRequest, resp: NextApiResponse) {
   if (req.method === 'GET') {

@@ -19,12 +19,12 @@ const initialState: CategoryState = {
 };
 
 export const fetchCategories = createAsyncThunk(
-  "category/fetchCategories",
+  'category/fetchCategories',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/categories", { method: HttpMethod.GET });
+      const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error("Error loading categories");
+      if (!response.ok) throw new Error('Error loading categories');
 
       return await response.json();
     } catch (error: any) {
@@ -34,7 +34,7 @@ export const fetchCategories = createAsyncThunk(
 );
 
 const categorySlice = createSlice({
-  name: "category",
+  name: 'category',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

@@ -4,7 +4,6 @@ import {
   CheckCircle,
   Cancel,
 } from '@mui/icons-material';
-import { common } from '@mui/material/colors';
 import {
   Table,
   TableBody,
@@ -16,6 +15,8 @@ import {
   Container,
   Tooltip,
 } from '@mui/material';
+import { common } from '@mui/material/colors';
+import Image from 'next/image';
 import React from 'react';
 
 interface DataTableProps {
@@ -38,13 +39,15 @@ function DataTable({
   headers,
   onPageChange,
   onDelete,
-}: DataTableProps):React.ReactElement {
+}: DataTableProps): React.ReactElement {
   const renderData = (dataKey: string, data: any) => {
     if (dataKey === 'avatar') {
-      return <img width={35} src={data[dataKey]} alt="avatar" />;
-    } else if (dataKey === 'membership') {
+      return <Image width={35} src={data[dataKey]} alt="avatar" />;
+    }
+    if (dataKey === 'membership') {
       return data[dataKey] ? <CheckCircle /> : <Cancel />;
-    } else if (dataKey === 'action') {
+    }
+    if (dataKey === 'action') {
       return (
         <>
           <Tooltip title="Edit" aria-label="edit">

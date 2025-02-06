@@ -18,9 +18,8 @@ export function getData<T extends keyof DBType>(
       ) as unknown as DBType[T];
     }
     return result as unknown as DBType[T];
-  } else {
-    return result as unknown as DBType[T];
   }
+  return result as unknown as DBType[T];
 }
 
 // Getting one element

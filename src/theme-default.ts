@@ -1,5 +1,5 @@
-import { createTheme, ThemeOptions } from '@mui/material/styles';
 import { blue, grey, pink } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 
 const blue600 = blue[600];
 const grey900 = grey[900];

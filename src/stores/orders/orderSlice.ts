@@ -6,7 +6,7 @@ interface Order {
   id: string;
   customerId: string;
   totalAmount: number;
-  status: "pending" | "completed" | "canceled";
+  status: 'pending' | 'completed' | 'canceled';
 }
 
 interface OrderState {
@@ -20,23 +20,20 @@ const initialState: OrderState = {
   isLoading: false,
 };
 
-export const fetchOrders = createAsyncThunk(
-  "order/fetchOrders",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await fetch("/api/orders", { method: HttpMethod.GET });
+export const fetchOrders = createAsyncThunk('order/fetchOrders', async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch('/api/orders', { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error("Error loading orders");
+    if (!response.ok) throw new Error('Error loading orders');
 
-      return await response.json();
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+    return await response.json();
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 const orderSlice = createSlice({
-  name: "order",
+  name: 'order',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

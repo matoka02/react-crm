@@ -10,16 +10,16 @@ const initialState: AuthState = {
 };
 
 export const signIn = createAsyncThunk(
-  "auth/signIn",
+  'auth/signIn',
   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch('/api/auth/login', {
         method: HttpMethod.POST,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
 
-      if (!response.ok) throw new Error("Authorization error");
+      if (!response.ok) throw new Error('Authorization error');
 
       return await response.json();
     } catch (error: any) {
@@ -28,14 +28,13 @@ export const signIn = createAsyncThunk(
   }
 );
 
-export const signOut = createAsyncThunk("auth/signOut", async () => {
-  await fetch("/api/auth/logout", { method: HttpMethod.POST });
+export const signOut = createAsyncThunk('auth/signOut', async () => {
+  await fetch('/api/auth/logout', { method: HttpMethod.POST });
   return null;
 });
 
-
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

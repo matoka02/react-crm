@@ -46,7 +46,7 @@ export default function AboutPage() {
         }}
       >
         This demo app is not a real application. There is no fake API as back-end service behind the
-        scene. The advanced search in the demo doesn't work properly. Any data update (create or
+        scene. The advanced search in the demo doesn &apos t work properly. Any data update (create or
         update record) will not be stored after hard refresh or logout. The main purpose of this
         demo is just a proof of concept.
       </Typography>
