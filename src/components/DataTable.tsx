@@ -14,6 +14,7 @@ import {
   Fab,
   Container,
   Tooltip,
+  Box,
 } from '@mui/material';
 import { common } from '@mui/material/colors';
 import Image from 'next/image';
@@ -70,14 +71,12 @@ function DataTable({
           </Tooltip>
         </>
       );
-    } else {
-      if (dataKey.includes('.')) {
-        const keys = dataKey.split('.');
-        return <>{data[keys[0]][keys[1]]}</>;
-      } else {
-        return <>{data[dataKey]}</>;
-      }
     }
+    if (dataKey.includes('.')) {
+      const keys = dataKey.split('.');
+      return <Box>{data[keys[0]][keys[1]]}</Box>;
+    }
+    return <Box>{data[dataKey]}</Box>;
   };
 
   return (
