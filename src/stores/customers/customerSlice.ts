@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ActionReducerMapBuilder,
+} from '@reduxjs/toolkit';
 
 import { HttpMethod } from '../types';
 
@@ -33,9 +38,9 @@ const initialState: CustomerState = {
   },
 };
 
-export const fetchCustomers = createAsyncThunk(
+export const fetchCustomers = createAsyncThunk<Customer[], void, { rejectValue: string }>(
   'customer/fetchCustomers',
-  async (_, { rejectWithValue }) => {
+  async (_: any, { rejectWithValue }: any) => {
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
@@ -52,33 +57,42 @@ const customerSlice = createSlice({
   name: 'customer',
   initialState,
   reducers: {
-    setSnackbarOpen(state, action: PayloadAction<boolean>) {
-      state.snackbarOpen = action.payload;
+    setSnackbarOpen(state: CustomerState, action: PayloadAction<boolean>) {
+      return { ...state, snackbarOpen: action.payload };
     },
-    setSnackbarMessage(state, action: PayloadAction<string>) {
-      state.snackbarMessage = action.payload;
+    setSnackbarMessage(state: CustomerState, action: PayloadAction<string>) {
+      return { ...state, snackbarMessage: action.payload };
     },
-    setSearchOpen(state, action: PayloadAction<boolean>) {
-      state.searchOpen = action.payload;
+    setSearchOpen(state: CustomerState, action: PayloadAction<boolean>) {
+      return { ...state, searchOpen: action.payload };
     },
-    setSearch(state, action: PayloadAction<{ firstname: string; lastname: string }>) {
-      state.search = action.payload;
+    setSearch(
+      state: CustomerState,
+      action: PayloadAction<{ firstname: string; lastname: string }>
+    ) {
+      return { ...state, search: action.payload };
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
     builder
-      .addCase(fetchCustomers.pending, (state) => {
-        state.isLoading = true;
-        state.error = undefined;
-      })
-      .addCase(fetchCustomers.fulfilled, (state, action: PayloadAction<Customer[]>) => {
-        state.isLoading = false;
-        state.customers = action.payload;
-      })
-      .addCase(fetchCustomers.rejected, (state, action: PayloadAction<any>) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
+      .addCase(fetchCustomers.pending, (state: CustomerState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(
+        fetchCustomers.fulfilled,
+        (state: CustomerState, action: PayloadAction<Customer[]>) => ({
+          ...state,
+          isLoading: false,
+          customers: action.payload,
+        })
+      )
+      .addCase(fetchCustomers.rejected, (state: CustomerState, action: PayloadAction<any>) => ({
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      }));
   },
 });
 

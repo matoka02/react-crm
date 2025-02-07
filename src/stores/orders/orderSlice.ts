@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ActionReducerMapBuilder,
+} from '@reduxjs/toolkit';
 
 import { HttpMethod } from '../types';
 
@@ -20,36 +25,42 @@ const initialState: OrderState = {
   isLoading: false,
 };
 
-export const fetchOrders = createAsyncThunk('order/fetchOrders', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/orders', { method: HttpMethod.GET });
+export const fetchOrders = createAsyncThunk<Order[], void, { rejectValue: string }>(
+  'order/fetchOrders',
+  async (_: any, { rejectWithValue }: any) => {
+    try {
+      const response = await fetch('/api/orders', { method: HttpMethod.GET });
 
-    if (!response.ok) throw new Error('Error loading orders');
+      if (!response.ok) throw new Error('Error loading orders');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<OrderState>) => {
     builder
-      .addCase(fetchOrders.pending, (state) => {
-        state.isLoading = true;
-        state.error = undefined;
-      })
-      .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
-        state.isLoading = false;
-        state.orders = action.payload;
-      })
-      .addCase(fetchOrders.rejected, (state, action: PayloadAction<any>) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
+      .addCase(fetchOrders.pending, (state: OrderState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(fetchOrders.fulfilled, (state: OrderState, action: PayloadAction<Order[]>) => ({
+        ...state,
+        isLoading: false,
+        orders: action.payload,
+      }))
+      .addCase(fetchOrders.rejected, (state: OrderState, action: PayloadAction<any>) => ({
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      }));
   },
 });
 

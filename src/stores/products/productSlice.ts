@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ActionReducerMapBuilder,
+} from '@reduxjs/toolkit';
 
 import { HttpMethod } from '../types';
 
@@ -21,9 +26,9 @@ const initialState: ProductState = {
   isLoading: false,
 };
 
-export const fetchProducts = createAsyncThunk(
+export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: string }>(
   'product/fetchProducts',
-  async (_, { rejectWithValue }) => {
+  async (_: any, { rejectWithValue }: any) => {
     try {
       const response = await fetch('/api/products', { method: HttpMethod.GET });
 
@@ -40,20 +45,26 @@ const productSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<ProductState>) => {
     builder
-      .addCase(fetchProducts.pending, (state) => {
-        state.isLoading = true;
-        state.error = undefined;
-      })
-      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
-        state.isLoading = false;
-        state.products = action.payload;
-      })
-      .addCase(fetchProducts.rejected, (state, action: PayloadAction<any>) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
+      .addCase(fetchProducts.pending, (state: ProductState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(
+        fetchProducts.fulfilled,
+        (state: ProductState, action: PayloadAction<Product[]>) => ({
+          ...state,
+          isLoading: false,
+          products: action.payload,
+        })
+      )
+      .addCase(fetchProducts.rejected, (state: ProductState, action: PayloadAction<any>) => ({
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      }));
   },
 });
 

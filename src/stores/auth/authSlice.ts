@@ -1,4 +1,10 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ActionReducerMapBuilder,
+  ThunkAPI,
+} from '@reduxjs/toolkit';
 
 import { AuthState, HttpMethod } from '../types';
 
@@ -9,9 +15,16 @@ const initialState: AuthState = {
   error: undefined,
 };
 
-export const signIn = createAsyncThunk(
+export const signIn = createAsyncThunk<
+  any,
+  { email: string; password: string },
+  { rejectValue: string }
+>(
   'auth/signIn',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    credentials: { email: string; password: string },
+    { rejectWithValue }: ThunkAPI<any, any, any, { rejectValue: string }>
+  ) => {
     try {
       const response = await fetch('/api/auth/login', {
         method: HttpMethod.POST,
@@ -37,25 +50,29 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<AuthState>) => {
     builder
-      .addCase(signIn.pending, (state) => {
-        state.isFetching = true;
-        state.error = undefined;
-      })
-      .addCase(signIn.fulfilled, (state, action: PayloadAction<any>) => {
-        state.isFetching = false;
-        state.isAuthenticated = true;
-        state.user = action.payload;
-      })
-      .addCase(signIn.rejected, (state, action: PayloadAction<any>) => {
-        state.isFetching = false;
-        state.error = action.payload;
-      })
-      .addCase(signOut.fulfilled, (state) => {
-        state.isAuthenticated = false;
-        state.user = null;
-      });
+      .addCase(signIn.pending, (state: AuthState) => ({
+        ...state,
+        isFetching: true,
+        error: undefined,
+      }))
+      .addCase(signIn.fulfilled, (state: AuthState, action: PayloadAction<any>) => ({
+        ...state,
+        isFetching: false,
+        isAuthenticated: true,
+        user: action.payload,
+      }))
+      .addCase(signIn.rejected, (state: AuthState, action: PayloadAction<any>) => ({
+        ...state,
+        isFetching: false,
+        error: action.payload,
+      }))
+      .addCase(signOut.fulfilled, (state: AuthState) => ({
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      }));
   },
 });
 

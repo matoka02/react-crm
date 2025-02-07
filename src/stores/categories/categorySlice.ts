@@ -1,4 +1,10 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ActionReducerMapBuilder,
+  ThunkAPI,
+} from '@reduxjs/toolkit';
 
 import { HttpMethod } from '../types';
 
@@ -18,9 +24,9 @@ const initialState: CategoryState = {
   isLoading: false,
 };
 
-export const fetchCategories = createAsyncThunk(
+export const fetchCategories = createAsyncThunk<Category[], void, { rejectValue: string }>(
   'category/fetchCategories',
-  async (_, { rejectWithValue }) => {
+  async (_: any, { rejectWithValue }: ThunkAPI<any, any, any, { rejectValue: string }>) => {
     try {
       const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
@@ -37,20 +43,26 @@ const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: ActionReducerMapBuilder<CategoryState>) => {
     builder
-      .addCase(fetchCategories.pending, (state) => {
-        state.isLoading = true;
-        state.error = undefined;
-      })
-      .addCase(fetchCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
-        state.isLoading = false;
-        state.categories = action.payload;
-      })
-      .addCase(fetchCategories.rejected, (state, action: PayloadAction<any>) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      });
+      .addCase(fetchCategories.pending, (state: CategoryState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(
+        fetchCategories.fulfilled,
+        (state: CategoryState, action: PayloadAction<Category[]>) => ({
+          ...state,
+          isLoading: false,
+          categories: action.payload,
+        })
+      )
+      .addCase(fetchCategories.rejected, (state: CategoryState, action: PayloadAction<any>) => ({
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      }));
   },
 });
 
