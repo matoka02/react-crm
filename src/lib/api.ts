@@ -1,4 +1,4 @@
-import { DB } from '@/lib/demo-db';
+import DB from '@/lib/demo-db';
 import { DBType } from '@/types';
 
 // Getting data taking into account filters

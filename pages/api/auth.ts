@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next/dist/types';
 
-import { DB } from '@/lib/demo-db';
+import DB from '@/lib/demo-db';
 
 function handler(req: NextApiRequest, resp: NextApiResponse) {
   if (req.method !== 'POST') {

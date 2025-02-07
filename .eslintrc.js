@@ -32,7 +32,9 @@ module.exports = {
           node: {
             extensions: ['.ts', '.tsx', '.js', '.jsx'],
           },
-          typescript: {},
+          typescript: {
+            project: './tsconfig.json',
+          },
         },
       },
       env: {
@@ -61,6 +63,11 @@ module.exports = {
         ],
         'linebreak-style': ['error', 'unix'],
         'react/prop-types': 'off',
+        'import/extensions': [
+          'error',
+          'ignorePackages',
+          { ts: 'never', tsx: 'never', js: 'never', jsx: 'never' },
+        ],
 
         'import/order': [
           'error',
@@ -86,12 +93,6 @@ module.exports = {
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-explicit-any': ['off'],
         '@typescript-eslint/no-var-requires': ['off'],
-
-        'import/extensions': [
-          'error',
-          'ignorePackages',
-          { ts: 'never', tsx: 'never', js: 'never', jsx: 'never' },
-        ],
 
         'no-param-reassign': [
           'error',

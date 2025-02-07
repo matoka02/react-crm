@@ -11,7 +11,6 @@ import {
   setSnackbarOpen,
 } from '@/stores/customers/customerSlice';
 
-
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch();
   const { customers, isLoading, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
