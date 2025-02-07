@@ -18,8 +18,8 @@ type DeleteDialogProps = {
 function DeleteDialog({
   open,
   closeDialog,
-  dialogTitle = 'Action Alert',
-  dialogText = 'Are you sure to delete this data?',
+  dialogTitle,
+  dialogText,
 }: DeleteDialogProps): React.ReactElement {
   const title = dialogTitle && dialogTitle.length > 0 ? dialogTitle : 'Action Alert';
   const text =
@@ -43,5 +43,10 @@ function DeleteDialog({
     </Dialog>
   );
 }
+
+DeleteDialog.defaultProps = {
+  dialogTitle: 'Action Alert',
+  dialogText: 'Are you sure to delete this data?',
+};
 
 export default DeleteDialog;

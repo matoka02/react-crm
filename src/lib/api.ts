@@ -1,5 +1,5 @@
 import DB from '@/lib/demo-db';
-import { DBType } from '@/types';
+import { DBType } from '@/types/model';
 
 // Getting data taking into account filters
 export function getData<T extends keyof DBType>(
