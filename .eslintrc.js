@@ -30,11 +30,9 @@ module.exports = {
         react: { version: 'detect' },
         'import/resolver': {
           node: {
-            extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            extensions: ['.ts', '.tsx', '.js', ',jsx'],
           },
-          typescript: {
-            project: './tsconfig.json',
-          },
+          typescript: {},
         },
       },
       env: {
@@ -66,9 +64,11 @@ module.exports = {
         'import/extensions': [
           'error',
           'ignorePackages',
-          { ts: 'never', tsx: 'never', js: 'never', jsx: 'never' },
+          {
+            tsx: 'never',
+            ts: 'never',
+          },
         ],
-
         'import/order': [
           'error',
           {
@@ -93,14 +93,6 @@ module.exports = {
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-explicit-any': ['off'],
         '@typescript-eslint/no-var-requires': ['off'],
-
-        'no-param-reassign': [
-          'error',
-          {
-            props: true,
-            ignorePropertyModificationsFor: ['state'],
-          },
-        ],
       },
     },
   ],
