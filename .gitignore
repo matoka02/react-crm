@@ -51,3 +51,5 @@ next-env.d.ts
 
 ./storybook-static
 storybook-static
+
+.env.sample
