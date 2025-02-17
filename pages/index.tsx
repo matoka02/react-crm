@@ -26,7 +26,7 @@ export default function Home() {
         {t('click')}
       </button> */}
       {/* <h1>Frontend SSR template</h1> */}
-      <AboutPage/>
+      <AboutPage />
     </div>
   );
 }

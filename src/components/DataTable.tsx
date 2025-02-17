@@ -43,7 +43,8 @@ function DataTable({
 }: DataTableProps): React.ReactElement {
   const renderData = (dataKey: string, data: any) => {
     if (dataKey === 'avatar') {
-      return <Image width={35} src={data[dataKey]} alt="avatar" />;
+      console.log('avatar:', data[dataKey]);
+      return <Image width={35} height={35} src={`${data[dataKey]}`} alt="avatar" />;
     }
     if (dataKey === 'membership') {
       return data[dataKey] ? <CheckCircle /> : <Cancel />;

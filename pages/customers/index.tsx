@@ -1,7 +1,11 @@
-import { Box } from '@mui/material';
+import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
+import { Box, Button, Drawer, Fab, Grid2, Snackbar, TextField, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Alert from '@/components/Alert';
+import DataTable from '@/components/DataTable';
+import DeleteDialog from '@/components/DeleteDialog';
 import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import {
@@ -10,14 +14,29 @@ import {
   setSearchOpen,
   setSnackbarOpen,
 } from '@/stores/customers/customerSlice';
+import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  // const customerState = useSelector((state: RootState) => state.customers);
+  // const {
+  //   customers = [],
+  //   isLoading = false,
+  //   snackbarOpen = false,
+  //   snackbarMessage = '',
+  //   searchOpen = false,
+  //   search = {},
+  // } = customerState || {};
+  // console.table(customers)
   const { customers, isLoading, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
-    (state: any) => state.customer
+    (state: RootState) => state.customers
   );
+  console.table(customers);
+
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(customers.slice(0, 10));
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchCustomers());
@@ -28,42 +47,146 @@ export default function CustomerListPage(): React.ReactElement {
   }, [customers, page]);
 
   const handleSearch = () => {
-    const filters = { firstname: search.firstname, lastname: search.lastname };
+    // const filters = { firstname: search.firstname, lastname: search.lastname };
     dispatch(fetchCustomers());
     dispatch(setSearchOpen(false));
-  };
-
-  const handleToggleSearch = () => {
-    dispatch(setSearchOpen(!searchOpen));
   };
 
   const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearch({ ...search, [evt.target.name]: evt.target.value }));
   };
 
-  const handleNewCustomer = () => {
-    // Handle new customer logic
+  const handleToggleSearch = () => {
+    dispatch(setSearchOpen(!searchOpen));
   };
 
-  const handleSnackbarClose = () => {
-    dispatch(setSnackbarOpen(false));
+  const handleNewCustomer = () => {
+    console.log('Redirect to new customer page');
   };
+
+  // const handleSnackbarClose = () => {
+  //   dispatch(setSnackbarOpen(false));
+  // };
 
   const handleDeleteDialogClose = (confirmed: boolean) => {
-    if (confirmed) {
-      // Perform delete action here
+    if (confirmed && selectedCustomerId) {
+      console.log(`Delete customer ID: ${selectedCustomerId}`);
     }
-    // Reset dialog state
+    setDeleteDialogOpen(false);
+    setSelectedCustomerId(null);
   };
 
   return (
     <Layout title={`Customers (${customers.length})`} navigation="Application / Customer">
-      {!isLoading ? (
-        <Box component="div">
-          <Box component="div"></Box>
-        </Box>
-      ) : (
+      {isLoading ? (
         <SkeletonList />
+      ) : (
+        <Box>
+          {/* Control buttons */}
+          <Tooltip title="Add Customer">
+            <Fab
+              color="primary"
+              onClick={handleNewCustomer}
+              sx={{ position: 'fixed', bottom: 16, right: 80 }}
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Search">
+            <Fab
+              color="secondary"
+              onClick={handleToggleSearch}
+              sx={{ position: 'fixed', bottom: 16, right: 16 }}
+            >
+              <SearchIcon />
+            </Fab>
+          </Tooltip>
+
+          {/* Notifications */}
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={3000}
+            onClose={() => dispatch(setSnackbarOpen(false))}
+          >
+            <Alert onClose={() => dispatch(setSnackbarOpen(false))} severity="success">
+              {snackbarMessage || 'Operation successful!'}
+            </Alert>
+          </Snackbar>
+
+          {/* Table with clients */}
+          <DataTable
+            model="customer"
+            items={items}
+            dataKeys={[
+              'avatar',
+              'firstname',
+              'lastname',
+              'email',
+              'mobile',
+              'membership',
+              'actions',
+            ]}
+            headers={[
+              'Photo',
+              'First Name',
+              'Last Name',
+              'Email',
+              'Mobile',
+              'Membership',
+              'Actions',
+            ]}
+            page={page}
+            totalPages={Math.ceil(customers.length / 10)}
+            onDelete={(evt, id) => {
+              setSelectedCustomerId(id ?? null);
+              setDeleteDialogOpen(true);
+            }}
+            onPageChange={(_, newPage) => setPage(newPage)}
+          />
+
+          {/* Delete dialog */}
+          <DeleteDialog open={deleteDialogOpen} closeDialog={handleDeleteDialogClose} />
+
+          {/* Searchbar */}
+          <Drawer anchor="right" open={searchOpen} onClose={handleToggleSearch}>
+            <Box sx={{ width: 300, p: 2 }}>
+              <h4>Search Customers</h4>
+              <TextField
+                fullWidth
+                margin="dense"
+                label="First Name"
+                name="firstname"
+                value={search.firstname}
+                onChange={handleSearchChange}
+              />
+              <TextField
+                fullWidth
+                margin="dense"
+                label="Last Name"
+                name="lastname"
+                value={search.lastname}
+                onChange={handleSearchChange}
+              />
+              <Grid2 container spacing={2} sx={{ mt: 2 }}>
+                <Grid2 item xs={6}>
+                  <Button fullWidth variant="contained" color="primary" onClick={handleSearch}>
+                    Search
+                  </Button>
+                </Grid2>
+                <Grid2 item xs={6}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleToggleSearch}
+                  >
+                    Close
+                  </Button>
+                </Grid2>
+              </Grid2>
+            </Box>
+          </Drawer>
+        </Box>
       )}
     </Layout>
   );

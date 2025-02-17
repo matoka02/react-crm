@@ -64,7 +64,6 @@ export interface Order extends Entity {
   shipAddress: Address;
 }
 
-
 export interface DBType {
   token: Token;
   customers: Customer[];

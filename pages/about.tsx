@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 export default function AboutPage() {
   const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -17,32 +17,32 @@ export default function AboutPage() {
     >
       <Typography
         variant={isSmallScreen ? 'h4' : 'h3'}
-        component='h2'
+        component="h2"
         gutterBottom
         sx={{
           paddingTop: '50px',
           paddingBottom: '30px',
           textAlign: 'center',
-          fontSize: isSmallScreen ? '30px' : '36px'
+          fontSize: isSmallScreen ? '30px' : '36px',
         }}
       >
         <b>About</b>
       </Typography>
       <Typography
         variant={isSmallScreen ? 'h6' : 'h5'}
-        component='h3'
-        color='darkcyan'
+        component="h3"
+        color="darkcyan"
         gutterBottom
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          fontSize: isSmallScreen ? '20px' : '24px'
+          fontSize: isSmallScreen ? '20px' : '24px',
         }}
       >
         React CRM Demo App 2.0.0
       </Typography>
       <Typography
-        variant='body1'
+        variant="body1"
         sx={{
           fontSize: isSmallScreen ? '16px' : '20px',
           textAlign: 'justify',
