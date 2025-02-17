@@ -12,7 +12,6 @@ import '@fontsource/roboto/700.css';
 import i18n from '../i18n';
 import { store } from '@/stores/store';
 import themeDefault from '@/theme-default';
-import AboutPage from './about';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN_KEY,
@@ -36,7 +35,6 @@ function MyApp({ Component, pageProps }) {
         <CssBaseline />
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Component {...pageProps} />
-        <AboutPage />
       </ThemeProvider>
     </Provider>
   );

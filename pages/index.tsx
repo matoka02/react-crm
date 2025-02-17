@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import AboutPage from './about';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function Home() {
         {t('click')}
       </button> */}
       {/* <h1>Frontend SSR template</h1> */}
+      <AboutPage/>
     </div>
   );
 }
