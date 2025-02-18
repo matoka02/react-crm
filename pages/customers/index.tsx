@@ -1,5 +1,16 @@
 import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
-import { Box, Button, Drawer, Fab, Grid2, Snackbar, TextField, Tooltip } from '@mui/material';
+import {
+  Box,
+  Button,
+  Drawer,
+  Fab,
+  Grid,
+  Grid2,
+  Snackbar,
+  TextField,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,7 +20,8 @@ import DeleteDialog from '@/components/DeleteDialog';
 import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import {
-  fetchCustomers,
+  fetchAllCustomers,
+  fetchFilteredCustomers,
   setSearch,
   setSearchOpen,
   setSnackbarOpen,
@@ -24,25 +36,37 @@ export default function CustomerListPage(): React.ReactElement {
   // console.table(customers);
 
   useEffect(() => {
-    dispatch(fetchCustomers());
+    dispatch(fetchAllCustomers());
   }, [dispatch]);
 
+  const theme = useTheme();
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(customers.slice(0, 10));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setItems(customers.slice((page - 1) * 10, page * 10));
   }, [customers, page]);
 
   const handleSearch = () => {
-    dispatch(fetchCustomers());
+    dispatch(fetchFilteredCustomers(search));
     dispatch(setSearchOpen(false));
   };
 
   const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearch({ ...search, [evt.target.name]: evt.target.value }));
+    const { name, value } = evt.target;
+    dispatch(setSearch({ ...search, [name]: value }));
+
+    if (searchTimeout) clearTimeout(searchTimeout);
+    if (value.length >= 1) {
+      const timeout = setTimeout(
+        () => dispatch(fetchFilteredCustomers({ ...search, [name]: value })),
+        500
+      );
+      setSearchTimeout(timeout);
+    }
   };
 
   const handleToggleSearch = () => {
@@ -66,24 +90,40 @@ export default function CustomerListPage(): React.ReactElement {
       {isLoading ? (
         <SkeletonList />
       ) : (
-        <Box>
+        <Box suppressHydrationWarning>
           {/* Control buttons */}
           <Tooltip title="Add Customer">
             <Fab
-              color="primary"
               onClick={handleNewCustomer}
-              sx={{ position: 'fixed', bottom: 16, right: 80 }}
+              sx={{
+                position: 'fixed',
+                bottom: 16,
+                right: 80,
+                zIndex: 1200,
+                backgroundColor: theme.palette.primary.main,
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.dark,
+                },
+              }}
             >
-              <AddIcon />
+              <AddIcon sx={{ color: 'white' }} />
             </Fab>
           </Tooltip>
           <Tooltip title="Search">
             <Fab
-              color="secondary"
               onClick={handleToggleSearch}
-              sx={{ position: 'fixed', bottom: 16, right: 16 }}
+              sx={{
+                position: 'fixed',
+                bottom: 16,
+                right: 16,
+                zIndex: 1200,
+                backgroundColor: theme.palette.secondary.main,
+                '&:hover': {
+                  backgroundColor: theme.palette.secondary.dark,
+                },
+              }}
             >
-              <SearchIcon />
+              <SearchIcon sx={{ color: 'white' }} />
             </Fab>
           </Tooltip>
 
@@ -109,7 +149,7 @@ export default function CustomerListPage(): React.ReactElement {
               'email',
               'mobile',
               'membership',
-              'actions',
+              'action',
             ]}
             headers={[
               'Photo',
@@ -140,35 +180,52 @@ export default function CustomerListPage(): React.ReactElement {
                 fullWidth
                 margin="dense"
                 label="First Name"
-                name="firstname"
-                value={search.firstname}
+                name="firstName"
+                value={search.firstName}
                 onChange={handleSearchChange}
               />
               <TextField
                 fullWidth
                 margin="dense"
                 label="Last Name"
-                name="lastname"
-                value={search.lastname}
+                name="lastName"
+                value={search.lastName}
                 onChange={handleSearchChange}
               />
-              <Grid2 container spacing={2} sx={{ mt: 2 }}>
-                <Grid2 xs={6}>
-                  <Button fullWidth variant="contained" color="primary" onClick={handleSearch}>
-                    Search
-                  </Button>
-                </Grid2>
-                <Grid2 xs={6}>
+              <Grid container spacing={2} sx={{ mt: 2 }} component="div">
+                <Grid item xs={6}>
                   <Button
                     fullWidth
                     variant="contained"
-                    color="secondary"
+                    sx={{
+                      color: 'white',
+                      backgroundColor: theme.palette.primary.main,
+                      '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      color: 'white',
+                      backgroundColor: theme.palette.secondary.main,
+                      '&:hover': {
+                        backgroundColor: theme.palette.secondary.dark,
+                      },
+                    }}
                     onClick={handleToggleSearch}
                   >
                     Close
                   </Button>
-                </Grid2>
-              </Grid2>
+                </Grid>
+              </Grid>
             </Box>
           </Drawer>
         </Box>

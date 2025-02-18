@@ -21,8 +21,8 @@ interface CustomerState {
   snackbarMessage: string;
   searchOpen: boolean;
   search: {
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
   };
 }
 
@@ -33,18 +33,38 @@ const initialState: CustomerState = {
   snackbarMessage: '',
   searchOpen: false,
   search: {
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
   },
 };
 
-export const fetchCustomers = createAsyncThunk<Customer[], void, { rejectValue: string }>(
-  'customer/fetchCustomers',
+export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValue: string }>(
+  'customer/fetchAllCustomers',
   async (_: any, { rejectWithValue }: any) => {
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Error loading clients');
+
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchFilteredCustomers = createAsyncThunk<
+  Customer[],
+  { firstName: string; lastName: string },
+  { rejectValue: string }
+>(
+  'customer/fetchFilteredCustomers',
+  async (filters: { firstName: string; lastName: string }, { rejectWithValue }: any) => {
+    try {
+      const query = new URLSearchParams(filters).toString();
+      const response = await fetch(`/api/customers/${query}`, { method: HttpMethod.GET });
+
+      if (!response.ok) throw new Error('Error fetching filtered customers');
 
       return await response.json();
     } catch (error: any) {
@@ -68,31 +88,54 @@ const customerSlice = createSlice({
     },
     setSearch(
       state: CustomerState,
-      action: PayloadAction<{ firstname: string; lastname: string }>
+      action: PayloadAction<{ firstName: string; lastName: string }>
     ) {
       return { ...state, search: action.payload };
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
     builder
-      .addCase(fetchCustomers.pending, (state: CustomerState) => ({
+      // All customers
+      .addCase(fetchAllCustomers.pending, (state: CustomerState) => ({
         ...state,
         isLoading: true,
         error: undefined,
       }))
       .addCase(
-        fetchCustomers.fulfilled,
+        fetchAllCustomers.fulfilled,
         (state: CustomerState, action: PayloadAction<Customer[]>) => ({
           ...state,
           isLoading: false,
           customers: action.payload,
         })
       )
-      .addCase(fetchCustomers.rejected, (state: CustomerState, action: PayloadAction<any>) => ({
+      .addCase(fetchAllCustomers.rejected, (state: CustomerState, action: PayloadAction<any>) => ({
         ...state,
         isLoading: false,
         error: action.payload,
-      }));
+      }))
+      // Find customers
+      .addCase(fetchFilteredCustomers.pending, (state: CustomerState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(
+        fetchFilteredCustomers.fulfilled,
+        (state: CustomerState, action: PayloadAction<Customer[]>) => ({
+          ...state,
+          isLoading: false,
+          customers: action.payload,
+        })
+      )
+      .addCase(
+        fetchFilteredCustomers.rejected,
+        (state: CustomerState, action: PayloadAction<any>) => ({
+          ...state,
+          isLoading: false,
+          error: action.payload,
+        })
+      );
   },
 });
 
