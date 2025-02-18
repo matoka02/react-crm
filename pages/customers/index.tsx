@@ -18,20 +18,14 @@ import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  // const customerState = useSelector((state: RootState) => state.customers);
-  // const {
-  //   customers = [],
-  //   isLoading = false,
-  //   snackbarOpen = false,
-  //   snackbarMessage = '',
-  //   searchOpen = false,
-  //   search = {},
-  // } = customerState || {};
-  // console.table(customers)
   const { customers, isLoading, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
     (state: RootState) => state.customers
   );
-  console.table(customers);
+  // console.table(customers);
+
+  useEffect(() => {
+    dispatch(fetchCustomers());
+  }, [dispatch]);
 
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(customers.slice(0, 10));
@@ -39,15 +33,10 @@ export default function CustomerListPage(): React.ReactElement {
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
 
   useEffect(() => {
-    dispatch(fetchCustomers());
-  }, [dispatch]);
-
-  useEffect(() => {
     setItems(customers.slice((page - 1) * 10, page * 10));
   }, [customers, page]);
 
   const handleSearch = () => {
-    // const filters = { firstname: search.firstname, lastname: search.lastname };
     dispatch(fetchCustomers());
     dispatch(setSearchOpen(false));
   };
@@ -63,10 +52,6 @@ export default function CustomerListPage(): React.ReactElement {
   const handleNewCustomer = () => {
     console.log('Redirect to new customer page');
   };
-
-  // const handleSnackbarClose = () => {
-  //   dispatch(setSnackbarOpen(false));
-  // };
 
   const handleDeleteDialogClose = (confirmed: boolean) => {
     if (confirmed && selectedCustomerId) {
@@ -168,12 +153,12 @@ export default function CustomerListPage(): React.ReactElement {
                 onChange={handleSearchChange}
               />
               <Grid2 container spacing={2} sx={{ mt: 2 }}>
-                <Grid2 item xs={6}>
+                <Grid2 xs={6}>
                   <Button fullWidth variant="contained" color="primary" onClick={handleSearch}>
                     Search
                   </Button>
                 </Grid2>
-                <Grid2 item xs={6}>
+                <Grid2 xs={6}>
                   <Button
                     fullWidth
                     variant="contained"
