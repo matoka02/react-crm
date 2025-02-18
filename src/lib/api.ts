@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 import DB from '@/lib/demo-db';
 import { DBType } from '@/types/model';
 
@@ -45,7 +47,8 @@ export function postData<T extends keyof DBType>(
   const collection = DB[model];
   if (!Array.isArray(collection)) return null;
 
-  const newItem = { id: Date.now(), ...data } as any;
+  // const newItem = { id: Date.now(), ...data } as any;
+  const newItem = { id: nanoid(), ...data } as any;
   collection.push(newItem);
   return newItem;
 }
