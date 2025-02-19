@@ -173,7 +173,16 @@ export default function CustomerListPage(): React.ReactElement {
           <DeleteDialog open={deleteDialogOpen} closeDialog={handleDeleteDialogClose} />
 
           {/* Searchbar */}
-          <Drawer anchor="right" open={searchOpen} onClose={handleToggleSearch}>
+          <Drawer
+            anchor="right"
+            open={searchOpen}
+            onClose={handleToggleSearch}
+            slotProps={{
+              backdrop: {
+                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+              },
+            }}
+          >
             <Box sx={{ width: 300, p: 2 }}>
               <h4>Search Customers</h4>
               <TextField
