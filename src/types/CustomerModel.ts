@@ -3,9 +3,9 @@ import { Customer } from './model';
 class CustomerModel implements Customer {
   id: number;
 
-  firstname: string;
+  firstName: string;
 
-  lastname: string;
+  lastName: string;
 
   email: string;
 
@@ -22,8 +22,8 @@ class CustomerModel implements Customer {
   orderAmount: number;
 
   constructor(
-    firstname: string,
-    lastname: string,
+    firstName: string,
+    lastName: string,
     email: string,
     mobile: string,
     rewards: number,
@@ -31,8 +31,8 @@ class CustomerModel implements Customer {
     avatar?: string
   ) {
     this.id = 0;
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
     this.mobile = mobile;
     this.membership = membership;

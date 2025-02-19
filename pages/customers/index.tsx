@@ -58,12 +58,16 @@ export default function CustomerListPage(): React.ReactElement {
 
   const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = evt.target;
+    console.log(evt.target);
     dispatch(setSearch({ ...search, [name]: value }));
 
     if (searchTimeout) clearTimeout(searchTimeout);
     if (value.length >= 1) {
       const timeout = setTimeout(
-        () => dispatch(fetchFilteredCustomers({ ...search, [name]: value })),
+        () => {
+          console.log(`Start search: name ${name}, value ${value}`);
+          dispatch(fetchFilteredCustomers({ ...search, [name]: value }))
+        },
         500
       );
       setSearchTimeout(timeout);
@@ -145,8 +149,8 @@ export default function CustomerListPage(): React.ReactElement {
             items={items}
             dataKeys={[
               'avatar',
-              'firstname',
-              'lastname',
+              'firstName',
+              'lastName',
               'email',
               'mobile',
               'membership',

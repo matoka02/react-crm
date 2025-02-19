@@ -11,16 +11,16 @@ export interface Category extends Entity {
 export interface Token {
   accessToken: string;
   user: {
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
   };
 }
 
 export interface User extends Entity {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   avatar?: string;
   mobile: string;

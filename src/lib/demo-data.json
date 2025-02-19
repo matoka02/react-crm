@@ -2,8 +2,8 @@
   "token": {
     "access_token": "fake-token-12345789-abcdefgh",
     "user": {
-      "firstname": "Admin",
-      "lastname": "",
+      "firstName": "Admin",
+      "lastName": "",
       "email": "admin@test.com",
       "password": "password"
     }
@@ -14,8 +14,8 @@
       "mobile": "555-555-555",
       "rewards": 21,
       "id": 2,
-      "firstname": "Larsen",
-      "lastname": "Shaw",
+      "firstName": "Larsen",
+      "lastName": "Shaw",
       "email": "abc@test.com",
       "avatar": "/assets/img/avatar3.png"
     },
@@ -24,8 +24,8 @@
       "mobile": "555-555-555",
       "rewards": 89,
       "id": 4,
-      "firstname": "Rosseta",
-      "lastname": "Wilson",
+      "firstName": "Rosseta",
+      "lastName": "Wilson",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar4.png"
     },
@@ -34,8 +34,8 @@
       "mobile": "555-555-555",
       "rewards": 38,
       "id": 5,
-      "firstname": "William",
-      "lastname": "Carney",
+      "firstName": "William",
+      "lastName": "Carney",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar2.png"
     },
@@ -44,8 +44,8 @@
       "mobile": "555-555-555",
       "rewards": 23,
       "id": 6,
-      "firstname": "Sarah",
-      "lastname": "Dunne",
+      "firstName": "Sarah",
+      "lastName": "Dunne",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar1.png"
     },
@@ -54,8 +54,8 @@
       "mobile": "555-555-555",
       "rewards": 23,
       "id": 8,
-      "firstname": "Merriana",
-      "lastname": "Sean",
+      "firstName": "Merriana",
+      "lastName": "Sean",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar5.png"
     },
@@ -64,8 +64,8 @@
       "mobile": "555-555-555",
       "rewards": 26,
       "id": 9,
-      "firstname": "Jubino",
-      "lastname": "Gerret",
+      "firstName": "Jubino",
+      "lastName": "Gerret",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar1.png"
     },
@@ -74,8 +74,8 @@
       "mobile": "555-555-555",
       "rewards": 22,
       "id": 10,
-      "firstname": "Geneva",
-      "lastname": "Wilson",
+      "firstName": "Geneva",
+      "lastName": "Wilson",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar2.png"
     },
@@ -84,8 +84,8 @@
       "mobile": "555-555-555",
       "rewards": 38,
       "id": 11,
-      "firstname": "Mark",
-      "lastname": "Carney",
+      "firstName": "Mark",
+      "lastName": "Carney",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar5.png"
     },
@@ -94,15 +94,15 @@
       "mobile": "555-555-555",
       "rewards": 27,
       "id": 12,
-      "firstname": "Yann",
-      "lastname": "Larrel",
+      "firstName": "Yann",
+      "lastName": "Larrel",
       "email": "test@test.com",
       "avatar": "/assets/img/avatar1.png"
     },
     {
       "membership": true,
-      "firstname": "John",
-      "lastname": "Doe",
+      "firstName": "John",
+      "lastName": "Doe",
       "mobile": "555-555-555",
       "rewards": 88,
       "email": "john.doe@test.com",
@@ -110,8 +110,8 @@
     },
     {
       "avatar": null,
-      "firstname": "sdfsdf",
-      "lastname": "sdfsdf",
+      "firstName": "sdfsdf",
+      "lastName": "sdfsdf",
       "mobile": "555-555-555",
       "rewards": 22,
       "email": "sdfsdfsdfs",
