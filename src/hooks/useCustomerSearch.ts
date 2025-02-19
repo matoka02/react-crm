@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { fetchFilteredCustomers, setSearch } from '@/stores/customers/customerSlice';
+import {
+  fetchAllCustomers,
+  fetchFilteredCustomers,
+  setSearch,
+} from '@/stores/customers/customerSlice';
 import { AppDispatch } from '@/stores/store';
 
 const NAME_REGEX = /^[A-Za-z\s]+$/;
@@ -25,7 +29,14 @@ function useCustomerSearch(initialSearch: { firstName: string; lastName: string 
     dispatch(fetchFilteredCustomers(search));
   };
 
-  return { search, handleSearchChange, handleSearch };
+  // Show all users
+  const handleResetSearch = () => {
+    dispatch(fetchAllCustomers());
+    dispatch(setSearch({ firstName: '', lastName: '' })); // Redux state
+    setLocalSearch({ firstName: '', lastName: '' }); // Local state
+  };
+
+  return { search, handleSearchChange, handleSearch, handleResetSearch };
 }
 
 export default useCustomerSearch;

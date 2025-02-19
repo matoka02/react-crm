@@ -29,12 +29,10 @@ import {
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
-
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const { customers, isLoading, error, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
-    (state: RootState) => state.customers
-  );
+  const { customers, isLoading, error, snackbarOpen, snackbarMessage, searchOpen, search } =
+    useSelector((state: RootState) => state.customers);
   // console.table(customers);
 
   useEffect(() => {
@@ -46,23 +44,30 @@ export default function CustomerListPage(): React.ReactElement {
   const [items, setItems] = useState(customers.slice(0, 10));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
-  const { search: localSearch, handleSearchChange, handleSearch } = useCustomerSearch(search);
+  const {
+    search: localSearch,
+    handleSearchChange,
+    handleSearch,
+    handleResetSearch,
+  } = useCustomerSearch(search);
 
   useEffect(() => {
     setItems(customers.slice((page - 1) * 10, page * 10));
   }, [customers, page]);
 
+  // Snackbar
   const handleCloseSnackbar = () => {
     dispatch(setSnackbarOpen(false));
     dispatch(clearError());
   };
 
-  const getSnackbarSeverity=()=>{
-    if (snackbarMessage==='No customers found') return 'warning';
+  const getSnackbarSeverity = () => {
+    if (snackbarMessage === 'No customers found') return 'warning';
     if (error) return 'error';
     return 'error';
-  }
+  };
 
+  // Search
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
   };
@@ -126,7 +131,7 @@ export default function CustomerListPage(): React.ReactElement {
             open={snackbarOpen}
             autoHideDuration={3000}
             onClose={handleCloseSnackbar}
-            anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
             <Alert onClose={handleCloseSnackbar} severity={getSnackbarSeverity()}>
               {snackbarMessage}
@@ -194,12 +199,19 @@ export default function CustomerListPage(): React.ReactElement {
                 value={localSearch.lastName}
                 onChange={handleSearchChange}
               />
-              <Grid container spacing={2} sx={{ mt: 2 }} component="div">
-                <Grid item xs={6}>
+              <Grid
+                container
+                spacing={2}
+                sx={{ mt: 2, flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}
+                component="div"
+              >
+                <Grid item xs={4}>
                   <Button
                     fullWidth
                     variant="contained"
                     sx={{
+                      minWidth: 120,
+                      width: '100%',
                       color: 'white',
                       backgroundColor: theme.palette.primary.main,
                       '&:hover': {
@@ -211,11 +223,32 @@ export default function CustomerListPage(): React.ReactElement {
                     Search
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Button
                     fullWidth
                     variant="contained"
                     sx={{
+                      minWidth: 120,
+                      width: '100%',
+                      whiteSpace: 'nowrap',
+                      color: 'white',
+                      backgroundColor: theme.palette.warning.main,
+                      '&:hover': {
+                        backgroundColor: theme.palette.warning.dark,
+                      },
+                    }}
+                    onClick={handleResetSearch}
+                  >
+                    Show All
+                  </Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      minWidth: 120,
+                      width: '100%',
                       color: 'white',
                       backgroundColor: theme.palette.secondary.main,
                       '&:hover': {
