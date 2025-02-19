@@ -4,6 +4,7 @@ import {
   Button,
   Drawer,
   Fab,
+  GlobalStyles,
   Grid,
   Grid2,
   Snackbar,
@@ -177,10 +178,8 @@ export default function CustomerListPage(): React.ReactElement {
             anchor="right"
             open={searchOpen}
             onClose={handleToggleSearch}
-            slotProps={{
-              backdrop: {
-                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-              },
+            ModalProps={{
+              sx: { backgroundColor: 'transparent' }, // Убираем черную полосу
             }}
           >
             <Box sx={{ width: 300, p: 2 }}>
