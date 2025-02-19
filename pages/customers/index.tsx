@@ -23,6 +23,7 @@ import SkeletonList from '@/components/SkeletonList';
 import useCustomerSearch from '@/hooks/useCustomerSearch';
 import {
   fetchAllCustomers,
+  clearError,
   setSearchOpen,
   setSnackbarOpen,
 } from '@/stores/customers/customerSlice';
@@ -31,7 +32,7 @@ import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const { customers, isLoading, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
+  const { customers, isLoading, error, snackbarOpen, snackbarMessage, searchOpen, search } = useSelector(
     (state: RootState) => state.customers
   );
   // console.table(customers);
@@ -45,40 +46,20 @@ export default function CustomerListPage(): React.ReactElement {
   const [items, setItems] = useState(customers.slice(0, 10));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const { search: localSearch, handleSearchChange, handleSearch } = useCustomerSearch(search);
 
   useEffect(() => {
     setItems(customers.slice((page - 1) * 10, page * 10));
   }, [customers, page]);
 
+  const handleCloseSnackbar = () => {
+    dispatch(setSnackbarOpen(false));
+    dispatch(clearError());
+  };
+
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
   };
-
-  // const handleSearch = () => {
-  //   dispatch(fetchFilteredCustomers(search));
-  //   dispatch(setSearchOpen(false));
-  // };
-
-  // const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = evt.target;
-  //   console.log(name,':', value);
-  //   dispatch(setSearch({ ...search, [name]: value }));
-
-  //   if (searchTimeout) clearTimeout(searchTimeout);
-  //   if (value.length >= 1) {
-  //     const timeout = setTimeout(
-  //       () => {
-  //         console.log(`Start search: name ${name}, value ${value}`);
-  //         dispatch(fetchFilteredCustomers({ ...search, [name]: value }))
-  //       },
-  //       500
-  //     );
-  //     setSearchTimeout(timeout);
-  //   }
-  // };
-
-  const { search: localSearch, handleSearchChange, handleSearch } = useCustomerSearch(search);
 
   const handleNewCustomer = () => {
     console.log('Redirect to new customer page');
@@ -138,10 +119,11 @@ export default function CustomerListPage(): React.ReactElement {
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={3000}
-            onClose={() => dispatch(setSnackbarOpen(false))}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           >
-            <Alert onClose={() => dispatch(setSnackbarOpen(false))} severity="success">
-              {snackbarMessage || 'Operation successful!'}
+            <Alert onClose={handleCloseSnackbar} severity='error'>
+              {snackbarMessage}
             </Alert>
           </Snackbar>
 

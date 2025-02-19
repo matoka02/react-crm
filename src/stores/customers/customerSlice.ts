@@ -44,11 +44,10 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error('Error loading clients');
-
       return await response.json();
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      // console.error(error.message);
+      return rejectWithValue('Error loading customers');
     }
   }
 );
@@ -65,11 +64,10 @@ export const fetchFilteredCustomers = createAsyncThunk<
 
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
-      if (!response.ok) throw new Error('Error fetching filtered customers');
-
       return await response.json();
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      // console.error(error.message);
+      return rejectWithValue('Error fetching filtered customers');
     }
   }
 );
@@ -78,12 +76,17 @@ const customerSlice = createSlice({
   name: 'customer',
   initialState,
   reducers: {
+    // snackbar
     setSnackbarOpen(state: CustomerState, action: PayloadAction<boolean>) {
       return { ...state, snackbarOpen: action.payload };
     },
     setSnackbarMessage(state: CustomerState, action: PayloadAction<string>) {
       return { ...state, snackbarMessage: action.payload };
     },
+    clearError(state) {
+      return { ...state, error: undefined };
+    },
+    // searchbar
     setSearchOpen(state: CustomerState, action: PayloadAction<boolean>) {
       return { ...state, searchOpen: action.payload };
     },
@@ -114,6 +117,8 @@ const customerSlice = createSlice({
         ...state,
         isLoading: false,
         error: action.payload,
+        snackbarOpen: true,
+        snackbarMessage: action.payload,
       }))
       // Find customers
       .addCase(fetchFilteredCustomers.pending, (state: CustomerState) => ({
@@ -135,11 +140,13 @@ const customerSlice = createSlice({
           ...state,
           isLoading: false,
           error: action.payload,
+          snackbarOpen: true,
+          snackbarMessage: action.payload,
         })
       );
   },
 });
 
-export const { setSnackbarOpen, setSnackbarMessage, setSearchOpen, setSearch } =
+export const { setSnackbarOpen, setSnackbarMessage, clearError, setSearchOpen, setSearch } =
   customerSlice.actions;
 export default customerSlice.reducer;
