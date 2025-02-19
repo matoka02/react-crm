@@ -57,6 +57,12 @@ export default function CustomerListPage(): React.ReactElement {
     dispatch(clearError());
   };
 
+  const getSnackbarSeverity=()=>{
+    if (snackbarMessage==='No customers found') return 'warning';
+    if (error) return 'error';
+    return 'error';
+  }
+
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
   };
@@ -122,7 +128,7 @@ export default function CustomerListPage(): React.ReactElement {
             onClose={handleCloseSnackbar}
             anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           >
-            <Alert onClose={handleCloseSnackbar} severity='error'>
+            <Alert onClose={handleCloseSnackbar} severity={getSnackbarSeverity()}>
               {snackbarMessage}
             </Alert>
           </Snackbar>

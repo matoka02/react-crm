@@ -64,7 +64,9 @@ export const fetchFilteredCustomers = createAsyncThunk<
 
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
-      return await response.json();
+      const data = await response.json();
+      if (data.length === 0) return rejectWithValue('No customers found');
+      return data;
     } catch (error: any) {
       // console.error(error.message);
       return rejectWithValue('Error fetching filtered customers');
@@ -132,6 +134,8 @@ const customerSlice = createSlice({
           ...state,
           isLoading: false,
           customers: action.payload,
+          snackbarOpen: action.payload.length === 0 ? true : state.snackbarOpen,
+          snackbarMessage: action.payload.length === 0 ? 'No customers found' : state.snackbarMessage,
         })
       )
       .addCase(
