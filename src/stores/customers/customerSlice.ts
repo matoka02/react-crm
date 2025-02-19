@@ -62,7 +62,6 @@ export const fetchFilteredCustomers = createAsyncThunk<
   async (filters: { firstName: string; lastName: string }, { rejectWithValue }: any) => {
     try {
       const query = new URLSearchParams(filters).toString();
-      console.log('query: ', query);
 
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 

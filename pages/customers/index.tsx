@@ -20,14 +20,14 @@ import DataTable from '@/components/DataTable';
 import DeleteDialog from '@/components/DeleteDialog';
 import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
+import useCustomerSearch from '@/hooks/useCustomerSearch';
 import {
   fetchAllCustomers,
-  fetchFilteredCustomers,
-  setSearch,
   setSearchOpen,
   setSnackbarOpen,
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,32 +51,34 @@ export default function CustomerListPage(): React.ReactElement {
     setItems(customers.slice((page - 1) * 10, page * 10));
   }, [customers, page]);
 
-  const handleSearch = () => {
-    dispatch(fetchFilteredCustomers(search));
-    dispatch(setSearchOpen(false));
-  };
-
-  const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = evt.target;
-    console.log(evt.target);
-    dispatch(setSearch({ ...search, [name]: value }));
-
-    if (searchTimeout) clearTimeout(searchTimeout);
-    if (value.length >= 1) {
-      const timeout = setTimeout(
-        () => {
-          console.log(`Start search: name ${name}, value ${value}`);
-          dispatch(fetchFilteredCustomers({ ...search, [name]: value }))
-        },
-        500
-      );
-      setSearchTimeout(timeout);
-    }
-  };
-
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
   };
+
+  // const handleSearch = () => {
+  //   dispatch(fetchFilteredCustomers(search));
+  //   dispatch(setSearchOpen(false));
+  // };
+
+  // const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = evt.target;
+  //   console.log(name,':', value);
+  //   dispatch(setSearch({ ...search, [name]: value }));
+
+  //   if (searchTimeout) clearTimeout(searchTimeout);
+  //   if (value.length >= 1) {
+  //     const timeout = setTimeout(
+  //       () => {
+  //         console.log(`Start search: name ${name}, value ${value}`);
+  //         dispatch(fetchFilteredCustomers({ ...search, [name]: value }))
+  //       },
+  //       500
+  //     );
+  //     setSearchTimeout(timeout);
+  //   }
+  // };
+
+  const { search: localSearch, handleSearchChange, handleSearch } = useCustomerSearch(search);
 
   const handleNewCustomer = () => {
     console.log('Redirect to new customer page');
@@ -183,7 +185,7 @@ export default function CustomerListPage(): React.ReactElement {
             open={searchOpen}
             onClose={handleToggleSearch}
             ModalProps={{
-              sx: { backgroundColor: 'transparent' }, // Убираем черную полосу
+              sx: { backgroundColor: 'transparent' },
             }}
           >
             <Box sx={{ width: 300, p: 2 }}>
@@ -193,7 +195,7 @@ export default function CustomerListPage(): React.ReactElement {
                 margin="dense"
                 label="First Name"
                 name="firstName"
-                value={search.firstName}
+                value={localSearch.firstName}
                 onChange={handleSearchChange}
               />
               <TextField
@@ -201,7 +203,7 @@ export default function CustomerListPage(): React.ReactElement {
                 margin="dense"
                 label="Last Name"
                 name="lastName"
-                value={search.lastName}
+                value={localSearch.lastName}
                 onChange={handleSearchChange}
               />
               <Grid container spacing={2} sx={{ mt: 2 }} component="div">
