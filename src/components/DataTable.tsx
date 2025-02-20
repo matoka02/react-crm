@@ -15,6 +15,7 @@ import {
   Container,
   Tooltip,
   Box,
+  useTheme,
 } from '@mui/material';
 import { common } from '@mui/material/colors';
 import Image from 'next/image';
@@ -41,6 +42,8 @@ function DataTable({
   onPageChange,
   onDelete,
 }: DataTableProps): React.ReactElement {
+  const theme = useTheme();
+
   const renderData = (dataKey: string, data: any) => {
     if (dataKey === 'avatar') {
       const avatarUrl = data[dataKey] || `/assets/img/avatar0.png`;
@@ -50,7 +53,12 @@ function DataTable({
           height={35}
           src={avatarUrl}
           alt="avatar"
-          style={{ borderRadius: '50%' }}
+          style={{
+            borderRadius: '50%',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: theme.palette.secondary.main,
+          }}
         />
       );
     }

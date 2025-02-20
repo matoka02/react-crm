@@ -30,8 +30,15 @@ import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const { customers, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
-    useSelector((state: RootState) => state.customers);
+  const {
+    customers,
+    isLoading,
+    snackbarOpen,
+    snackbarMessage,
+    snackbarSeverity,
+    searchOpen,
+    search,
+  } = useSelector((state: RootState) => state.customers);
   // console.table(customers);
 
   useEffect(() => {
@@ -56,7 +63,6 @@ export default function CustomerListPage(): React.ReactElement {
 
   // Snackbar
   const handleCloseSnackbar = () => {
-    // dispatch(setSnackbarOpen(false));
     dispatch(clearError());
   };
 
@@ -79,9 +85,11 @@ export default function CustomerListPage(): React.ReactElement {
 
   const handleDeleteDialogClose = (confirmed: boolean) => {
     if (confirmed && selectedCustomerId) {
-      dispatch(deleteCustomer(selectedCustomerId)).unwrap().finally(() => {
-        dispatch(fetchAllCustomers());
-      });
+      dispatch(deleteCustomer(selectedCustomerId))
+        .unwrap()
+        .finally(() => {
+          dispatch(fetchAllCustomers());
+        });
     }
     setDeleteDialogOpen(false);
     setSelectedCustomerId(null);

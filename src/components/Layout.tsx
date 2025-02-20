@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Typography, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 import React, { ReactNode } from 'react';
 
 interface LayoutProps {
@@ -11,7 +11,7 @@ function Layout({ title, navigation, children }: LayoutProps): React.ReactElemen
   const theme = useTheme();
 
   return (
-    <Box sx={{ pt: 10, px: 3 }}>
+    <Box sx={{ pt: 0, px: 3 }}>
       <Typography
         variant="subtitle1"
         sx={{ color: theme.palette.grey[600], pb: 2, display: 'block' }}
@@ -25,7 +25,7 @@ function Layout({ title, navigation, children }: LayoutProps): React.ReactElemen
         </Typography>
       </Paper>
 
-      <Divider sx={{ mb: 2 }}>{children}</Divider>
+      <Box sx={{ mb: 2 }}>{children}</Box>
     </Box>
   );
 }
