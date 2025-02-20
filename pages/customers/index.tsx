@@ -4,12 +4,11 @@ import {
   Button,
   Drawer,
   Fab,
-  GlobalStyles,
-  Grid,
   Grid2,
   Snackbar,
   TextField,
   Tooltip,
+  Typography,
   useTheme,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -182,85 +181,99 @@ export default function CustomerListPage(): React.ReactElement {
             }}
           >
             <Box sx={{ width: 300, p: 2 }}>
-              <h4>Search Customers</h4>
-              <TextField
-                fullWidth
-                margin="dense"
-                label="First Name"
-                name="firstName"
-                value={localSearch.firstName}
-                onChange={handleSearchChange}
-              />
-              <TextField
-                fullWidth
-                margin="dense"
-                label="Last Name"
-                name="lastName"
-                value={localSearch.lastName}
-                onChange={handleSearchChange}
-              />
-              <Grid
-                container
-                spacing={2}
-                sx={{ mt: 2, flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}
-                component="div"
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Search Customers
+              </Typography>
+              <form
+                onSubmit={(evt) => {
+                  evt.preventDefault();
+                  handleSearch();
+                }}
               >
-                <Grid item xs={4}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    sx={{
-                      minWidth: 120,
-                      width: '100%',
-                      color: 'white',
-                      backgroundColor: theme.palette.primary.main,
-                      '&:hover': {
-                        backgroundColor: theme.palette.primary.dark,
-                      },
-                    }}
-                    onClick={handleSearch}
-                  >
-                    Search
-                  </Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    sx={{
-                      minWidth: 120,
-                      width: '100%',
-                      whiteSpace: 'nowrap',
-                      color: 'white',
-                      backgroundColor: theme.palette.warning.main,
-                      '&:hover': {
-                        backgroundColor: theme.palette.warning.dark,
-                      },
-                    }}
-                    onClick={handleResetSearch}
-                  >
-                    Show All
-                  </Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    sx={{
-                      minWidth: 120,
-                      width: '100%',
-                      color: 'white',
-                      backgroundColor: theme.palette.secondary.main,
-                      '&:hover': {
-                        backgroundColor: theme.palette.secondary.dark,
-                      },
-                    }}
-                    onClick={handleToggleSearch}
-                  >
-                    Close
-                  </Button>
-                </Grid>
-              </Grid>
+                <TextField
+                  fullWidth
+                  margin="dense"
+                  label="First Name"
+                  name="firstName"
+                  value={localSearch.firstName}
+                  onChange={handleSearchChange}
+                />
+                <TextField
+                  fullWidth
+                  margin="dense"
+                  label="Last Name"
+                  name="lastName"
+                  value={localSearch.lastName}
+                  onChange={handleSearchChange}
+                />
+                <Grid2
+                  container
+                  spacing={2}
+                  sx={{
+                    width: '100%',
+                    mt: 2,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    flexGrow: 1,
+                  }}
+                  component="div"
+                >
+                  <Grid2 size={12}>
+                    <Button
+                      fullWidth
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        minWidth: 120,
+                        width: '100%',
+                        color: 'white',
+                        backgroundColor: theme.palette.primary.main,
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.dark,
+                        },
+                      }}
+                    >
+                      Search
+                    </Button>
+                  </Grid2>
+                  <Grid2 size={12}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{
+                        width: '100%',
+                        whiteSpace: 'nowrap',
+                        color: 'white',
+                        backgroundColor: theme.palette.success.main,
+                        '&:hover': {
+                          backgroundColor: theme.palette.success.dark,
+                        },
+                      }}
+                      onClick={handleResetSearch}
+                    >
+                      Show All
+                    </Button>
+                  </Grid2>
+                  <Grid2 size={12}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{
+                        minWidth: 120,
+                        width: '100%',
+                        color: 'white',
+                        backgroundColor: theme.palette.secondary.main,
+                        '&:hover': {
+                          backgroundColor: theme.palette.secondary.dark,
+                        },
+                      }}
+                      onClick={handleToggleSearch}
+                    >
+                      Close
+                    </Button>
+                  </Grid2>
+                </Grid2>
+              </form>
             </Box>
           </Drawer>
         </Box>
