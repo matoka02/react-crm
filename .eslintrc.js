@@ -61,7 +61,14 @@ module.exports = {
         ],
         'linebreak-style': ['error', 'unix'],
         'react/prop-types': 'off',
-
+        'import/extensions': [
+          'error',
+          'ignorePackages',
+          {
+            tsx: 'never',
+            ts: 'never',
+          },
+        ],
         'import/order': [
           'error',
           {

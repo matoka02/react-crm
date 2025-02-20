@@ -1,12 +1,12 @@
 export const SearchFilterOps = {
-  equal: "_eq",
-  greaterThan: "_gt",
-  lessThan: "_lt",
-  greaterThanOrEqual: "_gte",
-  lessThanOrEqual: "_lte",
-  contain: "_like",
-  startsWith: "_startsWith",
-  endsWith: "_endsWith"
+  equal: '_eq',
+  greaterThan: '_gt',
+  lessThan: '_lt',
+  greaterThanOrEqual: '_gte',
+  lessThanOrEqual: '_lte',
+  contain: '_like',
+  startsWith: '_startsWith',
+  endsWith: '_endsWith',
 };
 
 // Function to capitalize the first letter
@@ -16,26 +16,30 @@ export function capFirstLetter(s: string) {
 
 // Clears search filters
 export function clearSearchFilters(searchFilter: any) {
-  if (searchFilter) {
-    if (searchFilter.filters) delete searchFilter.filters;
+  const updatedFilter = { ...searchFilter };
 
-    Object.keys(searchFilter).forEach(filter => {
-      if (searchFilter[filter]) {
-        Object.keys(searchFilter[filter]).forEach(prop => {
-          searchFilter[filter][prop] = null;
-        });
-      }
-    });
+  if (updatedFilter.filters) {
+    delete updatedFilter.filters;
   }
+
+  Object.keys(updatedFilter).forEach((filter) => {
+    if (updatedFilter[filter]) {
+      Object.keys(updatedFilter[filter]).forEach((prop) => {
+        updatedFilter[filter][prop] = null;
+      });
+    }
+  });
+
+  return updatedFilter;
 }
 
 // Creates a filters object for searching
 export function buildSearchFilters(searchFilter: any) {
   const filters: any[] = [];
   if (searchFilter) {
-    Object.keys(searchFilter).forEach(filter => {
-      if (filter !== "filters") {
-        Object.keys(searchFilter[filter]).forEach(propName => {
+    Object.keys(searchFilter).forEach((filter) => {
+      if (filter !== 'filters') {
+        Object.keys(searchFilter[filter]).forEach((propName) => {
           if (propName && searchFilter[filter] && searchFilter[filter][propName]) {
             filters.push({
               property: propName,
@@ -52,46 +56,44 @@ export function buildSearchFilters(searchFilter: any) {
 
 // Data filtering function
 const filterFn = (op: string, value: any) => (prop: string, data: any) => {
-  let propName = "";
+  const propName = prop.replace(op, '');
+
   switch (op) {
     case SearchFilterOps.equal:
-      propName = prop.replace(SearchFilterOps.equal, "");
       return data[propName] === value;
     case SearchFilterOps.contain:
-      propName = prop.replace(SearchFilterOps.contain, "");
-      return data[propName].toLowerCase().includes(value.toLowerCase());
+      return data[propName]?.toLowerCase().includes(value.toLowerCase());
     case SearchFilterOps.startsWith:
-      propName = prop.replace(SearchFilterOps.startsWith, "");
-      return data[propName].toLowerCase().startsWith(value.toLowerCase());
+      return data[propName]?.toLowerCase().startsWith(value.toLowerCase());
     case SearchFilterOps.endsWith:
-      propName = prop.replace(SearchFilterOps.endsWith, "");
-      return data[propName].toLowerCase().endsWith(value.toLowerCase());
+      return data[propName]?.toLowerCase().endsWith(value.toLowerCase());
     case SearchFilterOps.greaterThan:
-      propName = prop.replace(SearchFilterOps.greaterThan, "");
       return parseFloat(data[propName]) > parseFloat(value);
     case SearchFilterOps.lessThan:
-      propName = prop.replace(SearchFilterOps.lessThan, "");
       return parseFloat(data[propName]) < parseFloat(value);
     case SearchFilterOps.greaterThanOrEqual:
-      propName = prop.replace(SearchFilterOps.greaterThanOrEqual, "");
       return parseFloat(data[propName]) >= parseFloat(value);
     case SearchFilterOps.lessThanOrEqual:
-      propName = prop.replace(SearchFilterOps.lessThanOrEqual, "");
       return parseFloat(data[propName]) <= parseFloat(value);
+    default:
+      // console.warn(`Unknown search operator: ${op}`);
+      return false;
   }
 };
 
 // Search parameters parsing function
 export function getSearchFilters(parsedQs: { [key: string]: any }) {
-  const filters = Object.keys(parsedQs).reduce((prev: any, k: string) => {
-    const prop = k.split("_")[0];
-    const op = "_" + k.split("_")[1];
-    const compVal = parsedQs[k];
+  const filters = Object.keys(parsedQs).reduce((prev: any, key: string) => {
+    const value = parsedQs[key];
+    if (!value) return prev;
 
-    if (prop !== "") {
-      prev[k] = filterFn(op, compVal);
-    }
-    return prev;
+    const [prop, op] = key.split('_');
+    const operator = op ? `_${op}` : SearchFilterOps.contain;
+
+    return {
+      ...prev,
+      [prop + operator]: filterFn(operator, value),
+    };
   }, {});
   return filters;
 }
@@ -99,5 +101,5 @@ export function getSearchFilters(parsedQs: { [key: string]: any }) {
 // Email verification
 export function isValidEmail(email: string) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email) ? true : "Email is invalid.";
+  return re.test(email) ? true : 'Email is invalid.';
 }
