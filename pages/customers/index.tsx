@@ -24,13 +24,13 @@ import {
   fetchAllCustomers,
   clearError,
   setSearchOpen,
-  setSnackbarOpen,
+  deleteCustomer,
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const { customers, isLoading, error, snackbarOpen, snackbarMessage, searchOpen, search } =
+  const { customers, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
     useSelector((state: RootState) => state.customers);
   // console.table(customers);
 
@@ -56,17 +56,11 @@ export default function CustomerListPage(): React.ReactElement {
 
   // Snackbar
   const handleCloseSnackbar = () => {
-    dispatch(setSnackbarOpen(false));
+    // dispatch(setSnackbarOpen(false));
     dispatch(clearError());
   };
 
-  const getSnackbarSeverity = () => {
-    if (snackbarMessage === 'No customers found') return 'warning';
-    if (error) return 'error';
-    return 'error';
-  };
-
-  // Search
+  // Search customer
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
   };
@@ -75,9 +69,19 @@ export default function CustomerListPage(): React.ReactElement {
     console.log('Redirect to new customer page');
   };
 
+  // Delete customer
+  const handleOpenDeleteDialog = (id?: number) => {
+    if (id) {
+      setSelectedCustomerId(id);
+      setDeleteDialogOpen(true);
+    }
+  };
+
   const handleDeleteDialogClose = (confirmed: boolean) => {
     if (confirmed && selectedCustomerId) {
-      console.log(`Delete customer ID: ${selectedCustomerId}`);
+      dispatch(deleteCustomer(selectedCustomerId)).unwrap().finally(() => {
+        dispatch(fetchAllCustomers());
+      });
     }
     setDeleteDialogOpen(false);
     setSelectedCustomerId(null);
@@ -132,7 +136,7 @@ export default function CustomerListPage(): React.ReactElement {
             onClose={handleCloseSnackbar}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
-            <Alert onClose={handleCloseSnackbar} severity={getSnackbarSeverity()}>
+            <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
           </Snackbar>
@@ -161,15 +165,21 @@ export default function CustomerListPage(): React.ReactElement {
             ]}
             page={page}
             totalPages={Math.ceil(customers.length / 10)}
-            onDelete={(evt, id) => {
-              setSelectedCustomerId(id ?? null);
-              setDeleteDialogOpen(true);
-            }}
+            // onDelete={(evt, id) => {
+            //   setSelectedCustomerId(id ?? null);
+            //   setDeleteDialogOpen(true);
+            // }}
+            onDelete={(evt, id) => handleOpenDeleteDialog(id)}
             onPageChange={(_, newPage) => setPage(newPage)}
           />
 
           {/* Delete dialog */}
-          <DeleteDialog open={deleteDialogOpen} closeDialog={handleDeleteDialogClose} />
+          <DeleteDialog
+            open={deleteDialogOpen}
+            closeDialog={handleDeleteDialogClose}
+            dialogTitle="Delete customer"
+            dialogText={`Are you sure you want to delete this customer with ID ${selectedCustomerId}?`}
+          />
 
           {/* Searchbar */}
           <Drawer
