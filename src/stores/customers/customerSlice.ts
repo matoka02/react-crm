@@ -9,8 +9,15 @@ import { HttpMethod } from '../types';
 
 interface Customer {
   id: string;
-  name: string;
+  // name: string;
+  // email: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  mobile: string;
+  membership: boolean;
+  rewards: number;
+  avatar?: string;
 }
 
 interface CustomerState {
@@ -54,6 +61,22 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
   }
 );
 
+export const fetchCustomerById = createAsyncThunk<
+  Customer,
+  string,
+  { rejectValue: string }
+>('customer/fetchCustomerById', async (customerId, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
+
+    if (!response.ok) throw new Error('Customer not found');
+
+    return await response.json();
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 export const fetchFilteredCustomers = createAsyncThunk<
   Customer[],
   { firstName: string; lastName: string },
@@ -90,11 +113,52 @@ export const deleteCustomer = createAsyncThunk<number, number, { rejectValue: st
 
       const data = await response.json();
       return data.id;
-    } catch (err: any) {
-      return rejectWithValue(err.message);
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
   }
 );
+
+export const addCustomer = createAsyncThunk<
+  Customer,
+  Partial<Customer>,
+  { rejectValue: string }
+>('customer/addCustomer', async (newCustomer, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`/api/customers`, {
+      method: HttpMethod.POST,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newCustomer),
+    });
+
+    if (!response.ok) throw new Error('Error adding customer');
+
+    return await response.json();
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const updateCustomer = createAsyncThunk<
+  Customer,
+  Customer,
+  { rejectValue: string }
+>('customer/updateCustomer', async (updatedCustomer, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
+      method: HttpMethod.PUT,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedCustomer),
+    });
+
+    if (!response.ok) throw new Error('Error updating customer');
+
+    return await response.json();
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 
 const customerSlice = createSlice({
   name: 'customer',
@@ -138,6 +202,22 @@ const customerSlice = createSlice({
         snackbarOpen: true,
         snackbarMessage: action.payload,
         snackbarSeverity: 'error',
+      }))
+      // Customer by ID
+      .addCase(fetchCustomerById.pending, (state: CustomerState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(fetchCustomerById.fulfilled, (state, action) => ({
+        ...state,
+        customers: [...state.customers, action.payload],
+      }))
+      .addCase(fetchCustomerById.rejected, (state, action) => ({
+        ...state,
+        snackbarOpen: true,
+        snackbarMessage: `${action.payload}`,
+        snackbarSeverity: 'warning',
       }))
       // Find customers
       .addCase(fetchFilteredCustomers.pending, (state: CustomerState) => ({
@@ -186,7 +266,48 @@ const customerSlice = createSlice({
         snackbarOpen: true,
         snackbarMessage: `Error: ${action.payload}`,
         snackbarSeverity: 'error',
-      }));
+      }))
+      // Add customer
+      .addCase(addCustomer.pending, (state: CustomerState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(addCustomer.fulfilled, (state, action) => ({
+        ...state,
+        customers: [...state.customers, action.payload],
+        snackbarOpen: true,
+        snackbarMessage: 'Customer added successfully!',
+        snackbarSeverity: 'success',
+      }))
+      .addCase(addCustomer.rejected, (state, action) => ({
+        ...state,
+        snackbarOpen: true,
+        snackbarMessage: `${action.payload}`,
+        snackbarSeverity: 'error',
+      }))
+      // Update customer
+      .addCase(updateCustomer.pending, (state: CustomerState) => ({
+        ...state,
+        isLoading: true,
+        error: undefined,
+      }))
+      .addCase(updateCustomer.fulfilled, (state, action) => ({
+        ...state,
+        customers: state.customers.map((customer) =>
+          customer.id === action.payload.id ? action.payload : customer
+        ),
+        snackbarOpen: true,
+        snackbarMessage: 'Customer updated successfully!',
+        snackbarSeverity: 'success',
+      }))
+      .addCase(updateCustomer.rejected, (state, action) => ({
+        ...state,
+        snackbarOpen: true,
+        snackbarMessage: `${action.payload}`,
+        snackbarSeverity: 'error',
+      }))
+      ;
   },
 });
 
