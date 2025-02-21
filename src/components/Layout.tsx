@@ -25,7 +25,7 @@ function Layout({ title, navigation, children }: LayoutProps): React.ReactElemen
         </Typography>
       </Paper>
 
-      <Box sx={{ mb: 2 }}>{children}</Box>
+      <Box sx={{ mx: 2 }}>{children}</Box>
     </Box>
   );
 }
