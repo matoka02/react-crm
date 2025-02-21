@@ -5,23 +5,13 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { HttpMethod } from '../types';
+import { Customer, NewCustomer } from '@/types';
 
-interface Customer {
-  id: string;
-  // name: string;
-  // email: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobile: string;
-  membership: boolean;
-  rewards: number;
-  avatar?: string;
-}
+import { HttpMethod } from '../types';
 
 interface CustomerState {
   customers: Customer[];
+  customer: NewCustomer | null;
   isLoading: boolean;
   error?: string;
   snackbarOpen: boolean;
@@ -36,6 +26,7 @@ interface CustomerState {
 
 const initialState: CustomerState = {
   customers: [],
+  customer: null,
   isLoading: false,
   snackbarOpen: false,
   snackbarMessage: '',
@@ -118,7 +109,7 @@ export const deleteCustomer = createAsyncThunk<number, number, { rejectValue: st
   }
 );
 
-export const addCustomer = createAsyncThunk<Customer, Partial<Customer>, { rejectValue: string }>(
+export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue: string }>(
   'customer/addCustomer',
   async (newCustomer, { rejectWithValue }) => {
     try {
@@ -127,6 +118,8 @@ export const addCustomer = createAsyncThunk<Customer, Partial<Customer>, { rejec
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCustomer),
       });
+      console.log(newCustomer);
+
 
       if (!response.ok) throw new Error('Error adding customer');
 
@@ -173,6 +166,10 @@ const customerSlice = createSlice({
       action: PayloadAction<{ firstName: string; lastName: string }>
     ) {
       return { ...state, search: action.payload };
+    },
+    // form
+    setCustomer(state, action: PayloadAction<NewCustomer | null>) {
+      return { ...state, customer: action.payload };
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
@@ -306,5 +303,5 @@ const customerSlice = createSlice({
   },
 });
 
-export const { clearError, setSearchOpen, setSearch } = customerSlice.actions;
+export const { clearError, setSearchOpen, setSearch, setCustomer } = customerSlice.actions;
 export default customerSlice.reducer;
