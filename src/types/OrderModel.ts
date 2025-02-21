@@ -1,4 +1,4 @@
-import { Address, Customer, Order, Product } from './model';
+import { Address, Customer, Order, Product } from './DBmodel';
 
 class OrderModel implements Order {
   id: number;

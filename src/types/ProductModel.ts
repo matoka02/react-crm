@@ -1,4 +1,4 @@
-import { Category, Product } from './model';
+import { Category, Product } from './DBmodel';
 
 class ProductModel implements Product {
   id: number;

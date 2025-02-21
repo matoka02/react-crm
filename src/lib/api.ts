@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 
 import DB from '@/lib/demo-db';
-import { DBType } from '@/types/model';
+import { DBType } from '@/types/DBmodel';
 
 // Getting data taking into account filters
 export function getData<T extends keyof DBType>(

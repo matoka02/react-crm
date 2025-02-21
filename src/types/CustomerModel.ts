@@ -1,4 +1,4 @@
-import { Customer } from './model';
+import { Customer } from './DBmodel';
 
 class CustomerModel implements Customer {
   id: number;
