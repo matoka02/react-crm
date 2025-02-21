@@ -61,21 +61,20 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
   }
 );
 
-export const fetchCustomerById = createAsyncThunk<
-  Customer,
-  string,
-  { rejectValue: string }
->('customer/fetchCustomerById', async (customerId, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
+export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValue: string }>(
+  'customer/fetchCustomerById',
+  async (customerId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
-    if (!response.ok) throw new Error('Customer not found');
+      if (!response.ok) throw new Error('Customer not found');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const fetchFilteredCustomers = createAsyncThunk<
   Customer[],
@@ -119,46 +118,43 @@ export const deleteCustomer = createAsyncThunk<number, number, { rejectValue: st
   }
 );
 
-export const addCustomer = createAsyncThunk<
-  Customer,
-  Partial<Customer>,
-  { rejectValue: string }
->('customer/addCustomer', async (newCustomer, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers`, {
-      method: HttpMethod.POST,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newCustomer),
-    });
+export const addCustomer = createAsyncThunk<Customer, Partial<Customer>, { rejectValue: string }>(
+  'customer/addCustomer',
+  async (newCustomer, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers`, {
+        method: HttpMethod.POST,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCustomer),
+      });
 
-    if (!response.ok) throw new Error('Error adding customer');
+      if (!response.ok) throw new Error('Error adding customer');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
-export const updateCustomer = createAsyncThunk<
-  Customer,
-  Customer,
-  { rejectValue: string }
->('customer/updateCustomer', async (updatedCustomer, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
-      method: HttpMethod.PUT,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedCustomer),
-    });
+export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue: string }>(
+  'customer/updateCustomer',
+  async (updatedCustomer, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
+        method: HttpMethod.PUT,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCustomer),
+      });
 
-    if (!response.ok) throw new Error('Error updating customer');
+      if (!response.ok) throw new Error('Error updating customer');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
-
+);
 
 const customerSlice = createSlice({
   name: 'customer',
@@ -306,8 +302,7 @@ const customerSlice = createSlice({
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
-      }))
-      ;
+      }));
   },
 });
 
