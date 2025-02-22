@@ -2,7 +2,7 @@ export interface Customer {
   id: string;
   name: string;
   email: string;
-}
+} 
 
 export interface NewCustomer {
   firstName: string;
