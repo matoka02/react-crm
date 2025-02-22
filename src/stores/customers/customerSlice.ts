@@ -128,7 +128,7 @@ export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue
   }
 );
 
-export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue: string }>(
+export const updateCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue: string }>(
   'customer/updateCustomer',
   async (updatedCustomer, { rejectWithValue }) => {
     try {
