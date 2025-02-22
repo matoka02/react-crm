@@ -67,7 +67,7 @@ function DataTable({
     }
     if (dataKey === 'action') {
       return (
-        <>
+        <Box sx={{ display: 'flex', gap: 1 }}>
           <Tooltip title="Edit" aria-label="edit">
             <Fab
               size="small"
@@ -86,7 +86,7 @@ function DataTable({
               <ActionDelete />
             </Fab>
           </Tooltip>
-        </>
+        </Box>
       );
     }
     if (dataKey.includes('.')) {
@@ -102,7 +102,7 @@ function DataTable({
         <TableHead>
           <TableRow>
             {headers.map((header) => (
-              <TableCell key={header} component="th" sx={{ width: '10%' }}>
+              <TableCell key={header} component="th" sx={{ width: '10%', verticalAlign: 'top' }}>
                 {header}
               </TableCell>
             ))}
@@ -114,7 +114,7 @@ function DataTable({
             items.map((item) => (
               <TableRow key={item.id}>
                 {dataKeys.map((dataKey) => (
-                  <TableCell key={dataKey} sx={{ width: '10%' }}>
+                  <TableCell key={dataKey} sx={{ width: '10%', verticalAlign: 'top' }}>
                     {renderData(dataKey, item)}
                   </TableCell>
                 ))}
@@ -131,7 +131,15 @@ function DataTable({
       </Table>
 
       {items.length > 0 && (
-        <Container sx={{ width: 350, margin: '0 auto', paddingTop: 10 }}>
+        <Container
+          sx={{
+            width: 350,
+            margin: '0 auto',
+            paddingTop: 10,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <Pagination
             count={totalPages}
             page={page}
