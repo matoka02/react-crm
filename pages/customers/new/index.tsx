@@ -1,9 +1,7 @@
 import { ArrowBackIos, Save } from '@mui/icons-material';
 import {
-  Box,
   Button,
   Card,
-  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -25,7 +23,7 @@ import Alert from '@/components/Alert';
 import Layout from '@/components/Layout';
 import SkeletonForm from '@/components/SkeletonForm';
 import useCustomerForm from '@/hooks/useCustomerValidate';
-import { addCustomer, clearError } from '@/stores/customers/customerSlice';
+import { addCustomer, clearError, setCustomer } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerFormPage(): React.ReactElement {
@@ -46,9 +44,24 @@ export default function CustomerFormPage(): React.ReactElement {
   // Submit
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     const isValid = await validateForm();
+
     if (isValid) {
-      dispatch(addCustomer(values));
+      dispatch(addCustomer(values)).then((action) => {
+        if (addCustomer.fulfilled.match(action)) {
+          dispatch(setCustomer(null));
+          setTimeout(() => {
+            router.push('/customers');
+          }, 3000);
+        }
+        if (addCustomer.rejected.match(action)) {
+          dispatch(setCustomer(null));
+          setTimeout(() => {
+            router.push('/customers');
+          }, 3000);
+        }
+      });
     }
   };
 
@@ -209,7 +222,6 @@ export default function CustomerFormPage(): React.ReactElement {
                       backgroundColor: theme.palette.primary.dark,
                     },
                   }}
-
                 >
                   <Save /> Save
                 </Button>
