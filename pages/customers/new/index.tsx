@@ -1,13 +1,19 @@
-import { ArrowBackIos, SavedSearch } from '@mui/icons-material';
+import { ArrowBackIos, Save } from '@mui/icons-material';
 import {
   Box,
   Button,
   Card,
   Divider,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid2,
+  Paper,
+  Radio,
+  RadioGroup,
   Snackbar,
-  Switch,
   TextField,
+  Typography,
   useTheme,
 } from '@mui/material';
 import Image from 'next/image';
@@ -37,6 +43,7 @@ export default function CustomerFormPage(): React.ReactElement {
     dispatch(clearError());
   };
 
+  // Submit
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const isValid = await validateForm();
@@ -50,107 +57,165 @@ export default function CustomerFormPage(): React.ReactElement {
       {isLoading ? (
         <SkeletonForm />
       ) : (
-        <Grid2 container spacing={3} sx={{ mt: 2 }}>
+        <Paper elevation={3} sx={{ maxWidth: 800, mx: 'auto', p: 4, mt: 4 }}>
           <form onSubmit={handleSubmit}>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleChange}
-                error={!!errors.firstName}
-                helperText={errors.firstName}
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="Last Name"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-                error={!!errors.lastName}
-                helperText={errors.lastName}
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="Email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="Mobile"
-                name="mobile"
-                value={values.mobile}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <Switch checked={values.membership} name="membership" onChange={handleChange} />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="Avatar URL"
-                name="avatar"
-                value={values.avatar}
-                onChange={handleChange}
-                fullWidth
-              />
-              {values.avatar && (
-                <Card sx={{ width: 120, maxWidth: 300, mt: 4, mb: 1 }}>
-                  <Image width={100} height={100} src={values.avatar} alt="Avatar" />
-                </Card>
-              )}
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="membership"
-                name="membership"
-                value={values.membership}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 size={12} sx={{ md: 4 }}>
-              <TextField
-                label="Rewards"
-                name="rewards"
-                value={values.rewards}
-                onChange={handleChange}
-                fullWidth
-              />
+            <Grid2 container spacing={3} sx={{ mt: 2 }}>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="First Name"
+                  name="firstName"
+                  placeholder="Enter first name"
+                  value={values.firstName}
+                  onChange={handleChange}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Last Name"
+                  name="lastName"
+                  placeholder="Enter last name"
+                  value={values.lastName}
+                  onChange={handleChange}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  placeholder="Enter email"
+                  value={values.email}
+                  onChange={handleChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Mobile"
+                  name="mobile"
+                  placeholder="Enter mobile number"
+                  value={values.mobile}
+                  onChange={handleChange}
+                  error={!!errors.mobile}
+                  helperText={errors.mobile}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <FormControl component="fieldset" fullWidth>
+                  <FormLabel component="legend">Membership</FormLabel>
+                  <RadioGroup
+                    row
+                    name="membership"
+                    value={values.membership ? 'yes' : 'no'}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="no" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {errors.membership && (
+                  <Typography color="error" variant="body2">
+                    {errors.membership}
+                  </Typography>
+                )}
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Rewards"
+                  name="rewards"
+                  value={values.rewards}
+                  onChange={handleChange}
+                  error={!!errors.rewards}
+                  helperText={errors.rewards}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Avatar URL"
+                  name="avatar"
+                  value={values.avatar}
+                  placeholder="Enter the avatar URL"
+                  onChange={handleChange}
+                  error={!!errors.avatar}
+                  helperText={errors.avatar}
+                  fullWidth
+                />
+                {values.avatar && (
+                  <Card
+                    sx={{
+                      width: 120,
+                      maxWidth: 300,
+                      mt: 4,
+                      mb: 1,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Image
+                      width={100}
+                      height={100}
+                      src={values.avatar}
+                      alt="Avatar"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </Card>
+                )}
+              </Grid2>
+
+              {/* Buttons */}
+              <Grid2
+                container
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 3,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={() => router.back()}
+                  sx={{
+                    gap: 1,
+                    color: 'white',
+                    backgroundColor: theme.palette.secondary.main,
+                    '&:hover': {
+                      backgroundColor: theme.palette.secondary.dark,
+                    },
+                  }}
+                >
+                  <ArrowBackIos /> Back
+                </Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={isLoading}
+                  sx={{
+                    gap: 2,
+                    color: 'white',
+                    backgroundColor: theme.palette.primary.main,
+                    '&:hover': {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }}
+
+                >
+                  <Save /> Save
+                </Button>
+              </Grid2>
             </Grid2>
           </form>
-
-          <Divider sx={{ my: 2 }} />
-          <Box>
-            <Button variant="contained" onClick={() => router.back()}>
-              <ArrowBackIos /> Back
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                ml: 2,
-                backgroundColor: theme.palette.primary.main,
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.dark,
-                },
-              }}
-              type="submit"
-              disabled={isLoading}
-            >
-              <SavedSearch />
-            </Button>
-          </Box>
 
           {/* Notifications */}
           <Snackbar
@@ -163,7 +228,7 @@ export default function CustomerFormPage(): React.ReactElement {
               {snackbarMessage}
             </Alert>
           </Snackbar>
-        </Grid2>
+        </Paper>
       )}
     </Layout>
   );
