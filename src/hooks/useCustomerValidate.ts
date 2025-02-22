@@ -6,14 +6,23 @@ import { setCustomer } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { NewCustomer } from '@/types';
 
+const PHONE_REGEX = /^\d{3}-\d{3}-\d{3}$/;
+const AVATAR_URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$|^\/assets\/.*/;
+
 const validationSchema = Yup.object({
-  firstName: Yup.string().min(2).required('First Name is required'),
-  lastName: Yup.string().min(2).required('Last Name is required'),
+  firstName: Yup.string()
+    .min(2, 'First name must be at least 2 characters')
+    .required('First Name is required'),
+  lastName: Yup.string()
+    .min(2, 'Last name must be at least 2 characters')
+    .required('Last Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
-  mobile: Yup.string().matches(/^\d{10}$/, 'Invalid mobile number'),
-  membership: Yup.boolean(),
-  rewards: Yup.number().min(0, 'Rewards cannot be negative'),
-  avatar: Yup.string().url('Invalid URL'),
+  mobile: Yup.string()
+    .matches(PHONE_REGEX, 'Phone number must be in the format 555-555-555')
+    .required('Mobile number is required'),
+  membership: Yup.boolean().required('Membership is required'),
+  rewards: Yup.number().min(0, 'Rewards cannot be negative').required(),
+  avatar: Yup.string().matches(AVATAR_URL_REGEX, 'Invalid URL'),
 });
 
 function useCustomerValidate() {
@@ -43,8 +52,13 @@ function useCustomerValidate() {
   const handleChange = (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = evt.target;
     if (name) {
-      setValues((prev) => ({ ...prev, [name]: value }));
-      dispatch(setCustomer({ ...values, [name]: value }));
+      let newValue: unknown = value;
+      if (name === 'membership') {
+        newValue = value === 'yes';
+      }
+
+      setValues((prev) => ({ ...prev, [name]: newValue }));
+      dispatch(setCustomer({ ...values, [name]: newValue }));
     }
   };
 
