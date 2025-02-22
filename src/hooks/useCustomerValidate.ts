@@ -22,7 +22,14 @@ const validationSchema = Yup.object({
     .required('Mobile number is required'),
   membership: Yup.boolean().required('Membership is required'),
   rewards: Yup.number().min(0, 'Rewards cannot be negative').required(),
-  avatar: Yup.string().matches(AVATAR_URL_REGEX, 'Invalid URL'),
+  avatar: Yup.string()
+    .nullable()
+    .optional()
+    .test(
+      'is-valid-url-or-empty',
+      'Invalid URL or path',
+      (value) => !value || AVATAR_URL_REGEX.test(value)
+    ),
 });
 
 function useCustomerValidate() {

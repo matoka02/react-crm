@@ -118,8 +118,6 @@ export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCustomer),
       });
-      console.log(newCustomer);
-
 
       if (!response.ok) throw new Error('Error adding customer');
 
