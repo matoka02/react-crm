@@ -11,6 +11,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -29,6 +30,7 @@ import {
 import { AppDispatch, RootState } from '@/stores/store';
 
 export default function CustomerListPage(): React.ReactElement {
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const {
     customers,
@@ -66,13 +68,9 @@ export default function CustomerListPage(): React.ReactElement {
     dispatch(clearError());
   };
 
-  // Search customer
+  // Search customers
   const handleToggleSearch = () => {
     dispatch(setSearchOpen(!searchOpen));
-  };
-
-  const handleNewCustomer = () => {
-    console.log('Redirect to new customer page');
   };
 
   // Delete customer
@@ -93,6 +91,11 @@ export default function CustomerListPage(): React.ReactElement {
     }
     setDeleteDialogOpen(false);
     setSelectedCustomerId(null);
+  };
+
+  // Add customer
+  const handleNewCustomer = () => {
+    router.push('/customers/new');
   };
 
   return (

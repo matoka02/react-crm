@@ -1,4 +1,8 @@
-import { Category, Product } from './model';
+import { Category, Product } from './DBmodel';
+
+/**
+ * Represents a product model implementing the `Product` interface.
+ */
 
 class ProductModel implements Product {
   id: number;

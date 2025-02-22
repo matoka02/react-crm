@@ -1,4 +1,8 @@
-import { Address, Customer, Order, Product } from './model';
+import { Address, Customer, Order, Product } from './DBmodel';
+
+/**
+ * Represents a order model implementing the `Order` interface.
+ */
 
 class OrderModel implements Order {
   id: number;

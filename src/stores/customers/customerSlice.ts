@@ -5,23 +5,13 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { HttpMethod } from '../types';
+import { Customer, NewCustomer } from '@/types';
 
-interface Customer {
-  id: string;
-  // name: string;
-  // email: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobile: string;
-  membership: boolean;
-  rewards: number;
-  avatar?: string;
-}
+import { HttpMethod } from '../types';
 
 interface CustomerState {
   customers: Customer[];
+  customer: NewCustomer | null;
   isLoading: boolean;
   error?: string;
   snackbarOpen: boolean;
@@ -36,6 +26,7 @@ interface CustomerState {
 
 const initialState: CustomerState = {
   customers: [],
+  customer: null,
   isLoading: false,
   snackbarOpen: false,
   snackbarMessage: '',
@@ -61,21 +52,20 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
   }
 );
 
-export const fetchCustomerById = createAsyncThunk<
-  Customer,
-  string,
-  { rejectValue: string }
->('customer/fetchCustomerById', async (customerId, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
+export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValue: string }>(
+  'customer/fetchCustomerById',
+  async (customerId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
-    if (!response.ok) throw new Error('Customer not found');
+      if (!response.ok) throw new Error('Customer not found');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const fetchFilteredCustomers = createAsyncThunk<
   Customer[],
@@ -119,46 +109,43 @@ export const deleteCustomer = createAsyncThunk<number, number, { rejectValue: st
   }
 );
 
-export const addCustomer = createAsyncThunk<
-  Customer,
-  Partial<Customer>,
-  { rejectValue: string }
->('customer/addCustomer', async (newCustomer, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers`, {
-      method: HttpMethod.POST,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newCustomer),
-    });
+export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue: string }>(
+  'customer/addCustomer',
+  async (newCustomer, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers`, {
+        method: HttpMethod.POST,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCustomer),
+      });
 
-    if (!response.ok) throw new Error('Error adding customer');
+      if (!response.ok) throw new Error('Error adding customer');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
-export const updateCustomer = createAsyncThunk<
-  Customer,
-  Customer,
-  { rejectValue: string }
->('customer/updateCustomer', async (updatedCustomer, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
-      method: HttpMethod.PUT,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedCustomer),
-    });
+export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue: string }>(
+  'customer/updateCustomer',
+  async (updatedCustomer, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
+        method: HttpMethod.PUT,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCustomer),
+      });
 
-    if (!response.ok) throw new Error('Error updating customer');
+      if (!response.ok) throw new Error('Error updating customer');
 
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
-
+);
 
 const customerSlice = createSlice({
   name: 'customer',
@@ -177,6 +164,10 @@ const customerSlice = createSlice({
       action: PayloadAction<{ firstName: string; lastName: string }>
     ) {
       return { ...state, search: action.payload };
+    },
+    // form
+    setCustomer(state, action: PayloadAction<NewCustomer | null>) {
+      return { ...state, customer: action.payload };
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
@@ -306,10 +297,9 @@ const customerSlice = createSlice({
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
-      }))
-      ;
+      }));
   },
 });
 
-export const { clearError, setSearchOpen, setSearch } = customerSlice.actions;
+export const { clearError, setSearchOpen, setSearch, setCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

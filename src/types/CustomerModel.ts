@@ -1,4 +1,8 @@
-import { Customer } from './model';
+import { Customer } from './DBmodel';
+
+/**
+ * Represents a customer model implementing the `Customer` interface.
+ */
 
 class CustomerModel implements Customer {
   id: number;

@@ -1,3 +1,17 @@
+/**
+ * Entity - the base interface for all entities in the DB.
+ * Category - interface for categories. Extends Entity.
+ * Token - interface for token and user information.
+ * User - interface for the user. Extends Entity.
+ * Customer - interface for the client. Extends User.
+ * Address - interface for the address. Extends Entity.
+ * Product - interface for the product. Extends Entity.
+ * Order - interface for the order. Extends Entity.
+ * DBType - interface for the database.
+ * ViewModel - type for data presentation. Can be one of: Customer, Order, Product, Category.
+ * SearchFilter - type for filtering data.
+ */
+
 export interface Entity {
   id: number;
   text?: string;
