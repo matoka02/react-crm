@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { setCustomer } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
-import { NewCustomer } from '@/types';
+import { NewCustomer } from '@/stores/types/modelTypes';
 
 const PHONE_REGEX = /^\d{3}-\d{3}-\d{3}$/;
 const AVATAR_URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$|^\/assets\/.*/;

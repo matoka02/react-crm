@@ -16,7 +16,6 @@ export interface NewCustomer {
   avatar?: string;
 }
 
-
 /* ====== CATEGORIES ====== */
 
 export interface Category {
@@ -30,7 +29,6 @@ export interface NewCategory {
   description: string;
   picture?: string;
 }
-
 
 /* ====== PRODUCTS ====== */
 
@@ -48,4 +46,3 @@ export interface NewProduct {
   numInStock: number;
   unitPrice: number;
 }
-

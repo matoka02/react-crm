@@ -5,9 +5,9 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { Customer, NewCustomer } from '@/types';
+import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
-import { HttpMethod } from '../types';
+import { HttpMethod } from '../types/httpTypes';
 
 interface CustomerState {
   customers: Customer[];

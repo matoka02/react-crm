@@ -5,9 +5,9 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { Category, NewCategory } from '@/types';
+import { Category, NewCategory } from '@/stores/types/modelTypes';
 
-import { HttpMethod } from '../types';
+import { HttpMethod } from '../types/httpTypes';
 
 interface CategoryState {
   categories: Category[];

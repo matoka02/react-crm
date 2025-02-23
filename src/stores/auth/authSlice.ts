@@ -3,10 +3,9 @@ import {
   createSlice,
   PayloadAction,
   ActionReducerMapBuilder,
-  ThunkAPI,
 } from '@reduxjs/toolkit';
 
-import { AuthState, HttpMethod } from '../types';
+import { AuthState, HttpMethod } from '../types/httpTypes';
 
 const initialState: AuthState = {
   isFetching: false,
