@@ -44,6 +44,13 @@ function DataTable({
 }: DataTableProps): React.ReactElement {
   const theme = useTheme();
 
+  const getCellAlignment = (key: string) => {
+    if (key === 'unitPrice' || key === 'numInStock') {
+      return 'right';
+    }
+    return 'left';
+  };
+
   const renderData = (dataKey: string, data: any) => {
     if (dataKey === 'avatar') {
       const avatarUrl = data[dataKey] || `/assets/img/avatar0.png`;
@@ -114,7 +121,14 @@ function DataTable({
             items.map((item) => (
               <TableRow key={item.id}>
                 {dataKeys.map((dataKey) => (
-                  <TableCell key={dataKey} sx={{ width: '10%', verticalAlign: 'top' }}>
+                  <TableCell
+                    key={dataKey}
+                    sx={{
+                      width: '10%',
+                      verticalAlign: 'top',
+                      textAlign: getCellAlignment(dataKey),
+                    }}
+                  >
                     {renderData(dataKey, item)}
                   </TableCell>
                 ))}
