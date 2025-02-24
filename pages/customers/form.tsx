@@ -175,6 +175,7 @@ export default function CustomerFormPage(): React.ReactElement {
                 <TextField
                   label="Rewards"
                   name="rewards"
+                  type="number"
                   value={values.rewards}
                   onChange={handleChange}
                   error={!!errors.rewards}
