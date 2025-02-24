@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import {
-  fetchAllProducts,
-  fetchFilteredProducts,
-} from '@/stores/products/productSlice';
+import { fetchAllProducts, fetchFilteredProducts } from '@/stores/products/productSlice';
 import { AppDispatch } from '@/stores/store';
 
 const NAME_REGEX = /^[A-Za-z0-9\s]+$/;

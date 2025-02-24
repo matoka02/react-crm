@@ -46,10 +46,12 @@ export const fetchAllProducts = createAsyncThunk<Product[], void, { rejectValue:
 
       const products: Product[] = await response.json();
 
-      return products.map((product) => ({
+      const data = products.map((product) => ({
         ...product,
-        categoryName: getCategoryNameById(product.categoryId, getState),
+        categoryName: getCategoryNameById(String(product.categoryId), getState),
       }));
+
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -66,10 +68,12 @@ export const fetchProductById = createAsyncThunk<Product, string, { rejectValue:
 
       const product: Product = await response.json();
 
-      return {
+      const data = {
         ...product,
-        categoryName: getCategoryNameById(product.categoryId, getState),
+        categoryName: getCategoryNameById(String(product.categoryId), getState),
       };
+
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -88,13 +92,15 @@ export const fetchFilteredProducts = createAsyncThunk<
 
       const response = await fetch(`/api/products?${query}`, { method: HttpMethod.GET });
 
-      const products: NewProduct[] = await response.json();
+      const products: Product[] = await response.json();
       if (products.length === 0) return rejectWithValue('No products found');
 
-      return products.map((product) => ({
+      const data = products.map((product) => ({
         ...product,
         categoryName: getCategoryNameById(product.categoryId, getState),
       }));
+
+      return data;
     } catch (error: any) {
       // console.error(error.message);
       return rejectWithValue('Error fetching filtered products');
@@ -146,7 +152,7 @@ export const addProduct = createAsyncThunk<Product, NewProduct, { rejectValue: s
   }
 );
 
-export const updateProduct = createAsyncThunk<Product, NewProduct, { rejectValue: string }>(
+export const updateProduct = createAsyncThunk<Product, Product, { rejectValue: string }>(
   'product/updateProduct',
   async (updatedProduct, { getState, rejectWithValue }) => {
     try {
