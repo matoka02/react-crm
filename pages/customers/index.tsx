@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
@@ -69,7 +69,8 @@ export default function CustomerListPage(): React.ReactElement {
   };
 
   // Search customers
-  const handleToggleSearch = () => {
+  const handleToggleSearch = (evt: SyntheticEvent) => {
+    evt.preventDefault();
     dispatch(setSearchOpen(!searchOpen));
   };
 
