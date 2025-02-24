@@ -40,7 +40,8 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
     try {
       const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue('Error loading categories');
     }
@@ -55,7 +56,8 @@ export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValu
 
       if (!response.ok) throw new Error('Category not found');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -116,7 +118,8 @@ export const addCategory = createAsyncThunk<Category, NewCategory, { rejectValue
 
       if (!response.ok) throw new Error('Error adding category');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -135,7 +138,8 @@ export const updateCategory = createAsyncThunk<Category, Category, { rejectValue
 
       if (!response.ok) throw new Error('Error updating category');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }

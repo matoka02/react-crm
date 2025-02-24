@@ -44,7 +44,8 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       // console.error(error.message);
       return rejectWithValue('Error loading customers');
@@ -60,7 +61,8 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
 
       if (!response.ok) throw new Error('Customer not found');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -121,7 +123,8 @@ export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue
 
       if (!response.ok) throw new Error('Error adding customer');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -140,7 +143,8 @@ export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue
 
       if (!response.ok) throw new Error('Error updating customer');
 
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
