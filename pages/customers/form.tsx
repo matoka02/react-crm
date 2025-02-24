@@ -66,8 +66,8 @@ export default function CustomerFormPage(): React.ReactElement {
   };
 
   // Submit
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (evt: React.FormEvent) => {
+    evt.preventDefault();
 
     const isValid = await validateForm();
 
