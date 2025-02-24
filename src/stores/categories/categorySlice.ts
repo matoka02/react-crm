@@ -123,7 +123,7 @@ export const addCategory = createAsyncThunk<Category, NewCategory, { rejectValue
   }
 );
 
-export const updateCategory = createAsyncThunk<Category, NewCategory, { rejectValue: string }>(
+export const updateCategory = createAsyncThunk<Category, Category, { rejectValue: string }>(
   'category/updateCategory',
   async (updatedCategory, { rejectWithValue }) => {
     try {
