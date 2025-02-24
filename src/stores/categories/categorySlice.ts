@@ -40,7 +40,7 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
     try {
       const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
-      const data = await response.json();
+      const data: Category[] = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue('Error loading categories');
@@ -56,7 +56,7 @@ export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValu
 
       if (!response.ok) throw new Error('Category not found');
 
-      const data = await response.json();
+      const data: Category = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -76,7 +76,7 @@ export const fetchFilteredCategories = createAsyncThunk<
 
       const response = await fetch(`/api/categories?${query}`, { method: HttpMethod.GET });
 
-      const data = await response.json();
+      const data: Category[] = await response.json();
       if (data.length === 0) return rejectWithValue('No categories found');
       return data;
     } catch (error: any) {
@@ -118,7 +118,7 @@ export const addCategory = createAsyncThunk<Category, NewCategory, { rejectValue
 
       if (!response.ok) throw new Error('Error adding category');
 
-      const data = await response.json();
+      const data: Category = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -138,7 +138,7 @@ export const updateCategory = createAsyncThunk<Category, Category, { rejectValue
 
       if (!response.ok) throw new Error('Error updating category');
 
-      const data = await response.json();
+      const data: Category = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);

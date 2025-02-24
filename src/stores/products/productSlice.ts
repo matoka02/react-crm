@@ -62,7 +62,7 @@ export const fetchProductById = createAsyncThunk<Product, string, { rejectValue:
   'product/fetchProductById',
   async (productId, { getState, rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/product/${productId}`, { method: HttpMethod.GET });
+      const response = await fetch(`/api/products/${productId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Product not found');
 
@@ -138,14 +138,18 @@ export const addProduct = createAsyncThunk<Product, NewProduct, { rejectValue: s
         body: JSON.stringify(newProduct),
       });
 
+      console.log('addProduct:', newProduct);
+
       if (!response.ok) throw new Error('Error adding product');
 
       const product: Product = await response.json();
 
-      return {
+      const data = {
         ...product,
-        categoryName: getCategoryNameById(product.categoryId, getState),
+        categoryName: getCategoryNameById(String(product.categoryId), getState),
       };
+
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -162,14 +166,18 @@ export const updateProduct = createAsyncThunk<Product, Product, { rejectValue: s
         body: JSON.stringify(updatedProduct),
       });
 
+      console.log('addProduct:', updatedProduct);
+
       if (!response.ok) throw new Error('Error updating product');
 
-      const product: NewProduct = await response.json();
+      const product: Product = await response.json();
 
-      return {
+      const data = {
         ...product,
-        categoryName: getCategoryNameById(product.categoryId, getState),
+        categoryName: getCategoryNameById(String(product.categoryId), getState),
       };
+
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }

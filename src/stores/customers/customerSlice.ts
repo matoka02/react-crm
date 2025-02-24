@@ -44,7 +44,7 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      const data = await response.json();
+      const data: Customer[] = await response.json();
       return data;
     } catch (error: any) {
       // console.error(error.message);
@@ -60,7 +60,7 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Customer not found');
-      const data = await response.json();
+      const data: Customer = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -80,7 +80,7 @@ export const fetchFilteredCustomers = createAsyncThunk<
 
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
-      const data = await response.json();
+      const data: Customer[] = await response.json();
       if (data.length === 0) return rejectWithValue('No customers found');
       return data;
     } catch (error: any) {
@@ -122,7 +122,7 @@ export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue
 
       if (!response.ok) throw new Error('Error adding customer');
 
-      const data = await response.json();
+      const data: Customer = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -142,7 +142,7 @@ export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue
 
       if (!response.ok) throw new Error('Error updating customer');
 
-      const data = await response.json();
+      const data: Customer = await response.json();
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
