@@ -161,10 +161,6 @@ const categorySlice = createSlice({
     setSearch(state: CategoryState, action: PayloadAction<{ name: string }>) {
       return { ...state, search: action.payload };
     },
-    // form
-    setCategory(state, action: PayloadAction<NewCategory | null>) {
-      return { ...state, category: action.payload };
-    },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CategoryState>) => {
     builder
@@ -198,10 +194,12 @@ const categorySlice = createSlice({
       }))
       .addCase(fetchCategoryById.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         categories: [...state.categories, action.payload],
       }))
       .addCase(fetchCategoryById.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'warning',
@@ -243,6 +241,7 @@ const categorySlice = createSlice({
       }))
       .addCase(deleteCategory.fulfilled, (state, action: PayloadAction<number>) => ({
         ...state,
+        isLoading: false,
         categories: state.categories.filter((category) => category.id !== String(action.payload)),
         snackbarOpen: true,
         snackbarMessage: 'Category deleted successfully!',
@@ -250,6 +249,7 @@ const categorySlice = createSlice({
       }))
       .addCase(deleteCategory.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `Error: ${action.payload}`,
         snackbarSeverity: 'error',
@@ -262,6 +262,7 @@ const categorySlice = createSlice({
       }))
       .addCase(addCategory.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         categories: [...state.categories, action.payload],
         snackbarOpen: true,
         snackbarMessage: 'Category added successfully!',
@@ -269,6 +270,7 @@ const categorySlice = createSlice({
       }))
       .addCase(addCategory.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -281,6 +283,7 @@ const categorySlice = createSlice({
       }))
       .addCase(updateCategory.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         categories: state.categories.map((category) =>
           category.id === action.payload.id ? action.payload : category
         ),
@@ -290,6 +293,7 @@ const categorySlice = createSlice({
       }))
       .addCase(updateCategory.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -297,5 +301,5 @@ const categorySlice = createSlice({
   },
 });
 
-export const { clearError, setSearchOpen, setSearch, setCategory } = categorySlice.actions;
+export const { clearError, setSearchOpen, setSearch } = categorySlice.actions;
 export default categorySlice.reducer;

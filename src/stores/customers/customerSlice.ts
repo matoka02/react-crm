@@ -168,10 +168,6 @@ const customerSlice = createSlice({
     ) {
       return { ...state, search: action.payload };
     },
-    // form
-    setCustomer(state, action: PayloadAction<NewCustomer | null>) {
-      return { ...state, customer: action.payload };
-    },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
     builder
@@ -312,5 +308,5 @@ const customerSlice = createSlice({
   },
 });
 
-export const { clearError, setSearchOpen, setSearch, setCustomer } = customerSlice.actions;
+export const { clearError, setSearchOpen, setSearch } = customerSlice.actions;
 export default customerSlice.reducer;

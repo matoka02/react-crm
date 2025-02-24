@@ -191,10 +191,6 @@ const productSlice = createSlice({
     setSearch(state: ProductState, action: PayloadAction<{ name: string }>) {
       return { ...state, search: action.payload };
     },
-    // form
-    setProduct(state, action: PayloadAction<NewProduct | null>) {
-      return { ...state, product: action.payload };
-    },
   },
   extraReducers: (builder: ActionReducerMapBuilder<ProductState>) => {
     builder
@@ -225,10 +221,12 @@ const productSlice = createSlice({
       }))
       .addCase(fetchProductById.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         products: [...state.products, action.payload],
       }))
       .addCase(fetchProductById.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'warning',
@@ -270,6 +268,7 @@ const productSlice = createSlice({
       }))
       .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<number>) => ({
         ...state,
+        isLoading: false,
         products: state.products.filter((product) => product.id !== String(action.payload)),
         snackbarOpen: true,
         snackbarMessage: 'Product deleted successfully!',
@@ -277,6 +276,7 @@ const productSlice = createSlice({
       }))
       .addCase(deleteProduct.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `Error: ${action.payload}`,
         snackbarSeverity: 'error',
@@ -289,6 +289,7 @@ const productSlice = createSlice({
       }))
       .addCase(addProduct.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         products: [...state.products, action.payload],
         snackbarOpen: true,
         snackbarMessage: 'Product added successfully!',
@@ -296,6 +297,7 @@ const productSlice = createSlice({
       }))
       .addCase(addProduct.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -308,6 +310,7 @@ const productSlice = createSlice({
       }))
       .addCase(updateProduct.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         products: state.products.map((product) =>
           product.id === action.payload.id ? action.payload : product
         ),
@@ -317,6 +320,7 @@ const productSlice = createSlice({
       }))
       .addCase(updateProduct.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -324,5 +328,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { clearError, setSearchOpen, setSearch, setProduct } = productSlice.actions;
+export const { clearError, setSearchOpen, setSearch } = productSlice.actions;
 export default productSlice.reducer;

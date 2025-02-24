@@ -54,6 +54,7 @@ export interface Product {
 export interface NewProduct {
   name: string;
   categoryId: string;
+  categoryName?: string;
   numInStock: number;
   unitPrice: number;
 }
