@@ -155,7 +155,7 @@ export default function CustomerListPage(): React.ReactElement {
 
           {/* Table with clients */}
           <DataTable
-            model="customer"
+            model="customers"
             items={items}
             dataKeys={[
               'avatar',
@@ -177,10 +177,6 @@ export default function CustomerListPage(): React.ReactElement {
             ]}
             page={page}
             totalPages={Math.ceil(customers.length / 10)}
-            // onDelete={(evt, id) => {
-            //   setSelectedCustomerId(id ?? null);
-            //   setDeleteDialogOpen(true);
-            // }}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}
             onPageChange={(_, newPage) => setPage(newPage)}
           />
@@ -217,6 +213,7 @@ export default function CustomerListPage(): React.ReactElement {
                   margin="dense"
                   label="First Name"
                   name="firstName"
+                  placeholder="Enter first name"
                   value={localSearch.firstName}
                   onChange={handleSearchChange}
                 />
@@ -225,6 +222,7 @@ export default function CustomerListPage(): React.ReactElement {
                   margin="dense"
                   label="Last Name"
                   name="lastName"
+                  placeholder="Enter last name"
                   value={localSearch.lastName}
                   onChange={handleSearchChange}
                 />

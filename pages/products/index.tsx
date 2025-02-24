@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
@@ -21,6 +21,7 @@ import DeleteDialog from '@/components/DeleteDialog';
 import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import useProductSearch from '@/hooks/useProductSearch';
+import { fetchAllCategories } from '@/stores/categories/categorySlice';
 import {
   fetchAllProducts,
   clearError,
@@ -28,7 +29,6 @@ import {
   deleteProduct,
 } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
-
 
 export default function ProductListPage(): React.ReactElement {
   const router = useRouter();
@@ -45,7 +45,10 @@ export default function ProductListPage(): React.ReactElement {
   // console.table(products);
 
   useEffect(() => {
-    dispatch(fetchAllProducts());
+    // dispatch(fetchAllProducts());
+    dispatch(fetchAllCategories()).then(() => {
+      dispatch(fetchAllProducts());
+    });
   }, [dispatch]);
 
   const theme = useTheme();
@@ -70,7 +73,8 @@ export default function ProductListPage(): React.ReactElement {
   };
 
   // Search products
-  const handleToggleSearch = () => {
+  const handleToggleSearch = (evt: SyntheticEvent) => {
+    evt.preventDefault();
     dispatch(setSearchOpen(!searchOpen));
   };
 
@@ -155,28 +159,12 @@ export default function ProductListPage(): React.ReactElement {
 
           {/* Table with clients */}
           <DataTable
-            model="product"
+            model="products"
             items={items}
-            dataKeys={[
-              'name',
-              'categoryName',
-              'unitPrice',
-              'numInStock',
-              'action',
-            ]}
-            headers={[
-              'Name',
-              'Category Name',
-              'Price',
-              'Total In Stock',
-              'Actions',
-            ]}
+            dataKeys={['name', 'categoryName', 'unitPrice', 'numInStock', 'action']}
+            headers={['Name', 'Category Name', 'Price', 'Total In Stock', 'Actions']}
             page={page}
             totalPages={Math.ceil(products.length / 10)}
-            // onDelete={(evt, id) => {
-            //   setSelectedProductId(id ?? null);
-            //   setDeleteDialogOpen(true);
-            // }}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}
             onPageChange={(_, newPage) => setPage(newPage)}
           />
@@ -211,8 +199,9 @@ export default function ProductListPage(): React.ReactElement {
                 <TextField
                   fullWidth
                   margin="dense"
-                  label="First Name"
-                  name="firstName"
+                  label="Name"
+                  name="name"
+                  placeholder="Enter name"
                   value={localSearch.name}
                   onChange={handleSearchChange}
                 />
