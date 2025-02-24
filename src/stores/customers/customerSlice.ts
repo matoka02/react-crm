@@ -60,7 +60,6 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Customer not found');
-
       const data = await response.json();
       return data;
     } catch (error: any) {
@@ -206,10 +205,12 @@ const customerSlice = createSlice({
       }))
       .addCase(fetchCustomerById.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: [...state.customers, action.payload],
       }))
       .addCase(fetchCustomerById.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'warning',
@@ -251,6 +252,7 @@ const customerSlice = createSlice({
       }))
       .addCase(deleteCustomer.fulfilled, (state, action: PayloadAction<number>) => ({
         ...state,
+        isLoading: false,
         customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
         snackbarOpen: true,
         snackbarMessage: 'Customer deleted successfully!',
@@ -258,6 +260,7 @@ const customerSlice = createSlice({
       }))
       .addCase(deleteCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `Error: ${action.payload}`,
         snackbarSeverity: 'error',
@@ -270,6 +273,7 @@ const customerSlice = createSlice({
       }))
       .addCase(addCustomer.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: [...state.customers, action.payload],
         snackbarOpen: true,
         snackbarMessage: 'Customer added successfully!',
@@ -277,6 +281,7 @@ const customerSlice = createSlice({
       }))
       .addCase(addCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -289,6 +294,7 @@ const customerSlice = createSlice({
       }))
       .addCase(updateCustomer.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: state.customers.map((customer) =>
           customer.id === action.payload.id ? action.payload : customer
         ),
@@ -298,6 +304,7 @@ const customerSlice = createSlice({
       }))
       .addCase(updateCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',

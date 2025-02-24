@@ -96,7 +96,7 @@ export default function CustomerListPage(): React.ReactElement {
 
   // Add customer
   const handleNewCustomer = () => {
-    router.push('/customers/new');
+    router.push('/customers/form');
   };
 
   return (

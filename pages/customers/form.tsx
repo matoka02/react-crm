@@ -15,26 +15,50 @@ import {
   useTheme,
 } from '@mui/material';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import Layout from '@/components/Layout';
 import SkeletonForm from '@/components/SkeletonForm';
 import useCustomerForm from '@/hooks/useCustomerValidate';
-import { addCustomer, clearError, setCustomer } from '@/stores/customers/customerSlice';
+import {
+  addCustomer,
+  clearError,
+  fetchCustomerById,
+  updateCustomer,
+} from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
 export default function CustomerFormPage(): React.ReactElement {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const customerId = searchParams.get('id') ?? '';
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
     (state: RootState) => state.customers
   );
 
   const theme = useTheme();
-  const { values, errors, handleChange, validateForm } = useCustomerForm();
+  const { values, setValues, errors, handleChange, validateForm } = useCustomerForm();
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (!customerId) {
+      setIsEditing(false);
+    }
+
+    if (customerId) {
+      setIsEditing(true);
+      dispatch(fetchCustomerById(customerId)).then((result) => {
+        if (fetchCustomerById.fulfilled.match(result)) {
+          setValues(result.payload);
+        }
+      });
+    }
+  }, [customerId, dispatch, setValues]);
 
   // Snackbar
   const handleCloseSnackbar = () => {
@@ -48,25 +72,32 @@ export default function CustomerFormPage(): React.ReactElement {
     const isValid = await validateForm();
 
     if (isValid) {
-      dispatch(addCustomer(values)).then((action) => {
-        if (addCustomer.fulfilled.match(action)) {
-          dispatch(setCustomer(null));
+      const payload: NewCustomer & Partial<{ id: string }> = customerId
+        ? { ...values, id: customerId }
+        : values;
+      const action = customerId ? updateCustomer(payload as Customer) : addCustomer(values);
+
+      const isActionCompleted = (result: any) =>
+        updateCustomer.fulfilled.match(result) ||
+        addCustomer.fulfilled.match(result) ||
+        updateCustomer.rejected.match(result) ||
+        addCustomer.rejected.match(result);
+
+      dispatch(action).then((result) => {
+        if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/customers');
-          }, 3000);
-        }
-        if (addCustomer.rejected.match(action)) {
-          dispatch(setCustomer(null));
-          setTimeout(() => {
-            router.push('/customers');
-          }, 3000);
+          }, 2000);
         }
       });
     }
   };
 
   return (
-    <Layout title="Add new customer" navigation="Application / Customer">
+    <Layout
+      title={customerId ? 'Edit Customer' : 'Add Customer'}
+      navigation="Application / Customer"
+    >
       {isLoading ? (
         <SkeletonForm />
       ) : (
@@ -223,7 +254,7 @@ export default function CustomerFormPage(): React.ReactElement {
                     },
                   }}
                 >
-                  <Save /> Save
+                  <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
               </Grid2>
             </Grid2>

@@ -79,7 +79,8 @@ function DataTable({
             <Fab
               size="small"
               sx={{ marginRight: '1em', color: common.white, backgroundColor: 'green[400]' }}
-              href={model && model.includes('?path=/story/') ? `${model}` : `${model}/${data.id}`}
+              // href={model && model.includes('?path=/story/') ? `${model}` : `${model}/${data.id}`}
+              href={`/${model}/form?id=${data.id}`}
             >
               <ContentCreate />
             </Fab>

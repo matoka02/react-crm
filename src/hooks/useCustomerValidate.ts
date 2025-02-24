@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { setCustomer } from '@/stores/customers/customerSlice';
-import { AppDispatch, RootState } from '@/stores/store';
 import { NewCustomer } from '@/stores/types/modelTypes';
 
 const PHONE_REGEX = /^\d{3}-\d{3}-\d{3}$/;
@@ -32,12 +29,9 @@ const validationSchema = Yup.object({
     ),
 });
 
-function useCustomerValidate() {
-  const dispatch = useDispatch<AppDispatch>();
-  const customer = useSelector((state: RootState) => state.customers.customer);
-
+function useCustomerValidate(initialValues?: NewCustomer) {
   const [values, setValues] = useState<NewCustomer>(
-    customer || {
+    initialValues || {
       firstName: '',
       lastName: '',
       email: '',
@@ -51,10 +45,10 @@ function useCustomerValidate() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (customer) {
-      setValues(customer);
+    if (initialValues) {
+      setValues(initialValues);
     }
-  }, [customer]);
+  }, [initialValues]);
 
   const handleChange = (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = evt.target;
@@ -65,7 +59,6 @@ function useCustomerValidate() {
       }
 
       setValues((prev) => ({ ...prev, [name]: newValue }));
-      dispatch(setCustomer({ ...values, [name]: newValue }));
     }
   };
 
@@ -88,7 +81,7 @@ function useCustomerValidate() {
     }
   };
 
-  return { values, errors, handleChange, validateForm };
+  return { values, setValues, errors, handleChange, validateForm };
 }
 
 export default useCustomerValidate;
