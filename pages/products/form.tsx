@@ -1,5 +1,16 @@
 import { ArrowBackIos, Save } from '@mui/icons-material';
-import { Button, Grid2, Paper, Snackbar, useTheme } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Grid2,
+  MenuItem,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
+  useTheme,
+} from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@/components/Alert';
 import Layout from '@/components/Layout';
 import SkeletonForm from '@/components/SkeletonForm';
+import useProductValidate from '@/hooks/useProductValidate';
 import { fetchAllCategories } from '@/stores/categories/categorySlice';
 import {
   addProduct,
@@ -17,30 +29,25 @@ import {
 import { AppDispatch, RootState } from '@/stores/store';
 import { Product, NewProduct } from '@/stores/types/modelTypes';
 
-
 export default function ProductFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams.get('id') ?? '';
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, product } = useSelector(
+  const { categories } = useSelector((state: RootState) => state.categories);
+  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
     (state: RootState) => state.products
   );
-  const { categories } = useSelector((state: RootState) => state.categories);
 
   const theme = useTheme();
-  const [values, setValues] = useState<NewProduct>({
-    name: '',
-    categoryId: '',
-    categoryName: '',
-    numInStock: 0,
-    unitPrice: 0,
-  });
+  const { values, setValues, errors, handleChange, validateForm } = useProductValidate();
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchAllCategories());
-  }, [dispatch]);
+    if (!categories.length) {
+      dispatch(fetchAllCategories());
+    }
+  }, [dispatch, categories.length]);
 
   useEffect(() => {
     if (!productId) {
@@ -51,10 +58,11 @@ export default function ProductFormPage(): React.ReactElement {
       setIsEditing(true);
       dispatch(fetchProductById(productId)).then((result) => {
         if (fetchProductById.fulfilled.match(result)) {
+          const productData = result.payload;
           setValues({
-            ...result.payload,
+            ...productData,
             categoryName:
-              categories.find((c) => c.id === result.payload.categoryId)?.name || 'Unknown',
+              categories.find((cat) => cat.id === productData.categoryId)?.name || 'Unknown',
           });
         }
       });
@@ -66,27 +74,32 @@ export default function ProductFormPage(): React.ReactElement {
     dispatch(clearError());
   };
 
-  const handleChange = (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const { name, value } = evt.target;
-    if (name) {
-      setValues((prev) => ({ ...prev, [name]: value }));
+  // Submit
+  const handleSubmit = async (evt: React.FormEvent) => {
+    evt.preventDefault();
+
+    const isValid = await validateForm();
+
+    if (isValid) {
+      const payload: NewProduct & Partial<{ id: string }> = productId
+        ? { ...values, id: productId }
+        : values;
+      const action = productId ? updateProduct(payload as Product) : addProduct(values);
+
+      const isActionCompleted = (result: any) =>
+        updateProduct.fulfilled.match(result) ||
+        addProduct.fulfilled.match(result) ||
+        updateProduct.rejected.match(result) ||
+        addProduct.rejected.match(result);
+
+      dispatch(action).then((result) => {
+        if (isActionCompleted(result)) {
+          setTimeout(() => {
+            router.push('/products');
+          }, 2000);
+        }
+      });
     }
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const payload: NewProduct & Partial<{ id: string }> = productId
-      ? { ...values, id: productId }
-      : values;
-    const action = productId ? updateProduct(payload as Product) : addProduct(values);
-
-    dispatch(action).then((result) => {
-      if (updateProduct.fulfilled.match(result) || addProduct.fulfilled.match(result)) {
-        setTimeout(() => {
-          router.push('/products');
-        }, 2000);
-      }
-    });
   };
 
   return (
@@ -97,6 +110,62 @@ export default function ProductFormPage(): React.ReactElement {
         <Paper elevation={3} sx={{ maxWidth: 800, mx: 'auto', p: 4, mt: 4 }}>
           <form onSubmit={handleSubmit}>
             <Grid2 container spacing={3} sx={{ mt: 2 }}>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Product Name"
+                  name="name"
+                  placeholder="Enter product name"
+                  value={values.name}
+                  onChange={handleChange}
+                  error={!!errors.name}
+                  helperText={errors.name}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <FormControl fullWidth>
+                  <FormLabel>Select category</FormLabel>
+                  <Select
+                    name="categoryId"
+                    value={values.categoryId}
+                    error={!!errors.categoryId}
+                    onChange={(evt) => handleChange(evt as any)}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Stock Quantity"
+                  name="numInStock"
+                  type="number"
+                  placeholder="Enter stock quantity"
+                  value={values.numInStock}
+                  onChange={handleChange}
+                  error={!!errors.numInStock}
+                  helperText={errors.numInStock}
+                  fullWidth
+                />
+              </Grid2>
+              <Grid2 size={12} sx={{ md: 6 }}>
+                <TextField
+                  label="Unit Price"
+                  name="unitPrice"
+                  type="number"
+                  placeholder="Enter unit price"
+                  value={values.unitPrice}
+                  onChange={handleChange}
+                  error={!!errors.unitPrice}
+                  helperText={errors.unitPrice}
+                  fullWidth
+                />
+              </Grid2>
+
               {/* Buttons */}
               <Grid2
                 container

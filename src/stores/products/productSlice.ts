@@ -138,8 +138,6 @@ export const addProduct = createAsyncThunk<Product, NewProduct, { rejectValue: s
         body: JSON.stringify(newProduct),
       });
 
-      console.log('addProduct:', newProduct);
-
       if (!response.ok) throw new Error('Error adding product');
 
       const product: Product = await response.json();
@@ -166,15 +164,16 @@ export const updateProduct = createAsyncThunk<Product, Product, { rejectValue: s
         body: JSON.stringify(updatedProduct),
       });
 
-      console.log('addProduct:', updatedProduct);
-
       if (!response.ok) throw new Error('Error updating product');
 
       const product: Product = await response.json();
 
+      const categoryName =
+        product.categoryName || getCategoryNameById(String(product.categoryId), getState);
+
       const data = {
         ...product,
-        categoryName: getCategoryNameById(String(product.categoryId), getState),
+        categoryName,
       };
 
       return data;
