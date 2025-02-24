@@ -140,7 +140,7 @@ export const addProduct = createAsyncThunk<Product, NewProduct, { rejectValue: s
 
       if (!response.ok) throw new Error('Error adding product');
 
-      const product: NewProduct = await response.json();
+      const product: Product = await response.json();
 
       return {
         ...product,
