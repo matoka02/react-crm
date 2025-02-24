@@ -100,7 +100,7 @@ export default function ProductListPage(): React.ReactElement {
 
   // Add product
   const handleNewProduct = () => {
-    router.push('/products/new');
+    router.push('/products/form');
   };
 
   return (
@@ -157,7 +157,7 @@ export default function ProductListPage(): React.ReactElement {
             </Alert>
           </Snackbar>
 
-          {/* Table with clients */}
+          {/* Table with products */}
           <DataTable
             model="products"
             items={items}
