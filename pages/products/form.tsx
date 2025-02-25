@@ -2,7 +2,6 @@ import { ArrowBackIos, Save } from '@mui/icons-material';
 import {
   Button,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Grid2,
   MenuItem,
@@ -134,9 +133,11 @@ export default function ProductFormPage(): React.ReactElement {
                     onChange={(evt) => handleChange(evt as any)}
                     displayEmpty
                   >
-                    <MenuItem value="" disabled>
-                      <Typography color="textSecondary">Select category</Typography>
-                    </MenuItem>
+                    {!productId ? (
+                      <MenuItem value="" disabled>
+                        <Typography color="textSecondary">Select category</Typography>
+                      </MenuItem>
+                    ) : null}
                     {categories.map((category) => (
                       <MenuItem key={category.id} value={category.id}>
                         {category.name}
