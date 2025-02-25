@@ -29,6 +29,8 @@ import {
 import { AppDispatch, RootState } from '@/stores/store';
 import { Product, NewProduct } from '@/stores/types/modelTypes';
 
+const SNACKBAR_DURATION = 3000;
+
 export default function ProductFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -97,7 +99,7 @@ export default function ProductFormPage(): React.ReactElement {
         if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/products');
-          }, 3000);
+          }, SNACKBAR_DURATION);
         }
       });
     }
@@ -214,7 +216,7 @@ export default function ProductFormPage(): React.ReactElement {
           {/* Notifications */}
           <Snackbar
             open={snackbarOpen}
-            autoHideDuration={3000}
+            autoHideDuration={SNACKBAR_DURATION}
             onClose={handleCloseSnackbar}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
