@@ -2,14 +2,13 @@ import { ArrowBackIos, Save } from '@mui/icons-material';
 import {
   Button,
   FormControl,
-  FormLabel,
   Grid2,
+  InputLabel,
   MenuItem,
   Paper,
   Select,
   Snackbar,
   TextField,
-  Typography,
   useTheme,
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -125,19 +124,15 @@ export default function ProductFormPage(): React.ReactElement {
               </Grid2>
               <Grid2 size={12} sx={{ md: 6 }}>
                 <FormControl fullWidth>
-                  <FormLabel sx={{ color: 'text.primary' }}>Category</FormLabel>
+                  <InputLabel id="categoryId">Select category</InputLabel>
                   <Select
+                    labelId="categoryId"
+                    id="categoryId"
                     name="categoryId"
                     value={values.categoryId}
                     error={!!errors.categoryId}
                     onChange={(evt) => handleChange(evt as any)}
-                    displayEmpty
                   >
-                    {!productId ? (
-                      <MenuItem value="" disabled>
-                        <Typography color="textSecondary">Select category</Typography>
-                      </MenuItem>
-                    ) : null}
                     {categories.map((category) => (
                       <MenuItem key={category.id} value={category.id}>
                         {category.name}

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import getCategoryNameById from '@/stores/products/categoryUtils';
 import { RootState } from '@/stores/store';
 import { NewProduct } from '@/stores/types/modelTypes';
 
