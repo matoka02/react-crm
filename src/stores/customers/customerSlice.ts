@@ -44,11 +44,16 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      const data: Customer[] = await response.json();
-      return data;
+      if (!response.ok) throw new Error('Error loading customers');
+
+      const customers: Customer[] = await response.json();
+
+      if (!customers) throw new Error('Invalid customer data from API');
+
+      return customers;
     } catch (error: any) {
       // console.error(error.message);
-      return rejectWithValue('Error loading customers');
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -60,6 +65,7 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Customer not found');
+
       const data: Customer = await response.json();
       return data;
     } catch (error: any) {
@@ -81,7 +87,9 @@ export const fetchFilteredCustomers = createAsyncThunk<
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
       const data: Customer[] = await response.json();
+
       if (data.length === 0) return rejectWithValue('No customers found');
+
       return data;
     } catch (error: any) {
       // console.error(error.message);

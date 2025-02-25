@@ -9,7 +9,7 @@ import { Product, NewProduct } from '@/stores/types/modelTypes';
 
 import { HttpMethod } from '../types/httpTypes';
 
-import getCategoryNameById from './categoryUtils';
+import getCategoryName from './categoryUtils';
 
 interface ProductState {
   products: Product[];
@@ -46,9 +46,11 @@ export const fetchAllProducts = createAsyncThunk<Product[], void, { rejectValue:
 
       const products: Product[] = await response.json();
 
+      if (!products) throw new Error('Invalid product data from API');
+
       const data = products.map((product) => ({
         ...product,
-        categoryName: getCategoryNameById(String(product.categoryId), getState),
+        categoryName: getCategoryName(String(product.categoryId), getState),
       }));
 
       return data;
@@ -70,7 +72,7 @@ export const fetchProductById = createAsyncThunk<Product, string, { rejectValue:
 
       const data = {
         ...product,
-        categoryName: getCategoryNameById(String(product.categoryId), getState),
+        categoryName: getCategoryName(String(product.categoryId), getState),
       };
 
       return data;
@@ -97,7 +99,7 @@ export const fetchFilteredProducts = createAsyncThunk<
 
       const data = products.map((product) => ({
         ...product,
-        categoryName: getCategoryNameById(product.categoryId, getState),
+        categoryName: getCategoryName(product.categoryId, getState),
       }));
 
       return data;
@@ -144,7 +146,7 @@ export const addProduct = createAsyncThunk<Product, NewProduct, { rejectValue: s
 
       const data = {
         ...product,
-        categoryName: getCategoryNameById(String(product.categoryId), getState),
+        categoryName: getCategoryName(String(product.categoryId), getState),
       };
 
       return data;
@@ -169,7 +171,7 @@ export const updateProduct = createAsyncThunk<Product, Product, { rejectValue: s
       const product: Product = await response.json();
 
       const categoryName =
-        product.categoryName || getCategoryNameById(String(product.categoryId), getState);
+        product.categoryName || getCategoryName(String(product.categoryId), getState);
 
       const data = {
         ...product,

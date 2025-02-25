@@ -10,7 +10,7 @@ interface StateWithCategories {
  * @returns Category name, or "Unknown" if not found.
  */
 
-const getCategoryNameById = (categoryId: string | number, getState: () => any) => {
+const getCategoryName = (categoryId: string | number, getState: () => any) => {
   const { categories }: StateWithCategories = getState();
 
   const foundCategory = categories.categories.find(
@@ -20,4 +20,4 @@ const getCategoryNameById = (categoryId: string | number, getState: () => any) =
   return foundCategory?.name || 'Unknown';
 };
 
-export default getCategoryNameById;
+export default getCategoryName;

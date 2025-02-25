@@ -40,8 +40,11 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
     try {
       const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
-      const data: Category[] = await response.json();
-      return data;
+      const categories: Category[] = await response.json();
+
+      if (!categories) throw new Error('Invalid category data from API');
+
+      return categories;
     } catch (error: any) {
       return rejectWithValue('Error loading categories');
     }
@@ -77,7 +80,9 @@ export const fetchFilteredCategories = createAsyncThunk<
       const response = await fetch(`/api/categories?${query}`, { method: HttpMethod.GET });
 
       const data: Category[] = await response.json();
+
       if (data.length === 0) return rejectWithValue('No categories found');
+
       return data;
     } catch (error: any) {
       // console.error(error.message);
