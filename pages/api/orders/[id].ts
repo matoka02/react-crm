@@ -8,7 +8,9 @@ function handler(req: NextApiRequest, resp: NextApiResponse) {
 
   if (req.method === 'GET') {
     const order = getById('orders', orderId);
-    return order ? resp.status(200).json(order) : resp.status(404).json({ message: 'Not Found' });
+    return order
+      ? resp.status(200).json(order)
+      : resp.status(404).json({ message: 'Not Found' });
   }
 
   if (req.method === 'PUT') {
