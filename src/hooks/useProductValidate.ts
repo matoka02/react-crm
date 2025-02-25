@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 import { RootState } from '@/stores/store';
 import { NewProduct } from '@/stores/types/modelTypes';
 
+const PRICE_REGEX = /^\d+(\.\d{1,2})?$/;
+
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(2, 'Product name must be at least 2 characters')
@@ -14,7 +16,13 @@ const validationSchema = Yup.object({
     .min(0, 'Stock cannot be negative')
     .integer('Stock must be an integer')
     .required(),
-  unitPrice: Yup.number().min(0, 'Price cannot be negative').required(),
+  unitPrice: Yup.number()
+    .min(0, 'Price cannot be negative')
+    .test('is-decimal', 'Price must have up to 2 decimal places', (value) => {
+      if (!value) return true;
+      return PRICE_REGEX.test(value.toString());
+    })
+    .required(),
 });
 
 function useProductValidate(initialValues?: NewProduct) {
