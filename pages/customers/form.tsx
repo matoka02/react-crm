@@ -87,7 +87,7 @@ export default function CustomerFormPage(): React.ReactElement {
         if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/customers');
-          }, 2000);
+          }, 3000);
         }
       });
     }
@@ -175,7 +175,6 @@ export default function CustomerFormPage(): React.ReactElement {
                 <TextField
                   label="Rewards"
                   name="rewards"
-                  type="number"
                   value={values.rewards}
                   onChange={handleChange}
                   error={!!errors.rewards}

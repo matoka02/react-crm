@@ -62,7 +62,8 @@ export default function ProductFormPage(): React.ReactElement {
           setValues({
             ...productData,
             categoryName:
-              categories.find((cat) => cat.id === productData.categoryId)?.name || 'Unknown',
+              categories.find((category) => category.id === productData.categoryId)?.name ||
+              'Unknown',
           });
         }
       });
@@ -96,7 +97,7 @@ export default function ProductFormPage(): React.ReactElement {
         if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/products');
-          }, 2000);
+          }, 3000);
         }
       });
     }
@@ -145,7 +146,6 @@ export default function ProductFormPage(): React.ReactElement {
                 <TextField
                   label="Stock Quantity"
                   name="numInStock"
-                  type="number"
                   placeholder="Enter stock quantity"
                   value={values.numInStock}
                   onChange={handleChange}
@@ -158,7 +158,6 @@ export default function ProductFormPage(): React.ReactElement {
                 <TextField
                   label="Unit Price"
                   name="unitPrice"
-                  type="number"
                   placeholder="Enter unit price"
                   value={values.unitPrice}
                   onChange={handleChange}

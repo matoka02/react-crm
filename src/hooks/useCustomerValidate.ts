@@ -18,7 +18,10 @@ const validationSchema = Yup.object({
     .matches(PHONE_REGEX, 'Phone number must be in the format 555-555-555')
     .required('Mobile number is required'),
   membership: Yup.boolean().required('Membership is required'),
-  rewards: Yup.number().min(0, 'Rewards cannot be negative').required(),
+  rewards: Yup.number()
+    .min(0, 'Rewards cannot be negative')
+    .integer('Rewards must be an integer')
+    .required(),
   avatar: Yup.string()
     .nullable()
     .optional()

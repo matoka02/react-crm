@@ -10,7 +10,10 @@ const validationSchema = Yup.object({
     .min(2, 'Product name must be at least 2 characters')
     .required('Product name is required'),
   categoryId: Yup.string().required('Category is required'),
-  numInStock: Yup.number().min(0, 'Stock cannot be negative').required(),
+  numInStock: Yup.number()
+    .min(0, 'Stock cannot be negative')
+    .integer('Stock must be an integer')
+    .required(),
   unitPrice: Yup.number().min(0, 'Price cannot be negative').required(),
 });
 
@@ -39,19 +42,12 @@ function useProductValidate(initialValues?: NewProduct) {
 
     if (!name) return;
 
-    // setValues((prev) => {
-    //   if (name === 'categoryId' && typeof value === 'string') {
-    //     const categoryName = getCategoryNameById(value, () => ({ categories }));
-    //     return { ...prev, categoryId: value, categoryName };
-    //   }
-    //   return { ...prev, [name]: value };
-    // });
     setValues((prev) => ({
       ...prev,
       [name]: value,
       categoryName:
         name === 'categoryId'
-          ? categories.find((cat) => cat.id === value)?.name || ''
+          ? categories.find((category) => category.id === value)?.name || ''
           : prev.categoryName,
     }));
   };
