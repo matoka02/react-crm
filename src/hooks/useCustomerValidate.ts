@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { setCustomer } from '@/stores/customers/customerSlice';
-import { AppDispatch, RootState } from '@/stores/store';
-import { NewCustomer } from '@/types';
+import { NewCustomer } from '@/stores/types/modelTypes';
 
 const PHONE_REGEX = /^\d{3}-\d{3}-\d{3}$/;
 const AVATAR_URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$|^\/assets\/.*/;
@@ -21,7 +18,10 @@ const validationSchema = Yup.object({
     .matches(PHONE_REGEX, 'Phone number must be in the format 555-555-555')
     .required('Mobile number is required'),
   membership: Yup.boolean().required('Membership is required'),
-  rewards: Yup.number().min(0, 'Rewards cannot be negative').required(),
+  rewards: Yup.number()
+    .min(0, 'Rewards cannot be negative')
+    .integer('Rewards must be an integer')
+    .required(),
   avatar: Yup.string()
     .nullable()
     .optional()
@@ -32,12 +32,9 @@ const validationSchema = Yup.object({
     ),
 });
 
-function useCustomerValidate() {
-  const dispatch = useDispatch<AppDispatch>();
-  const customer = useSelector((state: RootState) => state.customers.customer);
-
+function useCustomerValidate(initialValues?: NewCustomer) {
   const [values, setValues] = useState<NewCustomer>(
-    customer || {
+    initialValues || {
       firstName: '',
       lastName: '',
       email: '',
@@ -51,10 +48,10 @@ function useCustomerValidate() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (customer) {
-      setValues(customer);
+    if (initialValues) {
+      setValues(initialValues);
     }
-  }, [customer]);
+  }, [initialValues]);
 
   const handleChange = (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = evt.target;
@@ -65,7 +62,6 @@ function useCustomerValidate() {
       }
 
       setValues((prev) => ({ ...prev, [name]: newValue }));
-      dispatch(setCustomer({ ...values, [name]: newValue }));
     }
   };
 
@@ -88,7 +84,7 @@ function useCustomerValidate() {
     }
   };
 
-  return { values, errors, handleChange, validateForm };
+  return { values, setValues, errors, handleChange, validateForm };
 }
 
 export default useCustomerValidate;

@@ -5,7 +5,7 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { HttpMethod } from '../types';
+import { HttpMethod } from '../types/httpTypes';
 
 interface Order {
   id: string;

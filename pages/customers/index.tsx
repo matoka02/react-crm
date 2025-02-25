@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
@@ -69,7 +69,8 @@ export default function CustomerListPage(): React.ReactElement {
   };
 
   // Search customers
-  const handleToggleSearch = () => {
+  const handleToggleSearch = (evt: SyntheticEvent) => {
+    evt.preventDefault();
     dispatch(setSearchOpen(!searchOpen));
   };
 
@@ -95,7 +96,7 @@ export default function CustomerListPage(): React.ReactElement {
 
   // Add customer
   const handleNewCustomer = () => {
-    router.push('/customers/new');
+    router.push('/customers/form');
   };
 
   return (
@@ -154,7 +155,7 @@ export default function CustomerListPage(): React.ReactElement {
 
           {/* Table with clients */}
           <DataTable
-            model="customer"
+            model="customers"
             items={items}
             dataKeys={[
               'avatar',
@@ -176,10 +177,6 @@ export default function CustomerListPage(): React.ReactElement {
             ]}
             page={page}
             totalPages={Math.ceil(customers.length / 10)}
-            // onDelete={(evt, id) => {
-            //   setSelectedCustomerId(id ?? null);
-            //   setDeleteDialogOpen(true);
-            // }}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}
             onPageChange={(_, newPage) => setPage(newPage)}
           />
@@ -216,6 +213,7 @@ export default function CustomerListPage(): React.ReactElement {
                   margin="dense"
                   label="First Name"
                   name="firstName"
+                  placeholder="Enter first name"
                   value={localSearch.firstName}
                   onChange={handleSearchChange}
                 />
@@ -224,6 +222,7 @@ export default function CustomerListPage(): React.ReactElement {
                   margin="dense"
                   label="Last Name"
                   name="lastName"
+                  placeholder="Enter last name"
                   value={localSearch.lastName}
                   onChange={handleSearchChange}
                 />

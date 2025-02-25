@@ -5,9 +5,9 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { Customer, NewCustomer } from '@/types';
+import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
-import { HttpMethod } from '../types';
+import { HttpMethod } from '../types/httpTypes';
 
 interface CustomerState {
   customers: Customer[];
@@ -44,7 +44,8 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      return await response.json();
+      const data: Customer[] = await response.json();
+      return data;
     } catch (error: any) {
       // console.error(error.message);
       return rejectWithValue('Error loading customers');
@@ -59,8 +60,8 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Customer not found');
-
-      return await response.json();
+      const data: Customer = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -79,7 +80,7 @@ export const fetchFilteredCustomers = createAsyncThunk<
 
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
-      const data = await response.json();
+      const data: Customer[] = await response.json();
       if (data.length === 0) return rejectWithValue('No customers found');
       return data;
     } catch (error: any) {
@@ -121,7 +122,8 @@ export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue
 
       if (!response.ok) throw new Error('Error adding customer');
 
-      return await response.json();
+      const data: Customer = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -140,7 +142,8 @@ export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue
 
       if (!response.ok) throw new Error('Error updating customer');
 
-      return await response.json();
+      const data: Customer = await response.json();
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -164,10 +167,6 @@ const customerSlice = createSlice({
       action: PayloadAction<{ firstName: string; lastName: string }>
     ) {
       return { ...state, search: action.payload };
-    },
-    // form
-    setCustomer(state, action: PayloadAction<NewCustomer | null>) {
-      return { ...state, customer: action.payload };
     },
   },
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
@@ -202,10 +201,12 @@ const customerSlice = createSlice({
       }))
       .addCase(fetchCustomerById.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: [...state.customers, action.payload],
       }))
       .addCase(fetchCustomerById.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'warning',
@@ -247,6 +248,7 @@ const customerSlice = createSlice({
       }))
       .addCase(deleteCustomer.fulfilled, (state, action: PayloadAction<number>) => ({
         ...state,
+        isLoading: false,
         customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
         snackbarOpen: true,
         snackbarMessage: 'Customer deleted successfully!',
@@ -254,6 +256,7 @@ const customerSlice = createSlice({
       }))
       .addCase(deleteCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `Error: ${action.payload}`,
         snackbarSeverity: 'error',
@@ -266,6 +269,7 @@ const customerSlice = createSlice({
       }))
       .addCase(addCustomer.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: [...state.customers, action.payload],
         snackbarOpen: true,
         snackbarMessage: 'Customer added successfully!',
@@ -273,6 +277,7 @@ const customerSlice = createSlice({
       }))
       .addCase(addCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -285,6 +290,7 @@ const customerSlice = createSlice({
       }))
       .addCase(updateCustomer.fulfilled, (state, action) => ({
         ...state,
+        isLoading: false,
         customers: state.customers.map((customer) =>
           customer.id === action.payload.id ? action.payload : customer
         ),
@@ -294,6 +300,7 @@ const customerSlice = createSlice({
       }))
       .addCase(updateCustomer.rejected, (state, action) => ({
         ...state,
+        isLoading: false,
         snackbarOpen: true,
         snackbarMessage: `${action.payload}`,
         snackbarSeverity: 'error',
@@ -301,5 +308,5 @@ const customerSlice = createSlice({
   },
 });
 
-export const { clearError, setSearchOpen, setSearch, setCustomer } = customerSlice.actions;
+export const { clearError, setSearchOpen, setSearch } = customerSlice.actions;
 export default customerSlice.reducer;
