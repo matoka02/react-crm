@@ -32,11 +32,8 @@ export default function OrderListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
   const { orders, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
     useSelector((state: RootState) => state.orders);
-    // console.log('Orders in Redux:', orders);
-  // console.table(orders);
 
   useEffect(() => {
-    // dispatch(fetchAllOrders());
     dispatch(fetchAllCustomers()).then(() => {
       dispatch(fetchAllOrders());
     });
@@ -209,7 +206,7 @@ export default function OrderListPage(): React.ReactElement {
                   label="Reference"
                   name="reference"
                   placeholder="Enter reference"
-                  value={localSearch.name}
+                  value={localSearch.reference}
                   onChange={handleSearchChange}
                 />
                 <Grid2
