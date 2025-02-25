@@ -58,3 +58,26 @@ export interface NewProduct {
   numInStock: number;
   unitPrice: number;
 }
+
+
+/* ====== ORDERS ====== */
+
+export interface Address{
+  address: string;
+  city: string;
+  zipcode: string;
+  country: string;
+}
+
+export interface Order {
+  reference: string;
+  customerId: number;
+  customer: Customer;
+  customerName: string;
+  products: Product[];
+  amount: number;
+  quantity: number;
+  orderDate: string;
+  shippedDate: string;
+  shipAddress: Address;
+}
