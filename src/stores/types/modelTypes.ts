@@ -70,6 +70,7 @@ export interface Address{
 }
 
 export interface Order {
+  id: string;
   reference: string;
   customerId: number;
   customer: Customer;

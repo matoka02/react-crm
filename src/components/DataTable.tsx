@@ -45,7 +45,12 @@ function DataTable({
   const theme = useTheme();
 
   const getCellAlignment = (key: string) => {
-    if (key === 'unitPrice' || key === 'numInStock') {
+    if (
+      key === 'unitPrice' ||
+      key === 'numInStock' ||
+      key === 'productsCount' ||
+      key === 'amount'
+    ) {
       return 'right';
     }
     return 'left';
@@ -99,7 +104,9 @@ function DataTable({
     }
     if (dataKey.includes('.')) {
       const keys = dataKey.split('.');
-      return <Box>{data[keys[0]][keys[1]]}</Box>;
+      // return <Box>{data[keys[0]][keys[1]]}</Box>;
+      const nestedData = data[keys[0]];
+      return <Box>{nestedData ? (nestedData[keys[1]] ?? '-') : '-'}</Box>;
     }
     return <Box>{data[dataKey]}</Box>;
   };
