@@ -130,7 +130,7 @@ export default function ProductFormPage(): React.ReactElement {
                   <InputLabel id="categoryId">Select category</InputLabel>
                   <Select
                     labelId="categoryId"
-                    id="categoryId"
+                    label="Select category"
                     name="categoryId"
                     value={values.categoryId}
                     error={!!errors.categoryId}
