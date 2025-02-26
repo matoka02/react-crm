@@ -331,6 +331,6 @@ const orderSlice = createSlice({
   },
 });
 
-export const SNACKBAR_DURATION = 3000;
+export const ORDER_DURATION = 3000;
 export const { clearError, setSearchOpen, setSearch } = orderSlice.actions;
 export default orderSlice.reducer;

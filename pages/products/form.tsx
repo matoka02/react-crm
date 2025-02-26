@@ -24,7 +24,7 @@ import {
   addProduct,
   clearError,
   fetchProductById,
-  SNACKBAR_DURATION,
+  PRODUCT_DURATION,
   updateProduct,
 } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
@@ -99,7 +99,7 @@ export default function ProductFormPage(): React.ReactElement {
         if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/products');
-          }, SNACKBAR_DURATION);
+          }, PRODUCT_DURATION);
         }
       });
     }
@@ -189,7 +189,7 @@ export default function ProductFormPage(): React.ReactElement {
           {/* Notifications */}
           <Snackbar
             open={snackbarOpen}
-            autoHideDuration={SNACKBAR_DURATION}
+            autoHideDuration={PRODUCT_DURATION}
             onClose={handleCloseSnackbar}
           >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>

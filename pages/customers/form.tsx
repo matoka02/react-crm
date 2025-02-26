@@ -27,7 +27,7 @@ import {
   addCustomer,
   clearError,
   fetchCustomerById,
-  SNACKBAR_DURATION,
+  CUSTOMER_DURATION,
   updateCustomer,
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
@@ -90,7 +90,7 @@ export default function CustomerFormPage(): React.ReactElement {
         if (isActionCompleted(result)) {
           setTimeout(() => {
             router.push('/customers');
-          }, SNACKBAR_DURATION);
+          }, CUSTOMER_DURATION);
         }
       });
     }
@@ -229,7 +229,7 @@ export default function CustomerFormPage(): React.ReactElement {
           {/* Notifications */}
           <Snackbar
             open={snackbarOpen}
-            autoHideDuration={SNACKBAR_DURATION}
+            autoHideDuration={CUSTOMER_DURATION}
             onClose={handleCloseSnackbar}
           >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>

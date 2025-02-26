@@ -22,7 +22,7 @@ import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import useOrderSearch from '@/hooks/useOrderSearch';
 import { fetchAllCustomers } from '@/stores/customers/customerSlice';
-import { fetchAllOrders, clearError, setSearchOpen, deleteOrder, SNACKBAR_DURATION } from '@/stores/orders/orderSlice';
+import { fetchAllOrders, clearError, setSearchOpen, deleteOrder, ORDER_DURATION } from '@/stores/orders/orderSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 const defaultProps = {
@@ -131,7 +131,7 @@ export default function OrderListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={SNACKBAR_DURATION} onClose={handleCloseSnackbar}>
+          <Snackbar open={snackbarOpen} autoHideDuration={ORDER_DURATION} onClose={handleCloseSnackbar}>
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
