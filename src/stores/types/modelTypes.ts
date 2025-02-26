@@ -81,3 +81,16 @@ export interface Order {
   shippedDate: string;
   shipAddress: Address;
 }
+
+export interface NewOrder {
+  reference: string;
+  customerId: number;
+  customer: Customer;
+  customerName: string;
+  products: Product[];
+  amount: number;
+  quantity: number;
+  orderDate: string;
+  shippedDate: string;
+  shipAddress: Address;
+}
