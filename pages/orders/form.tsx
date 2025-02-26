@@ -48,11 +48,11 @@ import { fetchAllProducts } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { Order, NewOrder, Product } from '@/stores/types/modelTypes';
 
-
 export default function OrderFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('id') ?? '';
+  console.log("orderId:", orderId, "Type:", typeof orderId);
   const dispatch = useDispatch<AppDispatch>();
   const { customers } = useSelector((state: RootState) => state.customers);
   const { categories } = useSelector((state: RootState) => state.categories);
@@ -63,7 +63,19 @@ export default function OrderFormPage(): React.ReactElement {
 
   const theme = useTheme();
   const styles = theme.customStyles.formPage;
-  const { values, setValues, errors, handleChange, validateForm } = useOrderValidate();
+  const {
+    values,
+    setValues,
+    selectedCategory,
+    selectedProduct,
+    errors,
+    handleChange,
+    validateForm,
+    handleCategoryChange,
+    handleProductChange,
+    handleAddProduct,
+    handleRemoveProduct,
+  } = useOrderValidate(categories, products);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -94,8 +106,6 @@ export default function OrderFormPage(): React.ReactElement {
   }, [customers, dispatch, orderId, setValues]);
 
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Открытие/закрытие диалога
   const handleDialogOpen = () => {
@@ -103,37 +113,6 @@ export default function OrderFormPage(): React.ReactElement {
     setOpen(true);
   };
   const handleDialogClose = () => setOpen(false);
-  // Выбор категории
-  const handleCategoryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedCategory(event.target.value as string);
-  };
-
-  // Выбор продукта
-  const handleProductChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const productId = event.target.value as string;
-    const product = products.find((p) => p.id === productId) || null;
-    setSelectedProduct(product);
-  };
-
-  // Добавление продукта в заказ
-  const handleAddProduct = () => {
-    if (!selectedProduct) return;
-    if (selectedProduct) {
-      setValues((prev: NewOrder) => ({
-        ...prev,
-        products: [...prev.products, selectedProduct],
-      }));
-    }
-    setOpen(false);
-  };
-
-  // Удаление продукта
-  const handleRemoveProduct = (productId: string) => {
-    setValues((prev: NewOrder) => ({
-      ...prev,
-      products: prev.products.filter((p) => p.id !== productId),
-    }));
-  };
 
   // Snackbar
   const handleCloseSnackbar = () => {
@@ -225,7 +204,7 @@ export default function OrderFormPage(): React.ReactElement {
                 />
               </Grid2>
 
-              {/* <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={{ md: 6 }}>
                 <TextField
                   label="Quantity"
                   name="productsCount"
@@ -234,8 +213,9 @@ export default function OrderFormPage(): React.ReactElement {
                   error={!!errors.productsCount}
                   helperText={errors.productsCount}
                   fullWidth
+                  disabled
                 />
-              </Grid2> */}
+              </Grid2>
 
               {/** Date */}
               <Grid2 size={12} sx={{ md: 6 }}>
@@ -323,7 +303,10 @@ export default function OrderFormPage(): React.ReactElement {
                       primary={product.name}
                       secondary={`Price: $${product.unitPrice}`}
                     />
-                    <IconButton onClick={() => handleRemoveProduct(product)}>
+                    {/* <IconButton onClick={() => handleRemoveProduct(product)}>
+                      <ActionDelete />
+                    </IconButton> */}
+                    <IconButton edge="end" onClick={() => handleRemoveProduct(product.id)}>
                       <ActionDelete />
                     </IconButton>
                   </ListItem>
@@ -331,15 +314,15 @@ export default function OrderFormPage(): React.ReactElement {
               </List>
 
               {/* Control button */}
-              <Divider />
+              {/* <Divider /> */}
               <div>
-                <Button
+                {/* <Button
                   variant="contained"
                   onClick={() => window.history.back()}
                   sx={styles.buttonBack}
                 >
                   <ArrowBackIos /> Back2
-                </Button>
+                </Button> */}
                 {/* <Button
                   variant="contained"
                   onClick={handleSubmit}
@@ -361,7 +344,7 @@ export default function OrderFormPage(): React.ReactElement {
                   <Select
                     fullWidth
                     value={selectedCategory}
-                    onChange={(evt) => handleCategoryChange(evt as any)}
+                    onChange={handleCategoryChange}
                     displayEmpty
                   >
                     <MenuItem value="" disabled>
@@ -376,20 +359,21 @@ export default function OrderFormPage(): React.ReactElement {
 
                   <Select
                     fullWidth
-                    value={selectedProduct?.id || ''}
-                    onChange={(evt) => handleProductChange(evt as any)}
+                    value={selectedProduct}
+                    onChange={handleProductChange}
                     displayEmpty
                   >
                     <MenuItem value="" disabled>
                       Select Product
                     </MenuItem>
-                    {products
-                      .filter((p) => p.categoryId === selectedCategory)
-                      .map((product) => (
-                        <MenuItem key={product.id} value={product.id}>
-                          {product.name}
-                        </MenuItem>
-                      ))}
+                    {values.products.length > 0 &&
+                      products
+                        .filter((p) => p.categoryId === selectedCategory)
+                        .map((product) => (
+                          <MenuItem key={product.id} value={product.id}>
+                            {product.name}
+                          </MenuItem>
+                        ))}
                   </Select>
                 </DialogContent>
                 <DialogActions>
