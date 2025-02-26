@@ -52,6 +52,7 @@ export default function OrderListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
   const { orders, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
     useSelector((state: RootState) => state.orders);
+    // console.table(orders);
 
   useEffect(() => {
     dispatch(fetchAllCustomers()).then(() => {
