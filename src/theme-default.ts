@@ -186,7 +186,6 @@ const themeDefault = createTheme({
       formWrapper: { mt: 2 },
       inputWrapper: { md: 6 },
       card: {
-        // CustomerFormPage
         width: 120,
         maxWidth: 300,
         mt: 4,
@@ -194,8 +193,8 @@ const themeDefault = createTheme({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      image: { objectFit: 'cover' }, // CustomerFormPage
+      },                              // CustomerFormPage
+      image: { objectFit: 'cover' },  // CustomerFormPage
       buttonContainer: {
         width: '100%',
         display: 'flex',

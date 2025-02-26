@@ -27,12 +27,12 @@ import {
   addCustomer,
   clearError,
   fetchCustomerById,
+  SNACKBAR_DURATION,
   updateCustomer,
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
-const SNACKBAR_DURATION = 3000;
 
 export default function CustomerFormPage(): React.ReactElement {
   const router = useRouter();

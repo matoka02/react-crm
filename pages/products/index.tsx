@@ -27,8 +27,15 @@ import {
   clearError,
   setSearchOpen,
   deleteProduct,
+  SNACKBAR_DURATION,
 } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+
+const defaultProps = {
+  model: 'products',
+  dataKeys: ['name', 'categoryName', 'unitPrice', 'numInStock', 'action'],
+  headers: ['Name', 'Category Name', 'Price', 'Total In Stock', 'Actions'],
+};
 
 export default function ProductListPage(): React.ReactElement {
   const router = useRouter();
@@ -123,7 +130,7 @@ export default function ProductListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+          <Snackbar open={snackbarOpen} autoHideDuration={SNACKBAR_DURATION} onClose={handleCloseSnackbar}>
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
@@ -131,10 +138,10 @@ export default function ProductListPage(): React.ReactElement {
 
           {/* Table with products */}
           <DataTable
-            model="products"
+            model={defaultProps.model}
             items={items}
-            dataKeys={['name', 'categoryName', 'unitPrice', 'numInStock', 'action']}
-            headers={['Name', 'Category Name', 'Price', 'Total In Stock', 'Actions']}
+            dataKeys={defaultProps.dataKeys}
+            headers={defaultProps.headers}
             page={page}
             totalPages={Math.ceil(products.length / 10)}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}

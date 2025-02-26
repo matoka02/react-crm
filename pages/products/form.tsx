@@ -24,12 +24,11 @@ import {
   addProduct,
   clearError,
   fetchProductById,
+  SNACKBAR_DURATION,
   updateProduct,
 } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { Product, NewProduct } from '@/stores/types/modelTypes';
-
-const SNACKBAR_DURATION = 3000;
 
 export default function ProductFormPage(): React.ReactElement {
   const router = useRouter();

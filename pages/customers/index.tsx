@@ -26,8 +26,15 @@ import {
   clearError,
   setSearchOpen,
   deleteCustomer,
+  SNACKBAR_DURATION,
 } from '@/stores/customers/customerSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+
+const defaultProps = {
+  model: 'customers',
+  dataKeys: ['avatar', 'firstName', 'lastName', 'email', 'mobile', 'membership', 'action'],
+  headers: ['Avatar', 'First Name', 'Last Name', 'Email', 'Mobile', 'Membership', 'Actions'],
+};
 
 export default function CustomerListPage(): React.ReactElement {
   const router = useRouter();
@@ -119,7 +126,7 @@ export default function CustomerListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+          <Snackbar open={snackbarOpen} autoHideDuration={SNACKBAR_DURATION} onClose={handleCloseSnackbar}>
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
@@ -127,26 +134,10 @@ export default function CustomerListPage(): React.ReactElement {
 
           {/* Table with clients */}
           <DataTable
-            model="customers"
+            model={defaultProps.model}
             items={items}
-            dataKeys={[
-              'avatar',
-              'firstName',
-              'lastName',
-              'email',
-              'mobile',
-              'membership',
-              'action',
-            ]}
-            headers={[
-              'Photo',
-              'First Name',
-              'Last Name',
-              'Email',
-              'Mobile',
-              'Membership',
-              'Actions',
-            ]}
+            dataKeys={defaultProps.dataKeys}
+            headers={defaultProps.headers}
             page={page}
             totalPages={Math.ceil(customers.length / 10)}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}

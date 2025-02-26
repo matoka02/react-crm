@@ -306,5 +306,6 @@ const categorySlice = createSlice({
   },
 });
 
+export const SNACKBAR_DURATION = 3000;
 export const { clearError, setSearchOpen, setSearch } = categorySlice.actions;
 export default categorySlice.reducer;

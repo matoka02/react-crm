@@ -22,8 +22,30 @@ import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import useOrderSearch from '@/hooks/useOrderSearch';
 import { fetchAllCustomers } from '@/stores/customers/customerSlice';
-import { fetchAllOrders, clearError, setSearchOpen, deleteOrder } from '@/stores/orders/orderSlice';
+import { fetchAllOrders, clearError, setSearchOpen, deleteOrder, SNACKBAR_DURATION } from '@/stores/orders/orderSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+
+const defaultProps = {
+  model: 'orders',
+  dataKeys: [
+    'reference',
+    'productsCount',
+    'amount',
+    'customerName',
+    'orderDate',
+    'shippedDate',
+    'action',
+  ],
+  headers: [
+    'Reference',
+    'Quantity',
+    'Amount',
+    'Customer',
+    'Order Date',
+    'Shipping Date',
+    'Actions',
+  ],
+};
 
 export default function OrderListPage(): React.ReactElement {
   const router = useRouter();
@@ -109,7 +131,7 @@ export default function OrderListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+          <Snackbar open={snackbarOpen} autoHideDuration={SNACKBAR_DURATION} onClose={handleCloseSnackbar}>
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
@@ -117,26 +139,10 @@ export default function OrderListPage(): React.ReactElement {
 
           {/* Table with orders */}
           <DataTable
-            model="orders"
+            model={defaultProps.model}
             items={items}
-            dataKeys={[
-              'reference',
-              'productsCount',
-              'amount',
-              'customerName',
-              'orderDate',
-              'shippedDate',
-              'action',
-            ]}
-            headers={[
-              'Reference',
-              'Quantity',
-              'Amount',
-              'Customer',
-              'Order Date',
-              'Shipping Date',
-              'Actions',
-            ]}
+            dataKeys={defaultProps.dataKeys}
+            headers={defaultProps.headers}
             page={page}
             totalPages={Math.ceil(orders.length / 10)}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}
