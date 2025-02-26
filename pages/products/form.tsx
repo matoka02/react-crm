@@ -42,6 +42,7 @@ export default function ProductFormPage(): React.ReactElement {
   );
 
   const theme = useTheme();
+  const styles = theme.customStyles.formPage;
   const { values, setValues, errors, handleChange, validateForm } = useProductValidate();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -110,10 +111,10 @@ export default function ProductFormPage(): React.ReactElement {
       {isLoading ? (
         <SkeletonForm />
       ) : (
-        <Paper elevation={3} sx={{ maxWidth: 800, mx: 'auto', p: 4, mt: 4 }}>
+        <Paper elevation={3} sx={styles.paper}>
           <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={3} sx={{ mt: 2 }}>
-              <Grid2 size={12} sx={{ md: 6 }}>
+            <Grid2 container spacing={3} sx={styles.formWrapper}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Product Name"
                   name="name"
@@ -125,7 +126,7 @@ export default function ProductFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <FormControl fullWidth>
                   <InputLabel id="categoryId">Select category</InputLabel>
                   <Select
@@ -144,7 +145,7 @@ export default function ProductFormPage(): React.ReactElement {
                   </Select>
                 </FormControl>
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Stock Quantity"
                   name="numInStock"
@@ -156,7 +157,7 @@ export default function ProductFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Unit Price"
                   name="unitPrice"
@@ -170,42 +171,15 @@ export default function ProductFormPage(): React.ReactElement {
               </Grid2>
 
               {/* Buttons */}
-              <Grid2
-                container
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  mt: 3,
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={() => router.back()}
-                  sx={{
-                    gap: 1,
-                    color: 'white',
-                    backgroundColor: theme.palette.secondary.main,
-                    '&:hover': {
-                      backgroundColor: theme.palette.secondary.dark,
-                    },
-                  }}
-                >
+              <Grid2 container sx={styles.buttonContainer}>
+                <Button variant="contained" onClick={() => router.back()} sx={styles.buttonBack}>
                   <ArrowBackIos /> Back
                 </Button>
                 <Button
                   variant="contained"
                   type="submit"
                   disabled={isLoading}
-                  sx={{
-                    gap: 2,
-                    color: 'white',
-                    backgroundColor: theme.palette.primary.main,
-                    '&:hover': {
-                      backgroundColor: theme.palette.primary.dark,
-                    },
-                  }}
+                  sx={styles.buttonSave}
                 >
                   <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
@@ -218,7 +192,6 @@ export default function ProductFormPage(): React.ReactElement {
             open={snackbarOpen}
             autoHideDuration={SNACKBAR_DURATION}
             onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}

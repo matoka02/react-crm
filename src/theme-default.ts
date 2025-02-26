@@ -29,15 +29,16 @@ declare module '@mui/material/styles' {
         buttonSetSearch: (theme: Theme) => React.CSSProperties;
         buttonBack: (theme: Theme) => React.CSSProperties;
       };
-      // formPage: {
-      //   buttons: object;
-      //   saveButton: object;
-      //   card: object;
-      //   container: object;
-      //   cell: object;
-      //   productList: object;
-      //   textField: object;
-      // };
+      formPage: {
+        paper: object;
+        formWrapper: object;
+        inputWrapper: object;
+        card: object;
+        image: object;
+        buttonContainer: object;
+        buttonBack: (theme: Theme) => React.CSSProperties;
+        buttonSave: (theme: Theme) => React.CSSProperties;
+      };
     };
   }
   interface ThemeOptions {
@@ -175,19 +176,50 @@ const themeDefault = createTheme({
     },
 
     // formPageStyles
-    // formPage: {
-    //   buttons: { marginTop: 30, float: 'right' },
-    //   saveButton: { marginLeft: 5 },
-    //   card: { width: 120, maxWidth: 300, marginTop: 40, marginBottom: 5 },
-    //   container: { marginTop: '2em' },
-    //   cell: { padding: '1em' },
-    //   productList: { color: 'navy', paddingTop: 20, fontWeight: 'bold' },
-    //   textField: {
-    //     marginLeft: 4,
-    //     marginRight: 4,
-    //     width: '100%',
-    //   },
-    // },
+    formPage: {
+      paper: {
+        maxWidth: 800,
+        mx: 'auto',
+        p: 4,
+        mt: 4,
+      },
+      formWrapper: { mt: 2 },
+      inputWrapper: { md: 6 },
+      card: {
+        // CustomerFormPage
+        width: 120,
+        maxWidth: 300,
+        mt: 4,
+        mb: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      image: { objectFit: 'cover' }, // CustomerFormPage
+      buttonContainer: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        mt: 3,
+      },
+      buttonBack: (theme) => ({
+        gap: 1,
+        color: 'white',
+        backgroundColor: theme.palette.secondary.main,
+        '&:hover': {
+          backgroundColor: theme.palette.secondary.dark,
+        },
+      }),
+      buttonSave: (theme) => ({
+        gap: 2,
+        color: 'white',
+        backgroundColor: theme.palette.primary.main,
+        '&:hover': {
+          backgroundColor: theme.palette.primary.dark,
+        },
+      }),
+    },
   },
 });
 

@@ -44,6 +44,7 @@ export default function CustomerFormPage(): React.ReactElement {
   );
 
   const theme = useTheme();
+  const styles = theme.customStyles.formPage;
   const { values, setValues, errors, handleChange, validateForm } = useCustomerForm();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -103,10 +104,10 @@ export default function CustomerFormPage(): React.ReactElement {
       {isLoading ? (
         <SkeletonForm />
       ) : (
-        <Paper elevation={3} sx={{ maxWidth: 800, mx: 'auto', p: 4, mt: 4 }}>
+        <Paper elevation={3} sx={styles.paper}>
           <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={3} sx={{ mt: 2 }}>
-              <Grid2 size={12} sx={{ md: 6 }}>
+            <Grid2 container spacing={3} sx={styles.formWrapper}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="First Name"
                   name="firstName"
@@ -118,7 +119,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Last Name"
                   name="lastName"
@@ -130,7 +131,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Email"
                   name="email"
@@ -142,7 +143,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Mobile"
                   name="mobile"
@@ -154,7 +155,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <FormControl component="fieldset" fullWidth>
                   <FormLabel component="legend">Membership</FormLabel>
                   <RadioGroup
@@ -173,7 +174,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   </Typography>
                 )}
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Rewards"
                   name="rewards"
@@ -184,7 +185,7 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Avatar URL"
                   name="avatar"
@@ -196,65 +197,28 @@ export default function CustomerFormPage(): React.ReactElement {
                   fullWidth
                 />
                 {values.avatar && (
-                  <Card
-                    sx={{
-                      width: 120,
-                      maxWidth: 300,
-                      mt: 4,
-                      mb: 1,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <Card sx={styles.card}>
                     <Image
                       width={100}
                       height={100}
                       src={values.avatar}
                       alt="Avatar"
-                      style={{ objectFit: 'cover' }}
+                      style={styles.image}
                     />
                   </Card>
                 )}
               </Grid2>
 
               {/* Buttons */}
-              <Grid2
-                container
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  mt: 3,
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={() => router.back()}
-                  sx={{
-                    gap: 1,
-                    color: 'white',
-                    backgroundColor: theme.palette.secondary.main,
-                    '&:hover': {
-                      backgroundColor: theme.palette.secondary.dark,
-                    },
-                  }}
-                >
+              <Grid2 container sx={styles.buttonContainer}>
+                <Button variant="contained" onClick={() => router.back()} sx={styles.buttonBack}>
                   <ArrowBackIos /> Back
                 </Button>
                 <Button
                   variant="contained"
                   type="submit"
                   disabled={isLoading}
-                  sx={{
-                    gap: 2,
-                    color: 'white',
-                    backgroundColor: theme.palette.primary.main,
-                    '&:hover': {
-                      backgroundColor: theme.palette.primary.dark,
-                    },
-                  }}
+                  sx={styles.buttonSave}
                 >
                   <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
@@ -267,7 +231,6 @@ export default function CustomerFormPage(): React.ReactElement {
             open={snackbarOpen}
             autoHideDuration={SNACKBAR_DURATION}
             onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}

@@ -59,10 +59,9 @@ export interface NewProduct {
   unitPrice: number;
 }
 
-
 /* ====== ORDERS ====== */
 
-export interface Address{
+export interface Address {
   address: string;
   city: string;
   zipcode: string;
