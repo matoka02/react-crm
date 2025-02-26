@@ -1,0 +1,103 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
+
+import { REFERENCE_REGEX } from './useOrderSearch';
+import { PRICE_REGEX } from './useProductValidate';
+
+import { RootState } from '@/stores/store';
+import { NewOrder } from '@/stores/types/modelTypes';
+
+const ZIPCODE_REGEX = /^\d{5}$/;
+
+const validationSchema = Yup.object({
+  customerId: Yup.number().required('Customer is required'),
+  reference: Yup.string()
+    .min(3, 'Reference must be at least 3 characters')
+    .matches(REFERENCE_REGEX)
+    .required(),
+  amount: Yup.number()
+    .min(0, 'Amount cannot be negative')
+    .test('is-decimal', 'Amount must have up to 2 decimal places', (value) => {
+      if (!value) return true;
+      return PRICE_REGEX.test(value.toString());
+    })
+    .required(),
+  productsCount: Yup.number().min(1, 'Quantity must be at least 1').integer().required(),
+  orderDate: Yup.string().required('Order Date is required'),
+  shippedDate: Yup.string().required('Shipped Date is required'),
+  shippedAddress: Yup.object({
+    address: Yup.string().min(5, 'Address must be at least 5 characters').required(),
+    city: Yup.string().min(2, 'City must be at least 2 characters').required(),
+    country: Yup.string().min(2, 'Country must be at least 2 characters').required(),
+    zipcode: Yup.string()
+      .matches(ZIPCODE_REGEX, 'Invalid Zip Code format')
+      .required('Zip Code is required'),
+  }),
+});
+
+function useOrderValidate(initialValues?: NewOrder) {
+  const customers = useSelector((state: RootState) => state.customers.customers);
+
+  const [values, setValues] = useState<NewOrder>(
+    initialValues || {
+      reference: '',
+      customerId: 0,
+      customer: {} as any,
+      customerName: '',
+      products: [],
+      amount: 0,
+      quantity: 1,
+      orderDate: '',
+      shippedDate: '',
+      shipAddress: { address: '', city: '', zipcode: '', country: '' },
+    }
+  );
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (initialValues) {
+      setValues(initialValues);
+    }
+  }, [initialValues]);
+
+  const handleChange = (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const { name, value } = evt.target;
+    if (!name) return;
+
+    setValues((prev) => {
+      if (name === 'customerId' && typeof value === 'number') {
+        const customer = customers.find((c) => String(c.id) === String(value));
+        return { ...prev, customerId: value, customerName: customer ? customer.firstName : '' };
+      }
+      if (name.startsWith('shipAddress.')) {
+        const addressField = name.split('.')[1];
+        return { ...prev, shipAddress: { ...prev.shipAddress, [addressField]: value } };
+      }
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const validateForm = async () => {
+    try {
+      await validationSchema.validate(values, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const formattedErrors: Record<string, string> = {};
+        error.inner.forEach((err) => {
+          if (err.path) {
+            formattedErrors[err.path] = err.message;
+          }
+        });
+        setErrors(formattedErrors);
+      }
+      return false;
+    }
+  };
+
+  return { values, setValues, errors, handleChange, validateForm };
+}
+
+export default useOrderValidate;

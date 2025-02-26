@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAllOrders, fetchFilteredOrders } from '@/stores/orders/orderSlice';
 import { AppDispatch } from '@/stores/store';
 
-const REFERENCE_REGEX = /^[a-zA-Z0-9-]+$/;
+export const REFERENCE_REGEX = /^[a-zA-Z0-9-]+$/;
 
 function useOrderSearch(initialSearch: { reference: string }) {
   const dispatch = useDispatch<AppDispatch>();

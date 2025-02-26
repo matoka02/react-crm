@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { RootState } from '@/stores/store';
 import { NewProduct } from '@/stores/types/modelTypes';
 
-const PRICE_REGEX = /^\d+(\.\d{1,2})?$/;
+export const PRICE_REGEX = /^\d+(\.\d{1,2})?$/;
 
 const validationSchema = Yup.object({
   name: Yup.string()
