@@ -48,6 +48,7 @@ export default function CustomerListPage(): React.ReactElement {
   }, [dispatch]);
 
   const theme = useTheme();
+  const styles = theme.customStyles.listPage;
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(customers.slice(0, 10));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -107,47 +108,18 @@ export default function CustomerListPage(): React.ReactElement {
         <Box suppressHydrationWarning>
           {/* Control buttons */}
           <Tooltip title="Add Customer">
-            <Fab
-              onClick={handleNewCustomer}
-              sx={{
-                position: 'fixed',
-                bottom: 16,
-                right: 80,
-                zIndex: 1200,
-                backgroundColor: theme.palette.primary.main,
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.dark,
-                },
-              }}
-            >
-              <AddIcon sx={{ color: 'white' }} />
+            <Fab onClick={handleNewCustomer} sx={styles.fabAdd}>
+              <AddIcon sx={styles.fabIcon} />
             </Fab>
           </Tooltip>
           <Tooltip title="Search">
-            <Fab
-              onClick={handleToggleSearch}
-              sx={{
-                position: 'fixed',
-                bottom: 16,
-                right: 16,
-                zIndex: 1200,
-                backgroundColor: theme.palette.secondary.main,
-                '&:hover': {
-                  backgroundColor: theme.palette.secondary.dark,
-                },
-              }}
-            >
-              <SearchIcon sx={{ color: 'white' }} />
+            <Fab onClick={handleToggleSearch} sx={styles.fabSearch}>
+              <SearchIcon sx={styles.fabIcon} />
             </Fab>
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={3000}
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          >
+          <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>
@@ -190,16 +162,9 @@ export default function CustomerListPage(): React.ReactElement {
           />
 
           {/* Searchbar */}
-          <Drawer
-            anchor="right"
-            open={searchOpen}
-            onClose={handleToggleSearch}
-            ModalProps={{
-              sx: { backgroundColor: 'transparent' },
-            }}
-          >
-            <Box sx={{ width: 300, p: 2 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+          <Drawer anchor="right" open={searchOpen} onClose={handleToggleSearch}>
+            <Box sx={styles.drawerBox}>
+              <Typography variant="h6" sx={styles.drawerTitle}>
                 Search Customers
               </Typography>
               <form
@@ -226,33 +191,9 @@ export default function CustomerListPage(): React.ReactElement {
                   value={localSearch.lastName}
                   onChange={handleSearchChange}
                 />
-                <Grid2
-                  container
-                  spacing={2}
-                  sx={{
-                    width: '100%',
-                    mt: 2,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    flexGrow: 1,
-                  }}
-                  component="div"
-                >
+                <Grid2 container spacing={2} sx={styles.drawerButtonContainer} component="div">
                   <Grid2 size={12}>
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        minWidth: 120,
-                        width: '100%',
-                        color: 'white',
-                        backgroundColor: theme.palette.primary.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.primary.dark,
-                        },
-                      }}
-                    >
+                    <Button fullWidth type="submit" variant="contained" sx={styles.buttonSearch}>
                       Search
                     </Button>
                   </Grid2>
@@ -260,15 +201,7 @@ export default function CustomerListPage(): React.ReactElement {
                     <Button
                       fullWidth
                       variant="contained"
-                      sx={{
-                        width: '100%',
-                        whiteSpace: 'nowrap',
-                        color: 'white',
-                        backgroundColor: theme.palette.success.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.success.dark,
-                        },
-                      }}
+                      sx={styles.buttonSetSearch}
                       onClick={handleResetSearch}
                     >
                       Show All
@@ -278,15 +211,7 @@ export default function CustomerListPage(): React.ReactElement {
                     <Button
                       fullWidth
                       variant="contained"
-                      sx={{
-                        minWidth: 120,
-                        width: '100%',
-                        color: 'white',
-                        backgroundColor: theme.palette.secondary.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.secondary.dark,
-                        },
-                      }}
+                      sx={styles.buttonBack}
                       onClick={handleToggleSearch}
                     >
                       Close
