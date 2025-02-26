@@ -5,7 +5,7 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { Order } from '@/stores/types/modelTypes';
+import { NewOrder, Order } from '@/stores/types/modelTypes';
 
 import { HttpMethod } from '../types/httpTypes';
 
@@ -132,7 +132,7 @@ export const deleteOrder = createAsyncThunk<number, number, { rejectValue: strin
   }
 );
 
-export const addOrder = createAsyncThunk<Order, Omit<Order, 'reference'>, { rejectValue: string }>(
+export const addOrder = createAsyncThunk<Order, NewOrder, { rejectValue: string }>(
   'order/addOrder',
   async (newOrder, { getState, rejectWithValue }) => {
     try {
@@ -163,13 +163,18 @@ export const updateOrder = createAsyncThunk<Order, Order, { rejectValue: string 
   'order/updateOrder',
   async (updatedOrder, { getState, rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/orders/${updatedOrder.reference}`, {
+      console.log('Updating Order:', updatedOrder);
+      const response = await fetch(`/api/orders/${updatedOrder.id}`, {
         method: HttpMethod.PUT,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedOrder),
       });
 
       if (!response.ok) throw new Error('Error updating order');
+
+      console.log('updateOrder');
+      console.table(updateOrder);
+
 
       const order: Order = await response.json();
 
