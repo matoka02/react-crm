@@ -71,7 +71,7 @@ export interface Address {
 export interface Order {
   id: string;
   reference: string;
-  customerId: number;
+  customerId: string;
   customer: Customer;
   customerName: string;
   products: Product[];
@@ -84,7 +84,7 @@ export interface Order {
 
 export interface NewOrder {
   reference: string;
-  customerId: number;
+  customerId: string;
   customer: Customer;
   customerName: string;
   products: Product[];

@@ -25,7 +25,7 @@ const shipAddressSchema = Yup.object({
 });
 
 const orderSchema = Yup.object({
-  customerId: Yup.number().required('Customer is required'),
+  customerId: Yup.string().required('Customer is required'),
   reference: Yup.string()
     .min(3, 'Reference must be at least 3 characters')
     .matches(REFERENCE_REGEX)
@@ -59,7 +59,7 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
   const [values, setValues] = useState<NewOrder>(
     initialValues || {
       reference: '',
-      customerId: 0,
+      customerId: '',
       customer: {} as any,
       customerName: '',
       products: [],
@@ -94,9 +94,9 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
     if (!name) return;
 
     setValues((prev) => {
-      if (name === 'customerId' && typeof value === 'number') {
-        const customer = customers.find((c) => String(c.id) === String(value));
-        return { ...prev, customerId: value, customerName: customer ? customer.firstName : '' };
+      if (name === 'customerId' ) {
+        const customer = customers.find((c) =>c.id === value);
+        return { ...prev, customerId: String(value), customerName: customer ? customer.firstName : '' };
       }
       if (name.startsWith('shipAddress.')) {
         const addressField = name.split('.')[1];
