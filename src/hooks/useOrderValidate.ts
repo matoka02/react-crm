@@ -37,9 +37,18 @@ const orderSchema = Yup.object({
       return PRICE_REGEX.test(value.toString());
     })
     .required(),
-  productsCount: Yup.number().min(1, 'The product list must not be empty!').integer().required(),
+  productsCount: Yup.number().min(1, 'The products list must not be empty!').integer().required(),
   orderDate: Yup.string().required('Order Date is required'),
-  shippedDate: Yup.string().required('Shipped Date is required'),
+  shippedDate: Yup.string()
+    .required('Shipped Date is required')
+    .test(
+      'is-after-orderDate',
+      'Shipped Date cannot be before Order Date',
+      function validateShippedDate(value) {
+        const { orderDate } = this.parent;
+        return !orderDate || !value || new Date(value) >= new Date(orderDate);
+      }
+    ),
   shipAddress: shipAddressSchema,
   products: Yup.array().of(productSchema).required('Products are required'),
 });
