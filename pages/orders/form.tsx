@@ -346,18 +346,20 @@ export default function OrderFormPage(): React.ReactElement {
                     value={selectedProduct ? selectedProduct.id : ''}
                     onChange={handleProductChange}
                     displayEmpty
+                    disabled={
+                      !selectedCategory || !products.some((p) => p.categoryId === selectedCategory)
+                    }
                   >
                     <MenuItem value="" disabled>
                       Select Product
                     </MenuItem>
-                    {values.products.length > 0 &&
-                      products
-                        .filter((p) => p.categoryId === selectedCategory)
-                        .map((product) => (
-                          <MenuItem key={product.id} value={product.id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
+                    {products
+                      .filter((p) => p.categoryId === selectedCategory)
+                      .map((product) => (
+                        <MenuItem key={product.id} value={product.id}>
+                          {product.name}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </DialogContent>
                 <DialogActions>

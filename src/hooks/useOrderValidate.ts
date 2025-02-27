@@ -37,18 +37,14 @@ const orderSchema = Yup.object({
       return PRICE_REGEX.test(value.toString());
     })
     .required(),
-  productsCount: Yup.number().min(1, 'Quantity must be at least 1').integer().required(),
+  productsCount: Yup.number().min(1, 'The product list must not be empty!').integer().required(),
   orderDate: Yup.string().required('Order Date is required'),
   shippedDate: Yup.string().required('Shipped Date is required'),
   shipAddress: shipAddressSchema,
   products: Yup.array().of(productSchema).required('Products are required'),
 });
 
-function useOrderValidate(
-  categories: Category[],
-  products: Product[],
-  initialValues?: NewOrder
-) {
+function useOrderValidate(categories: Category[], products: Product[], initialValues?: NewOrder) {
   const customers = useSelector((state: RootState) => state.customers.customers);
 
   const [values, setValues] = useState<NewOrder>(
@@ -105,14 +101,15 @@ function useOrderValidate(
   const handleCategoryChange = (evt: SelectChangeEvent) => {
     const categoryId = evt.target.value as string;
     setSelectedCategory(categoryId);
-    // setSelectedProduct(null);
+    setSelectedProduct(null);
   };
 
   // Product selection
   const handleProductChange = (evt: SelectChangeEvent) => {
     const productId = evt.target.value as string;
     const product = products.find((p) => p.id === productId);
-    if (product) setSelectedProduct(product);
+    // if (product) setSelectedProduct(product);
+    setSelectedProduct(product || null);
   };
 
   // Adding a product to an order
