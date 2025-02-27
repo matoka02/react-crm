@@ -51,7 +51,7 @@ import { Order, NewOrder, Product } from '@/stores/types/modelTypes';
 export default function OrderFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('id') ?? '';
+  const orderId = searchParams.get('id') || '';
   const dispatch = useDispatch<AppDispatch>();
   const { customers } = useSelector((state: RootState) => state.customers);
   const { categories } = useSelector((state: RootState) => state.categories);
@@ -65,16 +65,19 @@ export default function OrderFormPage(): React.ReactElement {
   const {
     values,
     setValues,
+    selectedCustomer,
     selectedCategory,
     selectedProduct,
     errors,
     handleChange,
-    validateForm,
+    handleCustomerChange,
     handleCategoryChange,
     handleProductChange,
     handleAddProduct,
     handleRemoveProduct,
-  } = useOrderValidate(categories, products);
+    validateForm,
+  } = useOrderValidate(customers,categories, products);
+  const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -103,8 +106,6 @@ export default function OrderFormPage(): React.ReactElement {
       });
     }
   }, [customers, dispatch, orderId, setValues]);
-
-  const [open, setOpen] = useState(false);
 
   // Открытие/закрытие диалога
   const handleDialogOpen = () => {
@@ -150,7 +151,7 @@ export default function OrderFormPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={orderId ? 'Edit Order' : 'Add Order'} navigation="Application / Order">
+    <Layout title={isEditing ? 'Edit Order' : 'Add Order'} navigation="Application / Order">
       {isLoading ? (
         <SkeletonForm />
       ) : (
@@ -165,11 +166,14 @@ export default function OrderFormPage(): React.ReactElement {
                   <InputLabel id="customerId">Select customer</InputLabel>
                   <Select
                     labelId="customerId"
-                    label="Select customer"
+                    label="Select customer3"
                     name="customerId"
-                    value={values.customerId}
-                    onChange={(evt) => handleChange(evt as any)}
+                    value={selectedCustomer}
+                    onChange={handleCustomerChange}
                   >
+                    <MenuItem value="" disabled>
+                      Select Customer2
+                    </MenuItem>
                     {customers.map((customer) => (
                       <MenuItem key={customer.id} value={customer.id}>
                         {customer.firstName} {customer.lastName}
@@ -208,7 +212,7 @@ export default function OrderFormPage(): React.ReactElement {
                 <TextField
                   label="Quantity"
                   name="productsCount"
-                  value={values.productsCount}
+                  value={values.quantity}
                   onChange={handleChange}
                   error={!!errors.productsCount}
                   helperText={errors.productsCount}
@@ -343,7 +347,7 @@ export default function OrderFormPage(): React.ReactElement {
 
                   <Select
                     fullWidth
-                    value={selectedProduct?selectedProduct.id:''}
+                    value={selectedProduct ? selectedProduct.id : ''}
                     onChange={handleProductChange}
                     displayEmpty
                   >
@@ -364,7 +368,12 @@ export default function OrderFormPage(): React.ReactElement {
                   <Button variant="contained" onClick={handleDialogClose} color="primary">
                     Cancel
                   </Button>
-                  <Button variant="contained" onClick={handleAddProduct} color="primary" disabled={!selectedProduct}>
+                  <Button
+                    variant="contained"
+                    onClick={handleAddProduct}
+                    color="primary"
+                    disabled={!selectedProduct}
+                  >
                     Ok
                   </Button>
                 </DialogActions>
