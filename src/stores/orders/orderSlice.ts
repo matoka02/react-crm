@@ -173,7 +173,7 @@ export const updateOrder = createAsyncThunk<Order, Order, { rejectValue: string 
       if (!response.ok) throw new Error('Error updating order');
 
       console.log('updateOrder');
-      console.table(updateOrder);
+      console.log(updateOrder);
 
       const order: Order = await response.json();
 

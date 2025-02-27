@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { REFERENCE_REGEX } from './useOrderSearch';
-import { PRICE_REGEX } from './useProductValidate';
-
 import { RootState } from '@/stores/store';
 import { Category, NewOrder, Product } from '@/stores/types/modelTypes';
-// import { Category } from '@/types/DBmodel';
+
+import { REFERENCE_REGEX } from './useOrderSearch';
+import { PRICE_REGEX } from './useProductValidate';
+import { SelectChangeEvent } from '@mui/material';
 
 const ZIPCODE_REGEX = /^\d{5}$/;
 
@@ -37,17 +37,15 @@ const orderSchema = Yup.object({
       return PRICE_REGEX.test(value.toString());
     })
     .required(),
-  // productsCount: Yup.number().min(1, 'Quantity must be at least 1').integer().required(),
+  productsCount: Yup.number().min(1, 'Quantity must be at least 1').integer().required(),
   orderDate: Yup.string().required('Order Date is required'),
   shippedDate: Yup.string().required('Shipped Date is required'),
-  shippedAddress: shipAddressSchema.required('Shipping address is required'),
+  shipAddress: shipAddressSchema,
   products: Yup.array().of(productSchema).required('Products are required'),
 });
 
 function useOrderValidate(categories: Category[], products: Product[], initialValues?: NewOrder) {
   const customers = useSelector((state: RootState) => state.customers.customers);
-  // const categories = useSelector((state: RootState) => state.categories.categories);
-  // const products = useSelector((state: RootState) => state.products.products);
 
   const [values, setValues] = useState<NewOrder>(
     initialValues || {
@@ -100,18 +98,16 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
   };
 
   // Select category and filter products
-  const handleCategoryChange = (evt: React.ChangeEvent<{ value: unknown }>) => {
+  const handleCategoryChange = (evt: SelectChangeEvent) => {
     const categoryId = evt.target.value as string;
     setSelectedCategory(categoryId);
     setSelectedProduct(null);
   };
 
   // Product selection
-  const handleProductChange = (evt: React.ChangeEvent<{ value: unknown }>) => {
+  const handleProductChange = (evt: SelectChangeEvent) => {
     const productId = evt.target.value as string;
     const product = products.find((p) => p.id === productId);
-    // if (!product) return prev;
-    // return { ...prev, products: [...prev.products, product] };
     if (product) setSelectedProduct(product);
   };
 
@@ -122,6 +118,8 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
         ...prev,
         products: [...prev.products, selectedProduct],
       }));
+      setSelectedCategory('');
+      setSelectedProduct(null);
     }
   };
 
@@ -141,6 +139,7 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
       return true;
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
+        console.log(errors)
         const formattedErrors: Record<string, string> = {};
         error.inner.forEach((err) => {
           if (err.path) {

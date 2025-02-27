@@ -52,7 +52,6 @@ export default function OrderFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('id') ?? '';
-  console.log('orderId:', orderId, 'Type:', typeof orderId);
   const dispatch = useDispatch<AppDispatch>();
   const { customers } = useSelector((state: RootState) => state.customers);
   const { categories } = useSelector((state: RootState) => state.categories);
@@ -125,6 +124,7 @@ export default function OrderFormPage(): React.ReactElement {
     console.log('Updated Order Payload:', values);
 
     const isValid = await validateForm();
+    console.log('isValid:', isValid);
 
     if (isValid) {
       const payload: NewOrder & Partial<{ id: string }> = orderId
@@ -316,22 +316,6 @@ export default function OrderFormPage(): React.ReactElement {
               {/* Control button */}
               {/* <Divider /> */}
               <div>
-                {/* <Button
-                  variant="contained"
-                  onClick={() => window.history.back()}
-                  sx={styles.buttonBack}
-                >
-                  <ArrowBackIos /> Back2
-                </Button> */}
-                {/* <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  color="primary"
-                  disabled={isLoading}
-                  sx={styles.buttonSave}
-                >
-                  <Save /> Save
-                </Button> */}
                 <Button variant="contained" onClick={handleDialogOpen} color="secondary">
                   <ContentCreate /> Add
                 </Button>
@@ -359,7 +343,7 @@ export default function OrderFormPage(): React.ReactElement {
 
                   <Select
                     fullWidth
-                    value={selectedProduct}
+                    value={selectedProduct?selectedProduct.id:''}
                     onChange={handleProductChange}
                     displayEmpty
                   >
@@ -380,7 +364,7 @@ export default function OrderFormPage(): React.ReactElement {
                   <Button variant="contained" onClick={handleDialogClose} color="primary">
                     Cancel
                   </Button>
-                  <Button variant="contained" onClick={handleAddProduct} color="primary">
+                  <Button variant="contained" onClick={handleAddProduct} color="primary" disabled={!selectedProduct}>
                     Ok
                   </Button>
                 </DialogActions>
