@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import { RootState } from '@/stores/store';
-import { Category, Customer, NewOrder, Product } from '@/stores/types/modelTypes';
+import { Category, NewOrder, Product } from '@/stores/types/modelTypes';
 
 import { REFERENCE_REGEX } from './useOrderSearch';
 import { PRICE_REGEX } from './useProductValidate';
@@ -44,8 +44,12 @@ const orderSchema = Yup.object({
   products: Yup.array().of(productSchema).required('Products are required'),
 });
 
-function useOrderValidate(customers: Customer[],categories: Category[], products: Product[], initialValues?: NewOrder) {
-  // const customers = useSelector((state: RootState) => state.customers.customers);
+function useOrderValidate(
+  categories: Category[],
+  products: Product[],
+  initialValues?: NewOrder
+) {
+  const customers = useSelector((state: RootState) => state.customers.customers);
 
   const [values, setValues] = useState<NewOrder>(
     initialValues || {
@@ -62,14 +66,12 @@ function useOrderValidate(customers: Customer[],categories: Category[], products
     }
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [selectedCustomer, setSelectedCustomer] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     if (initialValues) {
       setValues(initialValues);
-      setSelectedCustomer(initialValues.customerId);
     }
   }, [initialValues]);
 
@@ -87,10 +89,10 @@ function useOrderValidate(customers: Customer[],categories: Category[], products
     if (!name) return;
 
     setValues((prev) => {
-      // if (name === 'customerId' && typeof value === 'number') {
-      //   const customer = customers.find((c) => String(c.id) === String(value));
-      //   return { ...prev, customerId: value, customerName: customer ? customer.firstName : '' };
-      // }
+      if (name === 'customerId' && typeof value === 'number') {
+        const customer = customers.find((c) => String(c.id) === String(value));
+        return { ...prev, customerId: value, customerName: customer ? customer.firstName : '' };
+      }
       if (name.startsWith('shipAddress.')) {
         const addressField = name.split('.')[1];
         return { ...prev, shipAddress: { ...prev.shipAddress, [addressField]: value } };
@@ -98,17 +100,6 @@ function useOrderValidate(customers: Customer[],categories: Category[], products
       return { ...prev, [name]: value };
     });
   };
-
-    // Select customers
-    const handleCustomerChange = (evt: SelectChangeEvent) => {
-      const customerId = Number(evt.target.value);
-      const customer = customers.find((c) => String(c.id) === String(customerId));
-    setValues((prev) => ({
-      ...prev,
-      customerId,
-      customerName: customer ? customer.firstName : '',
-    }));
-    };
 
   // Select category and filter products
   const handleCategoryChange = (evt: SelectChangeEvent) => {
@@ -172,7 +163,6 @@ function useOrderValidate(customers: Customer[],categories: Category[], products
     selectedProduct,
     errors,
     handleChange,
-    handleCustomerChange,
     handleCategoryChange,
     handleProductChange,
     handleAddProduct,

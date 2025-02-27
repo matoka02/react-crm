@@ -65,18 +65,16 @@ export default function OrderFormPage(): React.ReactElement {
   const {
     values,
     setValues,
-    selectedCustomer,
     selectedCategory,
     selectedProduct,
     errors,
     handleChange,
-    handleCustomerChange,
     handleCategoryChange,
     handleProductChange,
     handleAddProduct,
     handleRemoveProduct,
     validateForm,
-  } = useOrderValidate(customers,categories, products);
+  } = useOrderValidate(categories, products);
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -167,15 +165,13 @@ export default function OrderFormPage(): React.ReactElement {
                   <Select
                     labelId="customerId"
                     label="Select customer3"
+                    displayEmpty
                     name="customerId"
-                    value={selectedCustomer}
-                    onChange={handleCustomerChange}
+                    value={values.customerId}
+                    onChange={(evt) => handleChange(evt as any)}
                   >
-                    <MenuItem value="" disabled>
-                      Select Customer2
-                    </MenuItem>
                     {customers.map((customer) => (
-                      <MenuItem key={customer.id} value={customer.id}>
+                      <MenuItem key={customer.id} value={String(customer.id)}>
                         {customer.firstName} {customer.lastName}
                       </MenuItem>
                     ))}
