@@ -249,7 +249,7 @@ const categorySlice = createSlice({
         isLoading: false,
         categories: state.categories.filter((category) => category.id !== String(action.payload)),
         snackbarOpen: true,
-        snackbarMessage: 'Category deleted successfully!',
+        snackbarMessage: `Category id:${action.payload} deleted successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(deleteCategory.rejected, (state, action) => ({
@@ -293,7 +293,7 @@ const categorySlice = createSlice({
           category.id === action.payload.id ? action.payload : category
         ),
         snackbarOpen: true,
-        snackbarMessage: 'Category updated successfully!',
+        snackbarMessage: `Category id:${action.payload.id} updated successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(updateCategory.rejected, (state, action) => ({

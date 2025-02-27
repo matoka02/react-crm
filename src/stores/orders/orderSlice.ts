@@ -163,7 +163,6 @@ export const updateOrder = createAsyncThunk<Order, Order, { rejectValue: string 
   'order/updateOrder',
   async (updatedOrder, { getState, rejectWithValue }) => {
     try {
-      console.log('Updating Order:', updatedOrder);
       const response = await fetch(`/api/orders/${updatedOrder.id}`, {
         method: HttpMethod.PUT,
         headers: { 'Content-Type': 'application/json' },
@@ -171,9 +170,6 @@ export const updateOrder = createAsyncThunk<Order, Order, { rejectValue: string 
       });
 
       if (!response.ok) throw new Error('Error updating order');
-
-      console.log('updateOrder');
-      console.log(updateOrder);
 
       const order: Order = await response.json();
 
@@ -278,7 +274,7 @@ const orderSlice = createSlice({
         isLoading: false,
         orders: state.orders.filter((order) => order.id !== String(action.payload)),
         snackbarOpen: true,
-        snackbarMessage: 'Order deleted successfully!',
+        snackbarMessage: `Order id:${action.payload} deleted successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(deleteOrder.rejected, (state, action) => ({
@@ -322,7 +318,7 @@ const orderSlice = createSlice({
           order.id === action.payload.id ? action.payload : order
         ),
         snackbarOpen: true,
-        snackbarMessage: 'Order updated successfully!',
+        snackbarMessage: `Order id:${action.payload.id} updated successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(updateOrder.rejected, (state, action) => ({

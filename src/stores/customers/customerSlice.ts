@@ -259,7 +259,7 @@ const customerSlice = createSlice({
         isLoading: false,
         customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
         snackbarOpen: true,
-        snackbarMessage: 'Customer deleted successfully!',
+        snackbarMessage: `Customer id:${action.payload} deleted successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(deleteCustomer.rejected, (state, action) => ({
@@ -303,7 +303,7 @@ const customerSlice = createSlice({
           customer.id === action.payload.id ? action.payload : customer
         ),
         snackbarOpen: true,
-        snackbarMessage: 'Customer updated successfully!',
+        snackbarMessage: `Customer id:${action.payload.id} updated successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(updateCustomer.rejected, (state, action) => ({

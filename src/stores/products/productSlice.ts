@@ -280,7 +280,7 @@ const productSlice = createSlice({
         isLoading: false,
         products: state.products.filter((product) => product.id !== String(action.payload)),
         snackbarOpen: true,
-        snackbarMessage: 'Product deleted successfully!',
+        snackbarMessage: `Product id:${action.payload} deleted successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(deleteProduct.rejected, (state, action) => ({
@@ -324,7 +324,7 @@ const productSlice = createSlice({
           product.id === action.payload.id ? action.payload : product
         ),
         snackbarOpen: true,
-        snackbarMessage: 'Product updated successfully!',
+        snackbarMessage: `Product id:${action.payload.id} updated successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(updateProduct.rejected, (state, action) => ({
