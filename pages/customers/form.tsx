@@ -33,7 +33,6 @@ import {
 import { AppDispatch, RootState } from '@/stores/store';
 import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
-
 export default function CustomerFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();

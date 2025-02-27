@@ -126,7 +126,11 @@ export default function CustomerListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={CUSTOMER_DURATION} onClose={handleCloseSnackbar}>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={CUSTOMER_DURATION}
+            onClose={handleCloseSnackbar}
+          >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>

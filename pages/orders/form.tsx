@@ -52,7 +52,7 @@ export default function OrderFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('id') ?? '';
-  console.log("orderId:", orderId, "Type:", typeof orderId);
+  console.log('orderId:', orderId, 'Type:', typeof orderId);
   const dispatch = useDispatch<AppDispatch>();
   const { customers } = useSelector((state: RootState) => state.customers);
   const { categories } = useSelector((state: RootState) => state.categories);

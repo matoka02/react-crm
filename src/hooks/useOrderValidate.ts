@@ -15,14 +15,14 @@ const productSchema = Yup.object({
   id: Yup.string().required('Product ID is required'),
 });
 
-const shipAddressSchema=Yup.object({
+const shipAddressSchema = Yup.object({
   address: Yup.string().min(5, 'Address must be at least 5 characters').required(),
   city: Yup.string().min(2, 'City must be at least 2 characters').required(),
   country: Yup.string().min(2, 'Country must be at least 2 characters').required(),
   zipcode: Yup.string()
     .matches(ZIPCODE_REGEX, 'Invalid Zip Code format')
     .required('Zip Code is required'),
-})
+});
 
 const orderSchema = Yup.object({
   customerId: Yup.number().required('Customer is required'),
@@ -41,11 +41,10 @@ const orderSchema = Yup.object({
   orderDate: Yup.string().required('Order Date is required'),
   shippedDate: Yup.string().required('Shipped Date is required'),
   shippedAddress: shipAddressSchema.required('Shipping address is required'),
-  products: Yup.array().of(productSchema).required('Products are required')
+  products: Yup.array().of(productSchema).required('Products are required'),
 });
 
-function useOrderValidate(categories: Category[],
-  products: Product[],initialValues?: NewOrder) {
+function useOrderValidate(categories: Category[], products: Product[], initialValues?: NewOrder) {
   const customers = useSelector((state: RootState) => state.customers.customers);
   // const categories = useSelector((state: RootState) => state.categories.categories);
   // const products = useSelector((state: RootState) => state.products.products);
@@ -102,7 +101,7 @@ function useOrderValidate(categories: Category[],
 
   // Select category and filter products
   const handleCategoryChange = (evt: React.ChangeEvent<{ value: unknown }>) => {
-    const categoryId=evt.target.value as string;
+    const categoryId = evt.target.value as string;
     setSelectedCategory(categoryId);
     setSelectedProduct(null);
   };

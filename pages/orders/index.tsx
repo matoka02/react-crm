@@ -22,7 +22,13 @@ import Layout from '@/components/Layout';
 import SkeletonList from '@/components/SkeletonList';
 import useOrderSearch from '@/hooks/useOrderSearch';
 import { fetchAllCustomers } from '@/stores/customers/customerSlice';
-import { fetchAllOrders, clearError, setSearchOpen, deleteOrder, ORDER_DURATION } from '@/stores/orders/orderSlice';
+import {
+  fetchAllOrders,
+  clearError,
+  setSearchOpen,
+  deleteOrder,
+  ORDER_DURATION,
+} from '@/stores/orders/orderSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 const defaultProps = {
@@ -52,7 +58,7 @@ export default function OrderListPage(): React.ReactElement {
   const dispatch = useDispatch<AppDispatch>();
   const { orders, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
     useSelector((state: RootState) => state.orders);
-    // console.table(orders);
+  // console.table(orders);
 
   useEffect(() => {
     dispatch(fetchAllCustomers()).then(() => {
@@ -132,7 +138,11 @@ export default function OrderListPage(): React.ReactElement {
           </Tooltip>
 
           {/* Notifications */}
-          <Snackbar open={snackbarOpen} autoHideDuration={ORDER_DURATION} onClose={handleCloseSnackbar}>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={ORDER_DURATION}
+            onClose={handleCloseSnackbar}
+          >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
             </Alert>

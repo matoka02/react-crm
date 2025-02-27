@@ -193,8 +193,8 @@ const themeDefault = createTheme({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-      },                              // CustomerFormPage
-      image: { objectFit: 'cover' },  // CustomerFormPage
+      }, // CustomerFormPage
+      image: { objectFit: 'cover' }, // CustomerFormPage
       buttonContainer: {
         width: '100%',
         display: 'flex',
