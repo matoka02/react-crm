@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Divider,
   FormControl,
+  FormGroup,
   Grid2,
   IconButton,
   InputLabel,
@@ -105,7 +106,7 @@ export default function OrderFormPage(): React.ReactElement {
     }
   }, [customers, dispatch, orderId, setValues]);
 
-  // Открытие/закрытие диалога
+  // Opening/closing a dialog
   const handleDialogOpen = () => {
     dispatch(fetchAllProducts());
     setOpen(true);
@@ -120,17 +121,14 @@ export default function OrderFormPage(): React.ReactElement {
   // Submit
   const handleSubmit = async (evt: React.FormEvent) => {
     evt.preventDefault();
-    console.log('Updated Order Payload:', values);
 
     const isValid = await validateForm();
-    console.log('isValid:', isValid);
 
     if (isValid) {
       const payload: NewOrder & Partial<{ id: string }> = orderId
         ? { ...values, id: orderId }
         : values;
       const action = orderId ? updateOrder(payload as Order) : addOrder(values);
-      console.log('Dispatching updateOrder with:', values);
 
       const isActionCompleted = (result: any) =>
         updateOrder.fulfilled.match(result) ||
@@ -155,16 +153,16 @@ export default function OrderFormPage(): React.ReactElement {
       ) : (
         <Paper elevation={3} sx={styles.paper}>
           <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={3} sx={{ mt: 2 }}>
+            <Grid2 container spacing={3} sx={styles.formWrapper}>
               <Typography variant="h5" color={theme.palette.primary.main}>
                 Order details
               </Typography>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <FormControl fullWidth>
                   <InputLabel id="customerId">Select customer</InputLabel>
                   <Select
                     labelId="customerId"
-                    label="Select customer3"
+                    label="Select customer"
                     displayEmpty
                     name="customerId"
                     value={values.customerId}
@@ -179,7 +177,7 @@ export default function OrderFormPage(): React.ReactElement {
                 </FormControl>
               </Grid2>
 
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Reference"
                   name="reference"
@@ -192,7 +190,7 @@ export default function OrderFormPage(): React.ReactElement {
                 />
               </Grid2>
 
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Amount"
                   name="amount"
@@ -204,7 +202,7 @@ export default function OrderFormPage(): React.ReactElement {
                 />
               </Grid2>
 
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Quantity"
                   name="productsCount"
@@ -218,7 +216,10 @@ export default function OrderFormPage(): React.ReactElement {
               </Grid2>
 
               {/** Date */}
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Typography variant="h5" color={theme.palette.primary.main}>
+                Dates:
+              </Typography>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Order Date"
                   name="orderDate"
@@ -231,7 +232,7 @@ export default function OrderFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Shipped Date"
                   name="shippedDate"
@@ -247,9 +248,9 @@ export default function OrderFormPage(): React.ReactElement {
 
               {/** Address */}
               <Typography variant="h5" color={theme.palette.primary.main}>
-                Shipped address
+                Shipped address:
               </Typography>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Address"
                   name="shipAddress.address"
@@ -260,7 +261,7 @@ export default function OrderFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="City"
                   name="shipAddress.city"
@@ -271,7 +272,7 @@ export default function OrderFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Country"
                   name="shipAddress.country"
@@ -282,7 +283,7 @@ export default function OrderFormPage(): React.ReactElement {
                   fullWidth
                 />
               </Grid2>
-              <Grid2 size={12} sx={{ md: 6 }}>
+              <Grid2 size={12} sx={styles.inputWrapper}>
                 <TextField
                   label="Zip Code"
                   name="shipAddress.zipcode"
@@ -295,33 +296,27 @@ export default function OrderFormPage(): React.ReactElement {
               </Grid2>
 
               {/** Products list */}
-              <Divider />
-              <List dense={false}>
-                {values.products.map((product: Product) => (
-                  <ListItem key={product.id}>
-                    <ListItemText
-                      primary={product.name}
-                      secondary={`Price: $${product.unitPrice}`}
-                    />
-                    {/* <IconButton onClick={() => handleRemoveProduct(product)}>
-                      <ActionDelete />
-                    </IconButton> */}
-                    <IconButton edge="end" onClick={() => handleRemoveProduct(product.id)}>
-                      <ActionDelete />
-                    </IconButton>
-                  </ListItem>
-                ))}
-              </List>
+              <Grid2 size={12} sx={styles.inputWrapper}>
+                <List dense={false}>
+                  {values.products.map((product: Product) => (
+                    <ListItem key={product.id}>
+                      <ListItemText
+                        primary={product.name}
+                        secondary={`Price: $${product.unitPrice}`}
+                      />
+                      <IconButton edge="end" onClick={() => handleRemoveProduct(product.id)}>
+                        <ActionDelete />
+                      </IconButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid2>
 
-              {/* Control button */}
-              {/* <Divider /> */}
-              <div>
-                <Button variant="contained" onClick={handleDialogOpen} color="secondary">
-                  <ContentCreate /> Add
-                </Button>
-              </div>
+              <Button variant="contained" onClick={handleDialogOpen} color="secondary">
+                <ContentCreate /> Add
+              </Button>
 
-              {/* Диалог добавления продукта */}
+              {/* Add product dialog */}
               <Dialog open={open} maxWidth="xs" fullWidth>
                 <DialogTitle>Add Product</DialogTitle>
                 <DialogContent style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
