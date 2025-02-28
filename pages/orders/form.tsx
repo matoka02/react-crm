@@ -172,10 +172,10 @@ export default function OrderFormPage(): React.ReactElement {
                         <InputLabel id="customerId">Select customer</InputLabel>
                         <Select
                           labelId="customerId"
-                          label="Select customer"
+                          label="Select customer4"
                           displayEmpty
                           name="customerId"
-                          value={values.customerId}
+                          value={String(values.customerId) ||''}
                           onChange={(evt) => handleChange(evt as any)}
                         >
                           {customers.map((customer) => (
@@ -245,7 +245,7 @@ export default function OrderFormPage(): React.ReactElement {
                         label="Order Date"
                         name="orderDate"
                         type="date"
-                        value={values.orderDate}
+                        value={values.orderDate||''}
                         onChange={handleChange}
                         error={!!errors.orderDate}
                         helperText={errors.orderDate}
@@ -258,7 +258,7 @@ export default function OrderFormPage(): React.ReactElement {
                         label="Shipped Date"
                         name="shippedDate"
                         type="date"
-                        value={values.shippedDate}
+                        value={values.shippedDate||''}
                         onChange={handleChange}
                         error={!!errors.shippedDate}
                         helperText={errors.shippedDate}
@@ -388,7 +388,7 @@ export default function OrderFormPage(): React.ReactElement {
                     <InputLabel id="category-select-label">Select Category</InputLabel>
                     <Select
                       labelId="category-select-label"
-                      value={selectedCategory}
+                      value={selectedCategory||''}
                       onChange={handleCategoryChange}
                       label="Select Category"
                     >
@@ -459,7 +459,7 @@ export default function OrderFormPage(): React.ReactElement {
                   <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
               </Grid2>
-              
+
             </Grid2>
           </form>
 
