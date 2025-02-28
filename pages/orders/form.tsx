@@ -172,8 +172,7 @@ export default function OrderFormPage(): React.ReactElement {
                         <InputLabel id="customerId">Select customer</InputLabel>
                         <Select
                           labelId="customerId"
-                          label="Select customer4"
-                          displayEmpty
+                          label="Select customer"
                           name="customerId"
                           value={String(values.customerId) ||''}
                           onChange={(evt) => handleChange(evt as any)}
@@ -385,15 +384,15 @@ export default function OrderFormPage(): React.ReactElement {
                 <DialogTitle sx={{ textAlign: 'center' }}>Add Product</DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <FormControl fullWidth sx={{ marginTop: 2 }} >
-                    <InputLabel id="category-select-label">Select Category</InputLabel>
+                    <InputLabel id="category-select-label">Select category</InputLabel>
                     <Select
                       labelId="category-select-label"
                       value={selectedCategory||''}
                       onChange={handleCategoryChange}
-                      label="Select Category"
+                      label="Select category"
                     >
                       <MenuItem value="" disabled>
-                        Select Category
+                        Select category
                       </MenuItem>
                       {categories.map((category) => (
                         <MenuItem key={category.id} value={category.id}>
@@ -404,19 +403,19 @@ export default function OrderFormPage(): React.ReactElement {
                   </FormControl>
 
                   <FormControl fullWidth>
-                    <InputLabel id="product-select-label">Select Product</InputLabel>
+                    <InputLabel id="product-select-label">Select product</InputLabel>
                     <Select
                       labelId="product-select-label"
                       value={selectedProduct ? selectedProduct.id : ''}
                       onChange={handleProductChange}
-                      label="Select Product"
+                      label="Select product"
                       disabled={
                         !selectedCategory ||
                         !products.some((p) => p.categoryId === selectedCategory)
                       }
                     >
                       <MenuItem value="" disabled>
-                        Select Product
+                        Select product
                       </MenuItem>
                       {products
                         .filter((p) => p.categoryId === selectedCategory)
