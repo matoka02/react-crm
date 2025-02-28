@@ -5,6 +5,7 @@ import {
   Save,
 } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -154,213 +155,281 @@ export default function OrderFormPage(): React.ReactElement {
         <Paper elevation={3} sx={styles.paper}>
           <form onSubmit={handleSubmit}>
             <Grid2 container spacing={3} sx={styles.formWrapper}>
-              <Typography variant="h5" color={theme.palette.primary.main}>
-                Order details
-              </Typography>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <FormControl fullWidth>
-                  <InputLabel id="customerId">Select customer</InputLabel>
-                  <Select
-                    labelId="customerId"
-                    label="Select customer"
-                    displayEmpty
-                    name="customerId"
-                    value={values.customerId}
-                    onChange={(evt) => handleChange(evt as any)}
-                  >
-                    {customers.map((customer) => (
-                      <MenuItem key={customer.id} value={String(customer.id)}>
-                        {customer.firstName} {customer.lastName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid2>
+              {/** General information */}
+              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
+                <Typography
+                  variant="h5"
+                  color={theme.palette.primary.main}
+                  component="legend"
+                  sx={{ marginTop: 2 }}
+                >
+                  General information:
+                </Typography>
+                <FormGroup>
+                  <Grid2 container spacing={3} sx={styles.formWrapper}>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <FormControl fullWidth>
+                        <InputLabel id="customerId">Select customer</InputLabel>
+                        <Select
+                          labelId="customerId"
+                          label="Select customer"
+                          displayEmpty
+                          name="customerId"
+                          value={values.customerId}
+                          onChange={(evt) => handleChange(evt as any)}
+                        >
+                          {customers.map((customer) => (
+                            <MenuItem key={customer.id} value={String(customer.id)}>
+                              {customer.firstName} {customer.lastName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid2>
 
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Reference"
-                  name="reference"
-                  placeholder="Enter reference"
-                  value={values.reference}
-                  onChange={handleChange}
-                  error={!!errors.reference}
-                  helperText={errors.reference}
-                  fullWidth
-                />
-              </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Reference"
+                        name="reference"
+                        placeholder="Enter reference"
+                        value={values.reference}
+                        onChange={handleChange}
+                        error={!!errors.reference}
+                        helperText={errors.reference}
+                        fullWidth
+                      />
+                    </Grid2>
 
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Amount"
-                  name="amount"
-                  value={values.amount}
-                  onChange={handleChange}
-                  error={!!errors.amount}
-                  helperText={errors.amount}
-                  fullWidth
-                />
-              </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Amount"
+                        name="amount"
+                        value={values.amount}
+                        onChange={handleChange}
+                        error={!!errors.amount}
+                        helperText={errors.amount}
+                        fullWidth
+                      />
+                    </Grid2>
 
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Quantity"
-                  name="productsCount"
-                  value={values.quantity}
-                  onChange={handleChange}
-                  error={!!errors.productsCount}
-                  helperText={errors.productsCount}
-                  fullWidth
-                  disabled
-                />
-              </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Quantity"
+                        name="productsCount"
+                        value={values.quantity}
+                        onChange={handleChange}
+                        error={!!errors.productsCount}
+                        helperText={errors.productsCount}
+                        fullWidth
+                        disabled
+                      />
+                    </Grid2>
+                  </Grid2>
+                </FormGroup>
+              </FormControl>
 
               {/** Date */}
-              <Typography variant="h5" color={theme.palette.primary.main}>
-                Dates:
-              </Typography>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Order Date"
-                  name="orderDate"
-                  type="date"
-                  value={values.orderDate}
-                  onChange={handleChange}
-                  error={!!errors.orderDate}
-                  helperText={errors.orderDate}
-                  slotProps={{ inputLabel: { shrink: true } }}
-                  fullWidth
-                />
-              </Grid2>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Shipped Date"
-                  name="shippedDate"
-                  type="date"
-                  value={values.shippedDate}
-                  onChange={handleChange}
-                  error={!!errors.shippedDate}
-                  helperText={errors.shippedDate}
-                  slotProps={{ inputLabel: { shrink: true } }}
-                  fullWidth
-                />
-              </Grid2>
+              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
+                <Typography
+                  variant="h5"
+                  color={theme.palette.primary.main}
+                  component="legend"
+                  sx={{ marginTop: 2 }}
+                >
+                  Dates:
+                </Typography>
+                <FormGroup>
+                  <Grid2 container spacing={3} sx={styles.formWrapper}>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Order Date"
+                        name="orderDate"
+                        type="date"
+                        value={values.orderDate}
+                        onChange={handleChange}
+                        error={!!errors.orderDate}
+                        helperText={errors.orderDate}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        fullWidth
+                      />
+                    </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Shipped Date"
+                        name="shippedDate"
+                        type="date"
+                        value={values.shippedDate}
+                        onChange={handleChange}
+                        error={!!errors.shippedDate}
+                        helperText={errors.shippedDate}
+                        slotProps={{ inputLabel: { shrink: true } }}
+                        fullWidth
+                      />
+                    </Grid2>
+                  </Grid2>
+                </FormGroup>
+              </FormControl>
 
               {/** Address */}
-              <Typography variant="h5" color={theme.palette.primary.main}>
-                Shipped address:
-              </Typography>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Address"
-                  name="shipAddress.address"
-                  value={values.shipAddress.address}
-                  onChange={handleChange}
-                  error={!!errors.address}
-                  helperText={errors.address}
-                  fullWidth
-                />
-              </Grid2>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="City"
-                  name="shipAddress.city"
-                  value={values.shipAddress.city}
-                  onChange={handleChange}
-                  error={!!errors.city}
-                  helperText={errors.city}
-                  fullWidth
-                />
-              </Grid2>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Country"
-                  name="shipAddress.country"
-                  value={values.shipAddress.country}
-                  onChange={handleChange}
-                  error={!!errors.country}
-                  helperText={errors.country}
-                  fullWidth
-                />
-              </Grid2>
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <TextField
-                  label="Zip Code"
-                  name="shipAddress.zipcode"
-                  value={values.shipAddress.zipcode}
-                  onChange={handleChange}
-                  error={!!errors.zipcode}
-                  helperText={errors.zipcode}
-                  fullWidth
-                />
-              </Grid2>
+              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
+                <Typography
+                  variant="h5"
+                  color={theme.palette.primary.main}
+                  component="legend"
+                  sx={{ marginTop: 2 }}
+                >
+                  Shipped address:
+                </Typography>
+                <FormGroup>
+                  <Grid2 container spacing={3} sx={styles.formWrapper}>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Address"
+                        name="shipAddress.address"
+                        value={values.shipAddress.address}
+                        onChange={handleChange}
+                        error={!!errors.address}
+                        helperText={errors.address}
+                        fullWidth
+                      />
+                    </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="City"
+                        name="shipAddress.city"
+                        value={values.shipAddress.city}
+                        onChange={handleChange}
+                        error={!!errors.city}
+                        helperText={errors.city}
+                        fullWidth
+                      />
+                    </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Country"
+                        name="shipAddress.country"
+                        value={values.shipAddress.country}
+                        onChange={handleChange}
+                        error={!!errors.country}
+                        helperText={errors.country}
+                        fullWidth
+                      />
+                    </Grid2>
+                    <Grid2 size={12} sx={styles.inputWrapper}>
+                      <TextField
+                        label="Zip Code"
+                        name="shipAddress.zipcode"
+                        value={values.shipAddress.zipcode}
+                        onChange={handleChange}
+                        error={!!errors.zipcode}
+                        helperText={errors.zipcode}
+                        fullWidth
+                      />
+                    </Grid2>
+                  </Grid2>
+                </FormGroup>
+              </FormControl>
 
               {/** Products list */}
-              <Grid2 size={12} sx={styles.inputWrapper}>
-                <List dense={false}>
-                  {values.products.map((product: Product) => (
-                    <ListItem key={product.id}>
-                      <ListItemText
-                        primary={product.name}
-                        secondary={`Price: $${product.unitPrice}`}
-                      />
-                      <IconButton edge="end" onClick={() => handleRemoveProduct(product.id)}>
-                        <ActionDelete />
-                      </IconButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </Grid2>
-
-              <Button variant="contained" onClick={handleDialogOpen} color="secondary">
-                <ContentCreate /> Add
-              </Button>
+              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
+                <Typography
+                  variant="h5"
+                  color={theme.palette.primary.main}
+                  component="legend"
+                  sx={{ marginBottom: 2 }}
+                >
+                  List of customer products:
+                </Typography>
+                <FormGroup>
+                  <Grid2 container spacing={3} sx={styles.formWrapper}>
+                    <Grid2 size={12}>
+                      <Paper elevation={3} sx={{ padding: 2 }}>
+                        <List dense={false}>
+                          {values.products.map((product: Product) => (
+                            <ListItem
+                              key={product.id}
+                              secondaryAction={
+                                <IconButton
+                                  edge="end"
+                                  onClick={() => handleRemoveProduct(product.id)}
+                                >
+                                  <ActionDelete />
+                                </IconButton>
+                              }
+                            >
+                              <ListItemText
+                                primary={product.name}
+                                secondary={`Price: $${product.unitPrice}`}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                        <Box sx={styles.buttonContainer}>
+                        <Button
+                          variant="contained"
+                          onClick={handleDialogOpen}
+                          color="secondary"
+                          startIcon={<ContentCreate />}
+                        >
+                          Add Product in Order
+                        </Button>
+                        </Box>
+                      </Paper>
+                    </Grid2>
+                  </Grid2>
+                </FormGroup>
+              </FormControl>
 
               {/* Add product dialog */}
               <Dialog open={open} maxWidth="xs" fullWidth>
-                <DialogTitle>Add Product</DialogTitle>
-                <DialogContent style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <Select
-                    fullWidth
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    displayEmpty
-                  >
-                    <MenuItem value="" disabled>
-                      Select Category
-                    </MenuItem>
-                    {categories.map((category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
+                <DialogTitle sx={{ textAlign: 'center' }}>Add Product</DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <FormControl fullWidth sx={{ marginTop: 2 }} >
+                    <InputLabel id="category-select-label">Select Category</InputLabel>
+                    <Select
+                      labelId="category-select-label"
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
+                      label="Select Category"
+                    >
+                      <MenuItem value="" disabled>
+                        Select Category
                       </MenuItem>
-                    ))}
-                  </Select>
-
-                  <Select
-                    fullWidth
-                    value={selectedProduct ? selectedProduct.id : ''}
-                    onChange={handleProductChange}
-                    displayEmpty
-                    disabled={
-                      !selectedCategory || !products.some((p) => p.categoryId === selectedCategory)
-                    }
-                  >
-                    <MenuItem value="" disabled>
-                      Select Product
-                    </MenuItem>
-                    {products
-                      .filter((p) => p.categoryId === selectedCategory)
-                      .map((product) => (
-                        <MenuItem key={product.id} value={product.id}>
-                          {product.name}
+                      {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
                         </MenuItem>
                       ))}
-                  </Select>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl fullWidth>
+                    <InputLabel id="product-select-label">Select Product</InputLabel>
+                    <Select
+                      labelId="product-select-label"
+                      value={selectedProduct ? selectedProduct.id : ''}
+                      onChange={handleProductChange}
+                      label="Select Product"
+                      disabled={
+                        !selectedCategory ||
+                        !products.some((p) => p.categoryId === selectedCategory)
+                      }
+                    >
+                      <MenuItem value="" disabled>
+                        Select Product
+                      </MenuItem>
+                      {products
+                        .filter((p) => p.categoryId === selectedCategory)
+                        .map((product) => (
+                          <MenuItem key={product.id} value={product.id}>
+                            {product.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
                 </DialogContent>
                 <DialogActions>
-                  <Button variant="contained" onClick={handleDialogClose} color="primary">
-                    Cancel
-                  </Button>
+                  <Box sx={{display:'flex', justifyContent:'center',width:'100%', gap:2}}>
                   <Button
                     variant="contained"
                     onClick={handleAddProduct}
@@ -369,6 +438,10 @@ export default function OrderFormPage(): React.ReactElement {
                   >
                     Ok
                   </Button>
+                  <Button variant="contained" onClick={handleDialogClose} color="primary">
+                    Cancel
+                  </Button>
+                  </Box>
                 </DialogActions>
               </Dialog>
 
@@ -386,6 +459,7 @@ export default function OrderFormPage(): React.ReactElement {
                   <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
               </Grid2>
+              
             </Grid2>
           </form>
 
