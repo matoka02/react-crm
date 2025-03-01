@@ -33,8 +33,15 @@ declare module '@mui/material/styles' {
         paper: object;
         formWrapper: object;
         inputWrapper: object;
-        card: object;
-        image: object;
+        subtitle: (theme: Theme) => React.CSSProperties; // OrderFormPage
+        fieldset: object; // OrderFormPage
+        secondPaper: object; // OrderFormPage
+        dialogTitle: object; // OrderFormPage
+        dialogContent: object; // OrderFormPage
+        dialogControl: object; // OrderFormPage
+        dialogActions: object; // OrderFormPage
+        card: object; // CustomerFormPage
+        image: object; // CustomerFormPage
         buttonContainer: object;
         buttonBack: (theme: Theme) => React.CSSProperties;
         buttonSave: (theme: Theme) => React.CSSProperties;
@@ -185,6 +192,19 @@ const themeDefault = createTheme({
       },
       formWrapper: { mt: 2 },
       inputWrapper: { md: 6 },
+      subtitle: (theme) => ({ marginTop: 2, color: theme.palette.primary.main }),
+      fieldset: { marginBottom: 3 },
+      secondPaper: { padding: 2 },
+      dialogTitle: { textAlign: 'center' },
+      dialogContent: { display: 'flex', flexDirection: 'column', gap: 2 },
+      dialogControl: { marginTop: 2 },
+      dialogActions: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 2,
+      },
       card: {
         width: 120,
         maxWidth: 300,
@@ -193,8 +213,8 @@ const themeDefault = createTheme({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-      }, // CustomerFormPage
-      image: { objectFit: 'cover' }, // CustomerFormPage
+      },
+      image: { objectFit: 'cover' },
       buttonContainer: {
         width: '100%',
         display: 'flex',

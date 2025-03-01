@@ -157,12 +157,7 @@ export default function OrderFormPage(): React.ReactElement {
             <Grid2 container spacing={3} sx={styles.formWrapper}>
               {/** General information */}
               <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
-                <Typography
-                  variant="h5"
-                  color={theme.palette.primary.main}
-                  component="legend"
-                  sx={{ marginTop: 2 }}
-                >
+                <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   General information:
                 </Typography>
                 <FormGroup>
@@ -174,7 +169,7 @@ export default function OrderFormPage(): React.ReactElement {
                           labelId="customerId"
                           label="Select customer"
                           name="customerId"
-                          value={String(values.customerId) ||''}
+                          value={String(values.customerId) || ''}
                           onChange={(evt) => handleChange(evt as any)}
                         >
                           {customers.map((customer) => (
@@ -228,13 +223,8 @@ export default function OrderFormPage(): React.ReactElement {
               </FormControl>
 
               {/** Date */}
-              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
-                <Typography
-                  variant="h5"
-                  color={theme.palette.primary.main}
-                  component="legend"
-                  sx={{ marginTop: 2 }}
-                >
+              <FormControl component="fieldset" fullWidth sx={styles.fieldset}>
+                <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   Dates:
                 </Typography>
                 <FormGroup>
@@ -244,7 +234,7 @@ export default function OrderFormPage(): React.ReactElement {
                         label="Order Date"
                         name="orderDate"
                         type="date"
-                        value={values.orderDate||''}
+                        value={values.orderDate || ''}
                         onChange={handleChange}
                         error={!!errors.orderDate}
                         helperText={errors.orderDate}
@@ -257,7 +247,7 @@ export default function OrderFormPage(): React.ReactElement {
                         label="Shipped Date"
                         name="shippedDate"
                         type="date"
-                        value={values.shippedDate||''}
+                        value={values.shippedDate || ''}
                         onChange={handleChange}
                         error={!!errors.shippedDate}
                         helperText={errors.shippedDate}
@@ -270,13 +260,8 @@ export default function OrderFormPage(): React.ReactElement {
               </FormControl>
 
               {/** Address */}
-              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
-                <Typography
-                  variant="h5"
-                  color={theme.palette.primary.main}
-                  component="legend"
-                  sx={{ marginTop: 2 }}
-                >
+              <FormControl component="fieldset" fullWidth sx={styles.fieldset}>
+                <Typography variant="h5" component="legend" sx={styles.fieldset}>
                   Shipped address:
                 </Typography>
                 <FormGroup>
@@ -330,19 +315,14 @@ export default function OrderFormPage(): React.ReactElement {
               </FormControl>
 
               {/** Products list */}
-              <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
-                <Typography
-                  variant="h5"
-                  color={theme.palette.primary.main}
-                  component="legend"
-                  sx={{ marginBottom: 2 }}
-                >
+              <FormControl component="fieldset" fullWidth sx={styles.fieldset}>
+                <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   List of customer products:
                 </Typography>
                 <FormGroup>
                   <Grid2 container spacing={3} sx={styles.formWrapper}>
                     <Grid2 size={12}>
-                      <Paper elevation={3} sx={{ padding: 2 }}>
+                      <Paper elevation={3} sx={styles.secondPaper}>
                         <List dense={false}>
                           {values.products.map((product: Product) => (
                             <ListItem
@@ -364,14 +344,14 @@ export default function OrderFormPage(): React.ReactElement {
                           ))}
                         </List>
                         <Box sx={styles.buttonContainer}>
-                        <Button
-                          variant="contained"
-                          onClick={handleDialogOpen}
-                          color="secondary"
-                          startIcon={<ContentCreate />}
-                        >
-                          Add Product in Order
-                        </Button>
+                          <Button
+                            variant="contained"
+                            onClick={handleDialogOpen}
+                            sx={styles.buttonBack}
+                            startIcon={<ContentCreate />}
+                          >
+                            Add Product in Order
+                          </Button>
                         </Box>
                       </Paper>
                     </Grid2>
@@ -381,13 +361,13 @@ export default function OrderFormPage(): React.ReactElement {
 
               {/* Add product dialog */}
               <Dialog open={open} maxWidth="xs" fullWidth>
-                <DialogTitle sx={{ textAlign: 'center' }}>Add Product</DialogTitle>
-                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <FormControl fullWidth sx={{ marginTop: 2 }} >
+                <DialogTitle sx={styles.dialogTitle}>Add Product</DialogTitle>
+                <DialogContent sx={styles.dialogContent}>
+                  <FormControl fullWidth sx={styles.dialogControl}>
                     <InputLabel id="category-select-label">Select category</InputLabel>
                     <Select
                       labelId="category-select-label"
-                      value={selectedCategory||''}
+                      value={selectedCategory || ''}
                       onChange={handleCategoryChange}
                       label="Select category"
                     >
@@ -428,18 +408,18 @@ export default function OrderFormPage(): React.ReactElement {
                   </FormControl>
                 </DialogContent>
                 <DialogActions>
-                  <Box sx={{display:'flex', justifyContent:'center',width:'100%', gap:2}}>
-                  <Button
-                    variant="contained"
-                    onClick={handleAddProduct}
-                    color="primary"
-                    disabled={!selectedProduct}
-                  >
-                    Ok
-                  </Button>
-                  <Button variant="contained" onClick={handleDialogClose} color="primary">
-                    Cancel
-                  </Button>
+                  <Box sx={styles.dialogActions}>
+                    <Button
+                      variant="contained"
+                      onClick={handleAddProduct}
+                      sx={styles.buttonSave}
+                      disabled={!selectedProduct}
+                    >
+                      Ok
+                    </Button>
+                    <Button variant="contained" onClick={handleDialogClose} sx={styles.buttonBack}>
+                      Cancel
+                    </Button>
                   </Box>
                 </DialogActions>
               </Dialog>
@@ -458,7 +438,6 @@ export default function OrderFormPage(): React.ReactElement {
                   <Save /> Save {isEditing ? 'Update' : ''}
                 </Button>
               </Grid2>
-
             </Grid2>
           </form>
 

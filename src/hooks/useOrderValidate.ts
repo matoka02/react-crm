@@ -94,9 +94,13 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
     if (!name) return;
 
     setValues((prev) => {
-      if (name === 'customerId' ) {
-        const customer = customers.find((c) =>c.id === value);
-        return { ...prev, customerId: String(value), customerName: customer ? customer.firstName : '' };
+      if (name === 'customerId') {
+        const customer = customers.find((c) => c.id === value);
+        return {
+          ...prev,
+          customerId: String(value),
+          customerName: customer ? customer.firstName : '',
+        };
       }
       if (name.startsWith('shipAddress.')) {
         const addressField = name.split('.')[1];
