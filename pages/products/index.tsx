@@ -27,8 +27,15 @@ import {
   clearError,
   setSearchOpen,
   deleteProduct,
+  PRODUCT_DURATION,
 } from '@/stores/products/productSlice';
 import { AppDispatch, RootState } from '@/stores/store';
+
+const defaultProps = {
+  model: 'products',
+  dataKeys: ['name', 'categoryName', 'unitPrice', 'numInStock', 'action'],
+  headers: ['Name', 'Category Name', 'Price', 'Total In Stock', 'Actions'],
+};
 
 export default function ProductListPage(): React.ReactElement {
   const router = useRouter();
@@ -52,6 +59,7 @@ export default function ProductListPage(): React.ReactElement {
   }, [dispatch]);
 
   const theme = useTheme();
+  const styles = theme.customStyles.listPage;
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(products.slice(0, 10));
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -111,46 +119,21 @@ export default function ProductListPage(): React.ReactElement {
         <Box suppressHydrationWarning>
           {/* Control buttons */}
           <Tooltip title="Add Product">
-            <Fab
-              onClick={handleNewProduct}
-              sx={{
-                position: 'fixed',
-                bottom: 16,
-                right: 80,
-                zIndex: 1200,
-                backgroundColor: theme.palette.primary.main,
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.dark,
-                },
-              }}
-            >
-              <AddIcon sx={{ color: 'white' }} />
+            <Fab onClick={handleNewProduct} sx={styles.fabAdd}>
+              <AddIcon sx={styles.fabIcon} />
             </Fab>
           </Tooltip>
           <Tooltip title="Search">
-            <Fab
-              onClick={handleToggleSearch}
-              sx={{
-                position: 'fixed',
-                bottom: 16,
-                right: 16,
-                zIndex: 1200,
-                backgroundColor: theme.palette.secondary.main,
-                '&:hover': {
-                  backgroundColor: theme.palette.secondary.dark,
-                },
-              }}
-            >
-              <SearchIcon sx={{ color: 'white' }} />
+            <Fab onClick={handleToggleSearch} sx={styles.fabSearch}>
+              <SearchIcon sx={styles.fabIcon} />
             </Fab>
           </Tooltip>
 
           {/* Notifications */}
           <Snackbar
             open={snackbarOpen}
-            autoHideDuration={3000}
+            autoHideDuration={PRODUCT_DURATION}
             onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           >
             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
               {snackbarMessage}
@@ -159,10 +142,10 @@ export default function ProductListPage(): React.ReactElement {
 
           {/* Table with products */}
           <DataTable
-            model="products"
+            model={defaultProps.model}
             items={items}
-            dataKeys={['name', 'categoryName', 'unitPrice', 'numInStock', 'action']}
-            headers={['Name', 'Category Name', 'Price', 'Total In Stock', 'Actions']}
+            dataKeys={defaultProps.dataKeys}
+            headers={defaultProps.headers}
             page={page}
             totalPages={Math.ceil(products.length / 10)}
             onDelete={(evt, id) => handleOpenDeleteDialog(id)}
@@ -178,16 +161,9 @@ export default function ProductListPage(): React.ReactElement {
           />
 
           {/* Searchbar */}
-          <Drawer
-            anchor="right"
-            open={searchOpen}
-            onClose={handleToggleSearch}
-            ModalProps={{
-              sx: { backgroundColor: 'transparent' },
-            }}
-          >
-            <Box sx={{ width: 300, p: 2 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+          <Drawer anchor="right" open={searchOpen} onClose={handleToggleSearch}>
+            <Box sx={styles.drawerBox}>
+              <Typography variant="h6" sx={styles.drawerTitle}>
                 Search Products
               </Typography>
               <form
@@ -205,33 +181,9 @@ export default function ProductListPage(): React.ReactElement {
                   value={localSearch.name}
                   onChange={handleSearchChange}
                 />
-                <Grid2
-                  container
-                  spacing={2}
-                  sx={{
-                    width: '100%',
-                    mt: 2,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    flexGrow: 1,
-                  }}
-                  component="div"
-                >
+                <Grid2 container spacing={2} sx={styles.drawerButtonContainer} component="div">
                   <Grid2 size={12}>
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        minWidth: 120,
-                        width: '100%',
-                        color: 'white',
-                        backgroundColor: theme.palette.primary.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.primary.dark,
-                        },
-                      }}
-                    >
+                    <Button fullWidth type="submit" variant="contained" sx={styles.buttonSearch}>
                       Search
                     </Button>
                   </Grid2>
@@ -239,15 +191,7 @@ export default function ProductListPage(): React.ReactElement {
                     <Button
                       fullWidth
                       variant="contained"
-                      sx={{
-                        width: '100%',
-                        whiteSpace: 'nowrap',
-                        color: 'white',
-                        backgroundColor: theme.palette.success.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.success.dark,
-                        },
-                      }}
+                      sx={styles.buttonSetSearch}
                       onClick={handleResetSearch}
                     >
                       Show All
@@ -257,15 +201,7 @@ export default function ProductListPage(): React.ReactElement {
                     <Button
                       fullWidth
                       variant="contained"
-                      sx={{
-                        minWidth: 120,
-                        width: '100%',
-                        color: 'white',
-                        backgroundColor: theme.palette.secondary.main,
-                        '&:hover': {
-                          backgroundColor: theme.palette.secondary.dark,
-                        },
-                      }}
+                      sx={styles.buttonBack}
                       onClick={handleToggleSearch}
                     >
                       Close

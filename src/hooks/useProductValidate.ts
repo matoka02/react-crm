@@ -5,9 +5,9 @@ import * as Yup from 'yup';
 import { RootState } from '@/stores/store';
 import { NewProduct } from '@/stores/types/modelTypes';
 
-const PRICE_REGEX = /^\d+(\.\d{1,2})?$/;
+export const PRICE_REGEX = /^\d+(\.\d{1,2})?$/;
 
-const validationSchema = Yup.object({
+const productSchema = Yup.object({
   name: Yup.string()
     .min(2, 'Product name must be at least 2 characters')
     .required('Product name is required'),
@@ -62,7 +62,7 @@ function useProductValidate(initialValues?: NewProduct) {
 
   const validateForm = async () => {
     try {
-      await validationSchema.validate(values, { abortEarly: false });
+      await productSchema.validate(values, { abortEarly: false });
       setErrors({});
       return true;
     } catch (error) {

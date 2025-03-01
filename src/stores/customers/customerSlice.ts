@@ -44,11 +44,16 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
     try {
       const response = await fetch('/api/customers', { method: HttpMethod.GET });
 
-      const data: Customer[] = await response.json();
-      return data;
+      if (!response.ok) throw new Error('Error loading customers');
+
+      const customers: Customer[] = await response.json();
+
+      if (!customers) throw new Error('Invalid customer data from API');
+
+      return customers;
     } catch (error: any) {
       // console.error(error.message);
-      return rejectWithValue('Error loading customers');
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -60,6 +65,7 @@ export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValu
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
       if (!response.ok) throw new Error('Customer not found');
+
       const data: Customer = await response.json();
       return data;
     } catch (error: any) {
@@ -81,7 +87,9 @@ export const fetchFilteredCustomers = createAsyncThunk<
       const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
 
       const data: Customer[] = await response.json();
+
       if (data.length === 0) return rejectWithValue('No customers found');
+
       return data;
     } catch (error: any) {
       // console.error(error.message);
@@ -251,7 +259,7 @@ const customerSlice = createSlice({
         isLoading: false,
         customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
         snackbarOpen: true,
-        snackbarMessage: 'Customer deleted successfully!',
+        snackbarMessage: `Customer id:${action.payload} deleted successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(deleteCustomer.rejected, (state, action) => ({
@@ -295,7 +303,7 @@ const customerSlice = createSlice({
           customer.id === action.payload.id ? action.payload : customer
         ),
         snackbarOpen: true,
-        snackbarMessage: 'Customer updated successfully!',
+        snackbarMessage: `Customer id:${action.payload.id} updated successfully!`,
         snackbarSeverity: 'success',
       }))
       .addCase(updateCustomer.rejected, (state, action) => ({
@@ -308,5 +316,6 @@ const customerSlice = createSlice({
   },
 });
 
+export const CUSTOMER_DURATION = 3000;
 export const { clearError, setSearchOpen, setSearch } = customerSlice.actions;
 export default customerSlice.reducer;

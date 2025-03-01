@@ -6,7 +6,7 @@ import { NewCustomer } from '@/stores/types/modelTypes';
 const PHONE_REGEX = /^\d{3}-\d{3}-\d{3}$/;
 const AVATAR_URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$|^\/assets\/.*/;
 
-const validationSchema = Yup.object({
+const customerSchema = Yup.object({
   firstName: Yup.string()
     .min(2, 'First name must be at least 2 characters')
     .required('First Name is required'),
@@ -67,7 +67,7 @@ function useCustomerValidate(initialValues?: NewCustomer) {
 
   const validateForm = async () => {
     try {
-      await validationSchema.validate(values, { abortEarly: false });
+      await customerSchema.validate(values, { abortEarly: false });
       setErrors({});
       return true;
     } catch (error) {
