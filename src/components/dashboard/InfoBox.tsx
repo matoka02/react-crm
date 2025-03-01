@@ -28,7 +28,7 @@ function InfoBox({ spanBgColor, title, value, Icon }: InfoBoxProps): React.React
           backgroundColor: spanBgColor,
         }}
       >
-        {Icon}
+        {Icon && <Icon sx={{ height: 48, width: 48, mt: 2.5, color: "white" }} />}
       </Box>
       <Box sx={styles.box}>
         <Typography sx={styles.title}>{title}</Typography>
