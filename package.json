@@ -45,6 +45,7 @@
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.0",
     "react-redux": "^9.2.0",
+    "recharts": "^2.15.1",
     "reflect-metadata": "^0.2.2",
     "require-from-string": "^2.0.2",
     "storybook": "^8.5.3",
