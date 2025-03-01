@@ -106,7 +106,7 @@ export default function ProductFormPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={productId ? 'Edit Product' : 'Add Product'} navigation="Application / Product">
+    <Layout title={isEditing ? 'Edit Product' : 'Add Product'} navigation="Application / Product">
       {isLoading ? (
         <SkeletonForm />
       ) : (

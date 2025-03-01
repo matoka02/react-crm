@@ -11,9 +11,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   FormControl,
-  FormGroup,
   Grid2,
   IconButton,
   InputLabel,
@@ -23,7 +21,6 @@ import {
   MenuItem,
   Paper,
   Select,
-  SelectChangeEvent,
   Snackbar,
   TextField,
   Typography,
@@ -154,72 +151,70 @@ export default function OrderFormPage(): React.ReactElement {
       ) : (
         <Paper elevation={3} sx={styles.paper}>
           <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={3} sx={styles.formWrapper}>
+            <Grid2 container spacing={3}>
               {/** General information */}
               <FormControl component="fieldset" fullWidth sx={{ marginBottom: 3 }}>
                 <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   General information:
                 </Typography>
-                <FormGroup>
-                  <Grid2 container spacing={3} sx={styles.formWrapper}>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <FormControl fullWidth>
-                        <InputLabel id="customerId">Select customer</InputLabel>
-                        <Select
-                          labelId="customerId"
-                          label="Select customer"
-                          name="customerId"
-                          value={String(values.customerId) || ''}
-                          onChange={(evt) => handleChange(evt as any)}
-                        >
-                          {customers.map((customer) => (
-                            <MenuItem key={customer.id} value={String(customer.id)}>
-                              {customer.firstName} {customer.lastName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid2>
-
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Reference"
-                        name="reference"
-                        placeholder="Enter reference"
-                        value={values.reference}
-                        onChange={handleChange}
-                        error={!!errors.reference}
-                        helperText={errors.reference}
-                        fullWidth
-                      />
-                    </Grid2>
-
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Amount"
-                        name="amount"
-                        value={values.amount}
-                        onChange={handleChange}
-                        error={!!errors.amount}
-                        helperText={errors.amount}
-                        fullWidth
-                      />
-                    </Grid2>
-
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Quantity"
-                        name="productsCount"
-                        value={values.quantity}
-                        onChange={handleChange}
-                        error={!!errors.productsCount}
-                        helperText={errors.productsCount}
-                        fullWidth
-                        disabled
-                      />
-                    </Grid2>
+                <Grid2 container spacing={3} sx={styles.formWrapper}>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <FormControl fullWidth>
+                      <InputLabel id="customerId">Select customer</InputLabel>
+                      <Select
+                        labelId="customerId"
+                        label="Select customer"
+                        name="customerId"
+                        value={String(values.customerId) || ''}
+                        onChange={(evt) => handleChange(evt as any)}
+                      >
+                        {customers.map((customer) => (
+                          <MenuItem key={customer.id} value={String(customer.id)}>
+                            {customer.firstName} {customer.lastName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid2>
-                </FormGroup>
+
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Reference"
+                      name="reference"
+                      placeholder="Enter reference"
+                      value={values.reference}
+                      onChange={handleChange}
+                      error={!!errors.reference}
+                      helperText={errors.reference}
+                      fullWidth
+                    />
+                  </Grid2>
+
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Amount"
+                      name="amount"
+                      value={values.amount}
+                      onChange={handleChange}
+                      error={!!errors.amount}
+                      helperText={errors.amount}
+                      fullWidth
+                    />
+                  </Grid2>
+
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Quantity"
+                      name="productsCount"
+                      value={values.quantity}
+                      onChange={handleChange}
+                      error={!!errors.productsCount}
+                      helperText={errors.productsCount}
+                      fullWidth
+                      disabled
+                    />
+                  </Grid2>
+                </Grid2>
               </FormControl>
 
               {/** Date */}
@@ -227,36 +222,34 @@ export default function OrderFormPage(): React.ReactElement {
                 <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   Dates:
                 </Typography>
-                <FormGroup>
-                  <Grid2 container spacing={3} sx={styles.formWrapper}>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Order Date"
-                        name="orderDate"
-                        type="date"
-                        value={values.orderDate || ''}
-                        onChange={handleChange}
-                        error={!!errors.orderDate}
-                        helperText={errors.orderDate}
-                        slotProps={{ inputLabel: { shrink: true } }}
-                        fullWidth
-                      />
-                    </Grid2>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Shipped Date"
-                        name="shippedDate"
-                        type="date"
-                        value={values.shippedDate || ''}
-                        onChange={handleChange}
-                        error={!!errors.shippedDate}
-                        helperText={errors.shippedDate}
-                        slotProps={{ inputLabel: { shrink: true } }}
-                        fullWidth
-                      />
-                    </Grid2>
+                <Grid2 container spacing={3} sx={styles.formWrapper}>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Order Date"
+                      name="orderDate"
+                      type="date"
+                      value={values.orderDate || ''}
+                      onChange={handleChange}
+                      error={!!errors.orderDate}
+                      helperText={errors.orderDate}
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      fullWidth
+                    />
                   </Grid2>
-                </FormGroup>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Shipped Date"
+                      name="shippedDate"
+                      type="date"
+                      value={values.shippedDate || ''}
+                      onChange={handleChange}
+                      error={!!errors.shippedDate}
+                      helperText={errors.shippedDate}
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      fullWidth
+                    />
+                  </Grid2>
+                </Grid2>
               </FormControl>
 
               {/** Address */}
@@ -264,54 +257,52 @@ export default function OrderFormPage(): React.ReactElement {
                 <Typography variant="h5" component="legend" sx={styles.fieldset}>
                   Shipped address:
                 </Typography>
-                <FormGroup>
-                  <Grid2 container spacing={3} sx={styles.formWrapper}>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Address"
-                        name="shipAddress.address"
-                        value={values.shipAddress.address}
-                        onChange={handleChange}
-                        error={!!errors.address}
-                        helperText={errors.address}
-                        fullWidth
-                      />
-                    </Grid2>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="City"
-                        name="shipAddress.city"
-                        value={values.shipAddress.city}
-                        onChange={handleChange}
-                        error={!!errors.city}
-                        helperText={errors.city}
-                        fullWidth
-                      />
-                    </Grid2>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Country"
-                        name="shipAddress.country"
-                        value={values.shipAddress.country}
-                        onChange={handleChange}
-                        error={!!errors.country}
-                        helperText={errors.country}
-                        fullWidth
-                      />
-                    </Grid2>
-                    <Grid2 size={12} sx={styles.inputWrapper}>
-                      <TextField
-                        label="Zip Code"
-                        name="shipAddress.zipcode"
-                        value={values.shipAddress.zipcode}
-                        onChange={handleChange}
-                        error={!!errors.zipcode}
-                        helperText={errors.zipcode}
-                        fullWidth
-                      />
-                    </Grid2>
+                <Grid2 container spacing={3} sx={styles.formWrapper}>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Address"
+                      name="shipAddress.address"
+                      value={values.shipAddress.address}
+                      onChange={handleChange}
+                      error={!!errors.address}
+                      helperText={errors.address}
+                      fullWidth
+                    />
                   </Grid2>
-                </FormGroup>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="City"
+                      name="shipAddress.city"
+                      value={values.shipAddress.city}
+                      onChange={handleChange}
+                      error={!!errors.city}
+                      helperText={errors.city}
+                      fullWidth
+                    />
+                  </Grid2>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Country"
+                      name="shipAddress.country"
+                      value={values.shipAddress.country}
+                      onChange={handleChange}
+                      error={!!errors.country}
+                      helperText={errors.country}
+                      fullWidth
+                    />
+                  </Grid2>
+                  <Grid2 size={12} sx={styles.inputWrapper}>
+                    <TextField
+                      label="Zip Code"
+                      name="shipAddress.zipcode"
+                      value={values.shipAddress.zipcode}
+                      onChange={handleChange}
+                      error={!!errors.zipcode}
+                      helperText={errors.zipcode}
+                      fullWidth
+                    />
+                  </Grid2>
+                </Grid2>
               </FormControl>
 
               {/** Products list */}
@@ -319,44 +310,42 @@ export default function OrderFormPage(): React.ReactElement {
                 <Typography variant="h5" component="legend" sx={styles.subtitle}>
                   List of customer products:
                 </Typography>
-                <FormGroup>
-                  <Grid2 container spacing={3} sx={styles.formWrapper}>
-                    <Grid2 size={12}>
-                      <Paper elevation={3} sx={styles.secondPaper}>
-                        <List dense={false}>
-                          {values.products.map((product: Product) => (
-                            <ListItem
-                              key={product.id}
-                              secondaryAction={
-                                <IconButton
-                                  edge="end"
-                                  onClick={() => handleRemoveProduct(product.id)}
-                                >
-                                  <ActionDelete />
-                                </IconButton>
-                              }
-                            >
-                              <ListItemText
-                                primary={product.name}
-                                secondary={`Price: $${product.unitPrice}`}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                        <Box sx={styles.buttonContainer}>
-                          <Button
-                            variant="contained"
-                            onClick={handleDialogOpen}
-                            sx={styles.buttonBack}
-                            startIcon={<ContentCreate />}
+                <Grid2 container spacing={3} sx={styles.formWrapper}>
+                  <Grid2 size={12}>
+                    <Paper elevation={3} sx={styles.secondPaper}>
+                      <List dense={false}>
+                        {values.products.map((product: Product) => (
+                          <ListItem
+                            key={product.id}
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                onClick={() => handleRemoveProduct(product.id)}
+                              >
+                                <ActionDelete />
+                              </IconButton>
+                            }
                           >
-                            Add Product in Order
-                          </Button>
-                        </Box>
-                      </Paper>
-                    </Grid2>
+                            <ListItemText
+                              primary={product.name}
+                              secondary={`Price: $${product.unitPrice}`}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                      <Box sx={styles.buttonContainer}>
+                        <Button
+                          variant="contained"
+                          onClick={handleDialogOpen}
+                          sx={styles.buttonBack}
+                          startIcon={<ContentCreate />}
+                        >
+                          Add Product in Order
+                        </Button>
+                      </Box>
+                    </Paper>
                   </Grid2>
-                </FormGroup>
+                </Grid2>
               </FormControl>
 
               {/* Add product dialog */}

@@ -97,7 +97,7 @@ export default function CustomerFormPage(): React.ReactElement {
 
   return (
     <Layout
-      title={customerId ? 'Edit Customer' : 'Add Customer'}
+      title={isEditing ? 'Edit Customer' : 'Add Customer'}
       navigation="Application / Customer"
     >
       {isLoading ? (
