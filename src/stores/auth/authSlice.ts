@@ -5,14 +5,14 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-// import { AuthState } from '@/stores/types/userTypes';
+import { User } from '@/stores/types/userTypes';
 
 import { HttpMethod } from '../types/httpTypes';
 
 export interface AuthState {
+  user: User | null;
   isFetching: boolean;
   isAuthenticated: boolean;
-  user: any | null;
   error?: string;
   snackbarOpen: boolean;
   snackbarMessage: string;
@@ -20,9 +20,9 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
+  user: null,
   isFetching: false,
   isAuthenticated: false,
-  user: null,
   // error: undefined,
   snackbarOpen: false,
   snackbarMessage: '',
