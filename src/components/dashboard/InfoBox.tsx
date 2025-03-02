@@ -11,26 +11,47 @@ interface InfoBoxProps {
 }
 
 const styles = {
-  box: { height: 80, padding: '5px 10px', marginLeft: 90 },
+  paper: { display: 'flex', flexDirection: 'row' },
+  boxTitle: {
+    flex: 1,
+    padding: '5px 10px',
+  },
   title: { fontSize: 20, fontWeight: 500, color: grey[800] },
   descr: { display: 'block', fontWeight: 500, fontSize: 18, color: grey[800] },
 };
 
 function InfoBox({ spanBgColor, title, value, Icon }: InfoBoxProps): React.ReactElement {
   return (
-    <Paper>
+    <Paper sx={styles.paper}>
       <Box
         sx={{
-          float: 'left',
+          display: 'flex',
           height: 90,
-          width: 90,
-          textAlign: 'center',
           backgroundColor: spanBgColor,
         }}
       >
-        {Icon && <Icon sx={{ height: 48, width: 48, mt: 2.5, color: "white" }} />}
+        {Icon && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 90,
+              height: 90,
+              backgroundColor: spanBgColor,
+            }}
+          >
+            <Icon
+              sx={{
+                height: 48,
+                width: 48,
+                color: 'white',
+              }}
+            />
+          </Box>
+        )}
       </Box>
-      <Box sx={styles.box}>
+      <Box sx={styles.boxTitle}>
         <Typography sx={styles.title}>{title}</Typography>
         <Typography sx={styles.descr}>{value}</Typography>
       </Box>

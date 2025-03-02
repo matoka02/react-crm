@@ -12,7 +12,7 @@ interface NewOrdersProps {
 }
 
 const styles = {
-  paper: { height: 150, backgroundColor: purple[500] },
+  paper: { height: 160, backgroundColor: purple[500] },
   boxTitle: {
     padding: 2,
     fontSize: 24,
@@ -20,7 +20,7 @@ const styles = {
     color: common.white,
     backgroundColor: purple[600],
   },
-  boxContent: { height: 95, padding: '5px 15px 0 15px' },
+  boxContent: { height: 85, padding: '5px 15px 0 15px' },
 };
 
 function NewOrders({ data }: NewOrdersProps): React.ReactElement {

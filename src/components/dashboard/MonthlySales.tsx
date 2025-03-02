@@ -13,7 +13,7 @@ interface MonthlySalesProps {
 }
 
 const styles = {
-  paper: { height: 150, backgroundColor: pink[600] },
+  paper: { height: 160, backgroundColor: pink[600] },
   boxTitle: {
     padding: 2,
     fontSize: 24,

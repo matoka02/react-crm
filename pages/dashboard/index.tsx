@@ -10,12 +10,14 @@ import MonthlySales from '@/components/dashboard/MonthlySales';
 import NewOrders from '@/components/dashboard/NewOrders';
 import Data from '@/lib/demo-dashboard';
 
-
 const styles = {
-  pageWrapper: { paddingTop: 60, padding: 20 },
+  pageWrapper: {
+    paddingTop: 20,
+  },
   container: { marginTop: '3em' },
   cell: {
     padding: '1em',
+    minWidth: 310,
   },
 };
 
@@ -23,16 +25,16 @@ export default function DashboardPage(): React.ReactElement {
   return (
     <Box sx={styles.pageWrapper}>
       <Grid2 container spacing={3} sx={styles.container}>
-        <Grid2 size={{ xs: 12, md: 3 }} sx={styles.cell}>
+        <Grid2 size={{ xs: 12, md: 6 }} sx={styles.cell}>
           <InfoBox Icon={ShoppingCart} spanBgColor={pink[600]} title="Total Profit" value="1500k" />
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 3 }} sx={styles.cell}>
+        <Grid2 size={{ xs: 12, md: 6 }} sx={styles.cell}>
           <InfoBox Icon={ThumbUp} spanBgColor={cyan[600]} title="Likes" value="4231" />
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 3 }} sx={styles.cell}>
+        <Grid2 size={{ xs: 12, md: 6 }} sx={styles.cell}>
           <InfoBox Icon={Assessment} spanBgColor={purple[600]} title="Sales" value="460" />
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 3 }} sx={styles.cell}>
+        <Grid2 size={{ xs: 12, md: 6 }} sx={styles.cell}>
           <InfoBox Icon={Face} spanBgColor={orange[600]} title="New Members" value="248" />
         </Grid2>
 
