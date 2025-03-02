@@ -19,7 +19,6 @@ export interface AuthState {
   snackbarSeverity: 'success' | 'error' | 'warning' | 'info';
 }
 
-
 const initialState: AuthState = {
   isFetching: false,
   isAuthenticated: false,
@@ -34,26 +33,23 @@ export const signIn = createAsyncThunk<
   any,
   { email: string; password: string },
   { rejectValue: string }
->(
-  'auth/signIn',
-  async ( credentials,{ rejectWithValue } ) => {
-    try {
-      const response = await fetch('/api/auth', {
-        method: HttpMethod.POST,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
+>('auth/signIn', async (credentials, { rejectWithValue }) => {
+  try {
+    const response = await fetch('/api/auth', {
+      method: HttpMethod.POST,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
 
-      if (!response.ok) throw new Error('Authorization error');
+    if (!response.ok) throw new Error('Authorization error');
 
-      const data =await response.json();
+    const data = await response.json();
 
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
 export const signOut = createAsyncThunk('auth/signOut', async () => {
   await fetch('/api/auth', { method: HttpMethod.POST });
@@ -90,7 +86,7 @@ const authSlice = createSlice({
         error: action.payload,
         snackbarOpen: true,
         snackbarMessage: action.payload || 'Sign-in failed',
-        snackbarSeverity:'error',
+        snackbarSeverity: 'error',
       }))
       .addCase(signOut.pending, (state: AuthState) => ({
         ...state,
@@ -105,15 +101,14 @@ const authSlice = createSlice({
         snackbarMessage: 'Successfully signed out!',
         snackbarSeverity: 'info',
       }))
-      .addCase(signOut.rejected, (state: AuthState,action: PayloadAction<any>) => ({
+      .addCase(signOut.rejected, (state: AuthState, action: PayloadAction<any>) => ({
         ...state,
         isAuthenticated: false,
         error: action.payload,
         snackbarOpen: true,
         snackbarMessage: action.payload || 'Sign-out failed',
-        snackbarSeverity:'error',
-      }))
-      ;
+        snackbarSeverity: 'error',
+      }));
   },
 });
 
