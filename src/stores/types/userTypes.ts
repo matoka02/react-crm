@@ -2,8 +2,8 @@
  * In the project, the backend imitation is performed on API routers.
  */
 
-export interface User{
-  email:string;
+export interface User {
+  email: string;
   password: string;
 }
 

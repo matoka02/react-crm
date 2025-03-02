@@ -23,7 +23,7 @@ import { User } from '@/stores/types/userTypes';
 
 const styles = {
   container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' },
-  paper: { padding: 20, maxWidth: 400, width: '100%' },
+  paper: { padding: 20, maxWidth: 800, width: '100%' },
   form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
   buttonWrapper: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
 };

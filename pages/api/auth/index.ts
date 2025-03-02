@@ -8,9 +8,9 @@ function handler(req: NextApiRequest, resp: NextApiResponse) {
   }
 
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (username === 'admin@test.com' && password === 'password') {
+    if (email === 'admin@test.com' && password === 'password') {
       return resp.status(200).json(DB.token);
     }
   } catch (error) {

@@ -35,6 +35,8 @@ export const signIn = createAsyncThunk<
   { rejectValue: string }
 >('auth/signIn', async (credentials, { rejectWithValue }) => {
   try {
+    console.log('credentials:', credentials);
+
     const response = await fetch('/api/auth', {
       method: HttpMethod.POST,
       headers: { 'Content-Type': 'application/json' },
