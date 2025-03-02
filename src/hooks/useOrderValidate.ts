@@ -121,7 +121,6 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
   const handleProductChange = (evt: SelectChangeEvent) => {
     const productId = evt.target.value as string;
     const product = products.find((p) => p.id === productId);
-    // if (product) setSelectedProduct(product);
     setSelectedProduct(product || null);
   };
 
@@ -153,7 +152,6 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
       return true;
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
-        console.log(errors);
         const formattedErrors: Record<string, string> = {};
         error.inner.forEach((err) => {
           if (err.path) {
