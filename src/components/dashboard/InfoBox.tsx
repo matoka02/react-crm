@@ -10,48 +10,46 @@ interface InfoBoxProps {
   value: string;
 }
 
-const styles = {
+const getStyles = (spanBgColor: string) => ({
   paper: { display: 'flex', flexDirection: 'row' },
-  boxTitle: {
+  iconContainer: {
+    display: 'flex',
+    height: 90,
+    backgroundColor: spanBgColor,
+  },
+  iconWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 90,
+    height: 90,
+    backgroundColor: spanBgColor,
+  },
+  icon: {
+    height: 48,
+    width: 48,
+    color: 'white',
+  },
+  titleContainer: {
     flex: 1,
     padding: '5px 10px',
   },
   title: { fontSize: 20, fontWeight: 500, color: grey[800] },
   descr: { display: 'block', fontWeight: 500, fontSize: 18, color: grey[800] },
-};
+});
 
 function InfoBox({ spanBgColor, title, value, Icon }: InfoBoxProps): React.ReactElement {
+  const styles = getStyles(spanBgColor);
   return (
     <Paper sx={styles.paper}>
-      <Box
-        sx={{
-          display: 'flex',
-          height: 90,
-          backgroundColor: spanBgColor,
-        }}
-      >
+      <Box sx={styles.iconContainer}>
         {Icon && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 90,
-              height: 90,
-              backgroundColor: spanBgColor,
-            }}
-          >
-            <Icon
-              sx={{
-                height: 48,
-                width: 48,
-                color: 'white',
-              }}
-            />
+          <Box sx={styles.iconWrapper}>
+            <Icon sx={styles.icon} />
           </Box>
         )}
       </Box>
-      <Box sx={styles.boxTitle}>
+      <Box sx={styles.titleContainer}>
         <Typography sx={styles.title}>{title}</Typography>
         <Typography sx={styles.descr}>{value}</Typography>
       </Box>
