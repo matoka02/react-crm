@@ -12,10 +12,3 @@ export interface ApiAction {
   data?: any;
   filters?: any;
 }
-
-export interface AuthState {
-  isFetching: boolean;
-  isAuthenticated: boolean;
-  user?: any;
-  error?: string;
-}
