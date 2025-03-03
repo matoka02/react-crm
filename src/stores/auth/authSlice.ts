@@ -35,28 +35,40 @@ export const signIn = createAsyncThunk<
   { rejectValue: string }
 >('auth/signIn', async (credentials, { rejectWithValue }) => {
   try {
-    console.log('credentials:', credentials);
-
     const response = await fetch('/api/auth', {
       method: HttpMethod.POST,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
 
-    if (!response.ok) throw new Error('Authorization error');
-
     const data = await response.json();
+
+    if (!response.ok) {
+      return rejectWithValue(data.message || 'Authorization error');
+    }
 
     return data;
   } catch (error: any) {
-    return rejectWithValue(error.message);
+    return rejectWithValue('Network error, please try again');
   }
 });
 
-export const signOut = createAsyncThunk('auth/signOut', async () => {
-  await fetch('/api/auth', { method: HttpMethod.POST });
-  return null;
-});
+export const signOut = createAsyncThunk<string, void, { rejectValue: string }>(
+  'auth/signOut',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/auth', { method: 'POST' });
+
+      if (!response.ok) {
+        return rejectWithValue('Failed to sign out. Please try again.');
+      }
+
+      return 'Successfully signed out';
+    } catch (error: any) {
+      return rejectWithValue('Network error, please try again.');
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -114,5 +126,6 @@ const authSlice = createSlice({
   },
 });
 
+export const USER_DURATION = 3000;
 export const { clearError } = authSlice.actions;
 export default authSlice.reducer;

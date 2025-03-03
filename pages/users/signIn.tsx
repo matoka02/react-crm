@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import useUserValidate from '@/hooks/useUserValidate';
-import { clearError, signIn } from '@/stores/auth/authSlice';
+import { clearError, signIn, USER_DURATION } from '@/stores/auth/authSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { User } from '@/stores/types/userTypes';
 
@@ -31,7 +31,7 @@ const styles = {
 export default function SigInPage(): React.ReactElement {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { isFetching, error, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
+  const { isFetching, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -51,7 +51,7 @@ export default function SigInPage(): React.ReactElement {
       if (signIn.fulfilled.match(result)) {
         setTimeout(() => {
           router.push('/dashboard');
-        }, 3000);
+        }, USER_DURATION);
       }
     });
   };
@@ -65,18 +65,17 @@ export default function SigInPage(): React.ReactElement {
         <Typography variant="subtitle1" align="center" color="textSecondary" gutterBottom>
           Version 2.0.0
         </Typography>
-        {error && <Typography color="error">{error}</Typography>}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <FormControl component="fieldset" fullWidth sx={styles.form}>
             <TextField
               label="Email"
               name="email"
-              variant="outlined"
-              fullWidth
+              placeholder="Enter email"
               value={values.email}
               onChange={handleChange}
               error={!!errors.email}
               helperText={errors.email}
+              autoComplete="off"
             />
             <TextField
               label="Password"
@@ -88,12 +87,13 @@ export default function SigInPage(): React.ReactElement {
               onChange={handleChange}
               error={!!errors.password}
               helperText={errors.password}
+              autoComplete="off"
             />
           </FormControl>
 
           {/* Buttons */}
           <Grid2 container sx={styles.buttonWrapper}>
-            <Button variant="contained" onClick={() => router.back()}>
+            <Button variant="contained" onClick={() => router.push('/')}>
               <ArrowBackIos /> Back
             </Button>
             <Button type="submit" variant="contained" color="primary" disabled={isFetching}>
@@ -103,7 +103,11 @@ export default function SigInPage(): React.ReactElement {
         </form>
 
         {/* Notifications */}
-        <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={USER_DURATION}
+          onClose={handleCloseSnackbar}
+        >
           <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
             {snackbarMessage}
           </Alert>

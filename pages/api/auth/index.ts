@@ -13,11 +13,11 @@ function handler(req: NextApiRequest, resp: NextApiResponse) {
     if (email === 'admin@test.com' && password === 'password') {
       return resp.status(200).json(DB.token);
     }
-  } catch (error) {
-    return resp.status(500).json({ message: 'Incorrect login or password', error });
-  }
 
-  return resp.status(403).json({ error: 'Invalid credentials' });
+    return resp.status(403).json({ message: 'Incorrect login or password' });
+  } catch (error) {
+    return resp.status(500).json({ message: 'Server error', error });
+  }
 }
 
 export default handler;
