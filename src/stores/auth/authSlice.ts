@@ -5,9 +5,15 @@ import {
   ActionReducerMapBuilder,
 } from '@reduxjs/toolkit';
 
-import { User } from '@/stores/types/userTypes';
+// import { User } from '@/stores/types/userTypes';
 
 import { HttpMethod } from '../types/httpTypes';
+
+export interface User {
+  email: string;
+  password: string;
+}
+
 
 export interface AuthState {
   user: User | null;
