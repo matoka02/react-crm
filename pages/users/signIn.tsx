@@ -55,7 +55,7 @@ const getStyles = (theme: any) => ({
   },
 });
 
-export default function SigInPage(): React.ReactElement {
+export default function SignInPage(): React.ReactElement {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { isFetching, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
