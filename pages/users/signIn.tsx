@@ -1,4 +1,4 @@
-import { ArrowBackIos } from '@mui/icons-material';
+import { AccountCircle, ArrowBackIos } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -21,12 +21,39 @@ import { clearError, signIn, USER_DURATION } from '@/stores/auth/authSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 import { User } from '@/stores/types/userTypes';
 
-const styles = {
+const getStyles = (theme: any) => ({
   container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' },
-  paper: { padding: 20, maxWidth: 800, width: '100%' },
+  paper: {
+    maxWidth: 800,
+    mx: 'auto',
+    p: 4,
+    mt: 4,
+  },
   form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  buttonWrapper: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-};
+  buttonWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    mt: 3,
+  },
+  buttonBack: {
+    gap: 1,
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.secondary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.secondary.dark,
+    },
+  },
+  buttonLogin: {
+    gap: 1,
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
+});
 
 export default function SigInPage(): React.ReactElement {
   const router = useRouter();
@@ -35,7 +62,8 @@ export default function SigInPage(): React.ReactElement {
     (state: RootState) => state.auth
   );
 
-  // const theme = useTheme();
+  const theme = useTheme();
+  const styles = getStyles(theme);
   const { values, errors, handleChange, validateForm } = useUserValidate();
 
   // Snackbar
@@ -93,11 +121,11 @@ export default function SigInPage(): React.ReactElement {
 
           {/* Buttons */}
           <Grid2 container sx={styles.buttonWrapper}>
-            <Button variant="contained" onClick={() => router.push('/')}>
+            <Button variant="contained" onClick={() => router.push('/')} sx={styles.buttonBack}>
               <ArrowBackIos /> Back
             </Button>
-            <Button type="submit" variant="contained" color="primary" disabled={isFetching}>
-              {isFetching ? <CircularProgress size={24} /> : 'Sign In'}
+            <Button type="submit" variant="contained" sx={styles.buttonLogin} disabled={isFetching} startIcon={isFetching? <CircularProgress size={24}/>: <AccountCircle/>}>
+              Sign In
             </Button>
           </Grid2>
         </form>

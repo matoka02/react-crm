@@ -1,6 +1,6 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 
-const getStyles = (isSmallScreen: boolean) => ({
+const getStyles = (isSmallScreen: boolean, theme: any) => ({
   pageContainer: {
     paddingTop: '3em',
     display: 'flex',
@@ -19,6 +19,7 @@ const getStyles = (isSmallScreen: boolean) => ({
     display: 'flex',
     justifyContent: 'center',
     fontSize: isSmallScreen ? '20px' : '24px',
+    color: theme.palette.primary.main,
   },
   bodyText: {
     fontSize: isSmallScreen ? '16px' : '20px',
@@ -29,7 +30,7 @@ const getStyles = (isSmallScreen: boolean) => ({
 export default function AboutPage() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const styles = getStyles(isSmallScreen);
+  const styles = getStyles(isSmallScreen, theme);
 
   return (
     <Box sx={styles.pageContainer}>
@@ -44,7 +45,6 @@ export default function AboutPage() {
       <Typography
         variant={isSmallScreen ? 'h6' : 'h5'}
         component="h3"
-        color={theme.palette.primary.main}
         gutterBottom
         sx={styles.subtitle}
       >
