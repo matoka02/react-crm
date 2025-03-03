@@ -124,7 +124,13 @@ export default function SigInPage(): React.ReactElement {
             <Button variant="contained" onClick={() => router.push('/')} sx={styles.buttonBack}>
               <ArrowBackIos /> Back
             </Button>
-            <Button type="submit" variant="contained" sx={styles.buttonLogin} disabled={isFetching} startIcon={isFetching? <CircularProgress size={24}/>: <AccountCircle/>}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={styles.buttonLogin}
+              disabled={isFetching}
+              startIcon={isFetching ? <CircularProgress size={24} /> : <AccountCircle />}
+            >
               Sign In
             </Button>
           </Grid2>
