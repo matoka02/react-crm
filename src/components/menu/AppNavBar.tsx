@@ -11,8 +11,12 @@ interface AppNavBarProps {
 
 const getStyles = {
   container: { flexGrow: 1 },
+  toolbar: {
+    minHeight: 0,
+    justifyContent: 'space-between',
+    gap: 2,
+  },
   title: { flexGrow: 1 },
-  toolbar: { minHeight: 0 },
 };
 
 function AppNavBar({ styles, handleDrawerToggle }: AppNavBarProps): React.ReactElement {
@@ -21,9 +25,9 @@ function AppNavBar({ styles, handleDrawerToggle }: AppNavBarProps): React.ReactE
   };
 
   return (
-    <AppBar position="fixed" sx={styles}>
+    <AppBar position="fixed" sx={styles.appBar}>
       <Toolbar sx={getStyles.toolbar}>
-        <IconButton edge="end" onClick={handleDrawerToggle} color="inherit" aria-label="menu">
+        <IconButton onClick={handleDrawerToggle} color="inherit" aria-label="menu">
           <Menu />
         </IconButton>
         <Typography variant="h5" sx={getStyles.title}>

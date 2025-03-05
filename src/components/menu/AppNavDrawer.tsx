@@ -25,6 +25,7 @@ const styles = {
     backgroundColor: 'rgba(227, 231, 232, 1)',
     overflow: 'auto',
   },
+  drawerContent:{width:drawerWidth}
 };
 
 function AppDrawerBar(props: AppDrawerBarProps): React.ReactElement {
@@ -42,14 +43,14 @@ function AppDrawerBar(props: AppDrawerBarProps): React.ReactElement {
   // const styles = getStyles(theme);
 
   const drawer = (
-    <>
+    <Box sx={styles.drawerContent}>
       <AppUserMenu
         username={username}
         onSignOutClick={onSignoutClick}
         onChangePassClick={onChangePassClick}
       />
       <AppDrawerMenu />
-    </>
+    </Box>
   );
 
   return (
