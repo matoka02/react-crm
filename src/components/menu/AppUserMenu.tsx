@@ -71,8 +71,8 @@ function AppUserMenu({
         <Avatar src={defaultAvatar} sx={styles.avatar} />
       </Stack>
       <Box>
-        <Typography component='div' sx={styles.name}>
-          <Typography component='span' sx={styles.userName} variant="inherit">
+        <Typography component="div" sx={styles.name}>
+          <Typography component="span" sx={styles.userName} variant="inherit">
             {username}
           </Typography>
         </Typography>

@@ -14,7 +14,6 @@ export interface User {
   password: string;
 }
 
-
 export interface AuthState {
   user: User | null;
   isFetching: boolean;

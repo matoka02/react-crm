@@ -25,7 +25,7 @@ const styles = {
     backgroundColor: 'rgba(227, 231, 232, 1)',
     overflow: 'auto',
   },
-  drawerContent:{width:drawerWidth}
+  drawerContent: { width: drawerWidth },
 };
 
 function AppDrawerBar(props: AppDrawerBarProps): React.ReactElement {
