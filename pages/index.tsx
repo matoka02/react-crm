@@ -8,7 +8,8 @@ import AppNavBar from '@/components/menu/AppNavBar';
 import AppNavDrawer from '@/components/menu/AppNavDrawer';
 import {
   // fetchAuthUser,
-  signOut } from '@/stores/auth/authSlice';
+  signOut,
+} from '@/stores/auth/authSlice';
 import { AppDispatch } from '@/stores/store';
 
 import NotFoundPage from './404';
@@ -67,9 +68,12 @@ export default function Home() {
   // )
 
   const router = useRouter();
-  const pathname=usePathname();
+  const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const {
+    // isAuthenticated,
+    user,
+  } = useSelector((state) => state.auth);
 
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const isSmallScreen = typeof window !== 'undefined' && window.innerWidth <= 600;
@@ -95,7 +99,7 @@ export default function Home() {
           content="Frontend SSR template is used for bootstrapping a project."
         />
       </Head>
-      {
+      {/**
         isAuthenticated ? (
           <>
             <AppNavBar styles={appStyles} handleDrawerToggle={handleDrawerToggle} />
@@ -123,8 +127,30 @@ export default function Home() {
           </>
         ) : (
           <SignInPage />
-        )
-    }
+        ) */}
+
+      <AppNavBar styles={appStyles} handleDrawerToggle={handleDrawerToggle} />
+      <AppNavDrawer
+        drawerStyle={appStyles.drawer}
+        navDrawerOpen={navDrawerOpen}
+        username={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
+        onSignoutClick={handleSignOut}
+        onChangePassClick={() => router.push('/password')}
+        handleDrawerToggle={handleDrawerToggle}
+        isSmallScreen={isSmallScreen}
+      />
+      <main style={appStyles.content}>
+        {pathname === '/' && <DashboardPage />}
+        {pathname === '/customers' && <CustomerListPage />}
+        {pathname === '/customers/form' && <CustomerFormPage />}
+        {pathname === '/orders' && <OrderListPage />}
+        {pathname === '/orders/form' && <OrderFormPage />}
+        {pathname === '/products' && <ProductListPage />}
+        {pathname === '/products/form' && <ProductFormPage />}
+        {pathname === '/about' && <AboutPage />}
+        {pathname === '/password' && <ChangePasswordPage />}
+        {pathname === '/404' && <NotFoundPage />}
+      </main>
     </>
-  )
+  );
 }
