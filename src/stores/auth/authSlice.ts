@@ -47,7 +47,6 @@ const initialState: AuthState = {
   token: null,
   isFetching: false,
   isAuthenticated: false,
-  // error: undefined,
   snackbarOpen: false,
   snackbarMessage: '',
   snackbarSeverity: 'info',
@@ -78,23 +77,26 @@ export const signIn = createAsyncThunk<
   }
 });
 
-export const signOut = createAsyncThunk<string, void, { rejectValue: string }>(
-  'auth/signOut',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await fetch('/api/auth', { method: 'POST' });
+export const signOut = createAsyncThunk<
+  // string,
+  void,
+  void,
+  { rejectValue: string }
+>('auth/signOut', async (_, { rejectWithValue }) => {
+  try {
+    // const response = await fetch('/api/auth', { method: 'POST' });
 
-      if (!response.ok) {
-        return rejectWithValue('Failed to sign out. Please try again.');
-      }
+    // if (!response.ok) {
+    //   return rejectWithValue('Failed to sign out. Please try again.');
+    // }
 
-      removeTokenUser();
-      return 'Successfully signed out';
-    } catch (error: any) {
-      return rejectWithValue('Network error, please try again.');
-    }
+    removeTokenUser();
+    // return 'Successfully signed out';
+    return Promise.resolve();
+  } catch (error: any) {
+    return rejectWithValue('Network error, please try again.');
   }
-);
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -148,6 +150,7 @@ const authSlice = createSlice({
       // to process login
       .addCase(signOut.fulfilled, (state: AuthState) => ({
         ...state,
+        isFetching: false,
         isAuthenticated: false,
         user: null,
         token: null,

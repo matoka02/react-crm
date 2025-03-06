@@ -6,10 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AppNavBar from '@/components/menu/AppNavBar';
 import AppNavDrawer from '@/components/menu/AppNavDrawer';
-import {
-  setAuthState,
-  signOut,
-} from '@/stores/auth/authSlice';
+import { setAuthState, signOut } from '@/stores/auth/authSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 import NotFoundPage from './404';
@@ -70,7 +67,7 @@ export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, user } = useSelector((state:RootState) => state.auth);
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -128,7 +125,7 @@ export default function Home() {
             {pathname === '/products' && <ProductListPage />}
             {pathname === '/products/form' && <ProductFormPage />}
             {pathname === '/about' && <AboutPage />}
-            {pathname === '/password' && <ChangePasswordPage />}
+            {pathname === '/users/password' && <ChangePasswordPage />}
             {pathname === '/404' && <NotFoundPage />}
           </main>
         </>

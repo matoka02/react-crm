@@ -1,14 +1,5 @@
 import { FilterList, SettingsPower, VpnKey } from '@mui/icons-material';
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Avatar, Box, IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import { common, purple } from '@mui/material/colors';
 import React from 'react';
 
@@ -18,10 +9,10 @@ interface AppUserMenuProps {
   onChangePassClick: () => void;
 }
 
-const defaultImage = '/assets/img/leftdrawer-bg.jpg';
-const defaultAvatar = '/assets/img/avatar0.png';
+const defaultImage: string = '/assets/img/leftdrawer-bg.jpg';
+const defaultAvatar: string = '/assets/img/avatar0.png';
 
-const getStyles = (theme: any) => ({
+const styles = {
   container: {
     padding: '15px 0 10px 10px',
     backgroundImage: `url(${defaultImage})`,
@@ -32,7 +23,7 @@ const getStyles = (theme: any) => ({
   userName: { fontSize: 22, color: common.white },
   icon: { color: common.white },
   menuItem: { paddingLeft: '1em' },
-});
+};
 
 function AppUserMenu({
   username,
@@ -41,9 +32,6 @@ function AppUserMenu({
 }: AppUserMenuProps): React.ReactElement {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const theme = useTheme();
-  const styles = getStyles(theme);
 
   const handleClose = () => {
     setAnchorEl(null);
