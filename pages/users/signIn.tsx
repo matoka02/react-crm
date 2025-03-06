@@ -22,7 +22,7 @@ import { clearError, signIn, USER_DURATION } from '@/stores/auth/authSlice';
 import { AppDispatch, RootState } from '@/stores/store';
 
 const getStyles = (theme: any) => ({
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' },
+  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', overflowY:'scroll' },
   paper: {
     maxWidth: 800,
     mx: 'auto',

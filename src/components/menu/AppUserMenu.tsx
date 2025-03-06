@@ -30,7 +30,7 @@ const getStyles = (theme: any) => ({
   avatar: { boxShadow: '0px 0px 0px 8px rgba(0,0,0,0.2)' },
   name: { color: purple[600], fontWeight: 400, fontSize: 19, textShadow: '1px 1px #444' },
   userName: { fontSize: 22, color: common.white },
-  icon: { color: theme.palette.secondary.main },
+  icon: { color: common.white },
   menuItem: { paddingLeft: '1em' },
 });
 
@@ -82,6 +82,7 @@ function AppUserMenu({
           aria-controls="menu-appbar"
           aria-haspopup="true"
           onClick={handleMenu}
+          sx={styles.icon}
         >
           <FilterList />
         </IconButton>
