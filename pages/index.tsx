@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import AppNavBar from '@/components/menu/AppNavBar';
 import AppNavDrawer from '@/components/menu/AppNavDrawer';
 import {
-  // fetchAuthUser,
+  setAuthState,
   signOut,
 } from '@/stores/auth/authSlice';
-import { AppDispatch } from '@/stores/store';
+import { AppDispatch, RootState } from '@/stores/store';
 
 import NotFoundPage from './404';
 import AboutPage from './about';
@@ -70,18 +70,26 @@ export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    // isAuthenticated,
-    user,
-  } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state:RootState) => state.auth);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const isSmallScreen = typeof window !== 'undefined' && window.innerWidth <= 600;
   const appStyles = getStyles(navDrawerOpen, isSmallScreen);
 
-  // useEffect(() => {
-  //   dispatch(fetchAuthUser());
-  // }, [dispatch]);
+  useEffect(() => {
+    if (typeof window! !== 'undefined') {
+      const token = localStorage.getItem('react-crm-token');
+      const storedUser = localStorage.getItem('react-crm-user');
+
+      if (token && storedUser) {
+        dispatch(setAuthState({ token, user: JSON.parse(storedUser) }));
+      }
+      setIsLoaded(true);
+    }
+  }, [dispatch]);
+
+  if (!isLoaded) return null;
 
   const handleDrawerToggle = () => setNavDrawerOpen((prev) => !prev);
 
@@ -99,58 +107,34 @@ export default function Home() {
           content="Frontend SSR template is used for bootstrapping a project."
         />
       </Head>
-      {/**
-        isAuthenticated ? (
-          <>
-            <AppNavBar styles={appStyles} handleDrawerToggle={handleDrawerToggle} />
-            <AppNavDrawer
-              drawerStyle={appStyles.drawer}
-              navDrawerOpen={navDrawerOpen}
-              username={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
-              onSignoutClick={handleSignOut}
-              onChangePassClick={() => router.push('/password')}
-              handleDrawerToggle={handleDrawerToggle}
-              isSmallScreen={isSmallScreen}
-            />
-            <main style={appStyles.content}>
-              {pathname === '/' && <DashboardPage />}
-              {pathname === '/customers' && <CustomerListPage />}
-              {pathname === '/customers/form' && <CustomerFormPage />}
-              {pathname === '/orders' && <OrderListPage />}
-              {pathname === '/orders/form' && <OrderFormPage />}
-              {pathname === '/products' && <ProductListPage />}
-              {pathname === '/products/form' && <ProductFormPage />}
-              {pathname === '/about' && <AboutPage />}
-              {pathname === '/password' && <ChangePasswordPage />}
-              {pathname === '/404' && <NotFoundPage />}
-            </main>
-          </>
-        ) : (
-          <SignInPage />
-        ) */}
-
-      <AppNavBar styles={appStyles} handleDrawerToggle={handleDrawerToggle} />
-      <AppNavDrawer
-        drawerStyle={appStyles.drawer}
-        navDrawerOpen={navDrawerOpen}
-        username={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
-        onSignoutClick={handleSignOut}
-        onChangePassClick={() => router.push('/password')}
-        handleDrawerToggle={handleDrawerToggle}
-        isSmallScreen={isSmallScreen}
-      />
-      <main style={appStyles.content}>
-        {pathname === '/' && <DashboardPage />}
-        {pathname === '/customers' && <CustomerListPage />}
-        {pathname === '/customers/form' && <CustomerFormPage />}
-        {pathname === '/orders' && <OrderListPage />}
-        {pathname === '/orders/form' && <OrderFormPage />}
-        {pathname === '/products' && <ProductListPage />}
-        {pathname === '/products/form' && <ProductFormPage />}
-        {pathname === '/about' && <AboutPage />}
-        {pathname === '/password' && <ChangePasswordPage />}
-        {pathname === '/404' && <NotFoundPage />}
-      </main>
+      {isAuthenticated ? (
+        <>
+          <AppNavBar styles={appStyles} handleDrawerToggle={handleDrawerToggle} />
+          <AppNavDrawer
+            drawerStyle={appStyles.drawer}
+            navDrawerOpen={navDrawerOpen}
+            username={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
+            onSignoutClick={handleSignOut}
+            onChangePassClick={() => router.push('/password')}
+            handleDrawerToggle={handleDrawerToggle}
+            isSmallScreen={isSmallScreen}
+          />
+          <main style={appStyles.content}>
+            {pathname === '/' && <DashboardPage />}
+            {pathname === '/customers' && <CustomerListPage />}
+            {pathname === '/customers/form' && <CustomerFormPage />}
+            {pathname === '/orders' && <OrderListPage />}
+            {pathname === '/orders/form' && <OrderFormPage />}
+            {pathname === '/products' && <ProductListPage />}
+            {pathname === '/products/form' && <ProductFormPage />}
+            {pathname === '/about' && <AboutPage />}
+            {pathname === '/password' && <ChangePasswordPage />}
+            {pathname === '/404' && <NotFoundPage />}
+          </main>
+        </>
+      ) : (
+        <SignInPage />
+      )}
     </>
   );
 }
