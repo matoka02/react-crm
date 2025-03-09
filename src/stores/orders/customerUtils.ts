@@ -11,7 +11,7 @@ interface StateWithCustomers {
  * @returns Customer first name, or "Unknown" if not found.
  */
 
-const getCustomerName = (customerId: number, getState: () => any): string => {
+const getCustomerName = (customerId: string, getState: () => any): string => {
   const { customers }: StateWithCustomers = getState();
 
   const foundCustomer = customers.customers.find(
