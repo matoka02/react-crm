@@ -11,7 +11,7 @@ function PageContainer({ title, navigation, children }: PageContainerProps): Rea
   const theme = useTheme();
 
   return (
-    <Box sx={{ pt: 0, px: 3 }}>
+    <Box sx={{ pt: 10, px: 3 }}>
       <Typography
         variant="subtitle1"
         sx={{ color: theme.palette.grey[600], pb: 2, display: 'block' }}

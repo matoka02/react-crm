@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 const getStyles = (isSmallScreen: boolean, theme: any) => ({
   pageContainer: {
-    paddingTop: '3em',
+    paddingTop: '3rem',
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
@@ -10,7 +10,7 @@ const getStyles = (isSmallScreen: boolean, theme: any) => ({
     padding: isSmallScreen ? '0 16px' : '0 50px',
   },
   title: {
-    paddingTop: '50px',
+    paddingTop: '84px',
     paddingBottom: '30px',
     textAlign: 'center',
     fontSize: isSmallScreen ? '30px' : '36px',

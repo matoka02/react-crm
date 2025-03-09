@@ -12,7 +12,7 @@ import Data from '@/lib/demo-dashboard';
 
 const styles = {
   pageWrapper: {
-    paddingTop: 20,
+    paddingTop: 4,
   },
   container: { marginTop: '3em' },
   cell: {

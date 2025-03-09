@@ -1,9 +1,8 @@
-import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+// import Head from 'next/head';
+import React from 'react';
 // import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
-import DashboardPage from './dashboard';
+import AboutPage from './about';
 
 export default function Home() {
   // const { t } = useTranslation();
@@ -30,5 +29,5 @@ export default function Home() {
   //   </div>
   // )
 
-  return <DashboardPage/>
+  return <AboutPage/>
 }
