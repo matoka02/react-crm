@@ -31,7 +31,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useOrderValidate from '@/hooks/useOrderValidate';
 import { fetchAllCategories } from '@/stores/categories/categorySlice';
@@ -145,7 +145,7 @@ export default function OrderFormPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={isEditing ? 'Edit Order' : 'Add Order'} navigation="Application / Order">
+    <PageContainer title={isEditing ? 'Edit Order' : 'Add Order'} navigation="Application / Order">
       {isLoading ? (
         <SkeletonForm />
       ) : (
@@ -442,6 +442,6 @@ export default function OrderFormPage(): React.ReactElement {
           </Snackbar>
         </Paper>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

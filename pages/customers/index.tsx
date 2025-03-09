@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
 import DeleteDialog from '@/components/DeleteDialog';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useCustomerSearch from '@/hooks/useCustomerSearch';
 import {
@@ -108,7 +108,7 @@ export default function CustomerListPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={`Customers (${customers.length})`} navigation="Application / Customer">
+    <PageContainer title={`Customers (${customers.length})`} navigation="Application / Customer">
       {isLoading ? (
         <SkeletonList />
       ) : (
@@ -218,6 +218,6 @@ export default function CustomerListPage(): React.ReactElement {
           </Drawer>
         </Box>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

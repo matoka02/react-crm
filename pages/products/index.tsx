@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
 import DeleteDialog from '@/components/DeleteDialog';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useProductSearch from '@/hooks/useProductSearch';
 import { fetchAllCategories } from '@/stores/categories/categorySlice';
@@ -112,7 +112,7 @@ export default function ProductListPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={`Products (${products.length})`} navigation="Application / Product">
+    <PageContainer title={`Products (${products.length})`} navigation="Application / Product">
       {isLoading ? (
         <SkeletonList />
       ) : (
@@ -213,6 +213,6 @@ export default function ProductListPage(): React.ReactElement {
           </Drawer>
         </Box>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

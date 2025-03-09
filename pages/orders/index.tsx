@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
 import DeleteDialog from '@/components/DeleteDialog';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useOrderSearch from '@/hooks/useOrderSearch';
 import { fetchAllCustomers } from '@/stores/customers/customerSlice';
@@ -120,7 +120,7 @@ export default function OrderListPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={`Orders (${orders.length})`} navigation="Application / Order">
+    <PageContainer title={`Orders (${orders.length})`} navigation="Application / Order">
       {isLoading ? (
         <SkeletonList />
       ) : (
@@ -221,6 +221,6 @@ export default function OrderListPage(): React.ReactElement {
           </Drawer>
         </Box>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

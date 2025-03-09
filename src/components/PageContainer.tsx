@@ -1,13 +1,13 @@
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 import React, { ReactNode } from 'react';
 
-interface LayoutProps {
+interface PageContainerProps {
   title: string;
   navigation: string;
   children: ReactNode;
 }
 
-function Layout({ title, navigation, children }: LayoutProps): React.ReactElement {
+function PageContainer({ title, navigation, children }: PageContainerProps): React.ReactElement {
   const theme = useTheme();
 
   return (
@@ -30,4 +30,4 @@ function Layout({ title, navigation, children }: LayoutProps): React.ReactElemen
   );
 }
 
-export default Layout;
+export default PageContainer;

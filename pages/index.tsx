@@ -112,7 +112,7 @@ export default function Home() {
             navDrawerOpen={navDrawerOpen}
             username={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}
             onSignoutClick={handleSignOut}
-            onChangePassClick={() => router.push('/password')}
+            onChangePassClick={() => router.push('/users/password')}
             handleDrawerToggle={handleDrawerToggle}
             isSmallScreen={isSmallScreen}
           />
