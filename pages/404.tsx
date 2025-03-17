@@ -170,10 +170,6 @@ export default function NotFoundPage() {
   const theme = useTheme();
   const styles = getStyles(theme);
   return (
-    // <div>
-    //   <h1>404 - Page Not Found</h1>
-    // </div>
-
     <Grid2 container sx={styles.container}>
       <Box sx={styles.topHeader} />
 
