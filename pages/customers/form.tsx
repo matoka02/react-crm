@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useCustomerForm from '@/hooks/useCustomerValidate';
 import {
@@ -96,7 +96,7 @@ export default function CustomerFormPage(): React.ReactElement {
   };
 
   return (
-    <Layout
+    <PageContainer
       title={isEditing ? 'Edit Customer' : 'Add Customer'}
       navigation="Application / Customer"
     >
@@ -237,6 +237,6 @@ export default function CustomerFormPage(): React.ReactElement {
           </Snackbar>
         </Paper>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

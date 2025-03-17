@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
-import Layout from '@/components/Layout';
+import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useProductValidate from '@/hooks/useProductValidate';
 import { fetchAllCategories } from '@/stores/categories/categorySlice';
@@ -106,7 +106,10 @@ export default function ProductFormPage(): React.ReactElement {
   };
 
   return (
-    <Layout title={isEditing ? 'Edit Product' : 'Add Product'} navigation="Application / Product">
+    <PageContainer
+      title={isEditing ? 'Edit Product' : 'Add Product'}
+      navigation="Application / Product"
+    >
       {isLoading ? (
         <SkeletonForm />
       ) : (
@@ -198,6 +201,6 @@ export default function ProductFormPage(): React.ReactElement {
           </Snackbar>
         </Paper>
       )}
-    </Layout>
+    </PageContainer>
   );
 }

@@ -16,3 +16,8 @@ declare const process: any;
 declare const require: any;
 
 declare type TODO = any;
+
+declare module '*.module.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}

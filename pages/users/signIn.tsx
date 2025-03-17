@@ -11,18 +11,24 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import useUserValidate from '@/hooks/useUserValidate';
 import { clearError, signIn, USER_DURATION } from '@/stores/auth/authSlice';
 import { AppDispatch, RootState } from '@/stores/store';
-import { User } from '@/stores/types/userTypes';
 
 const getStyles = (theme: any) => ({
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    overflowY: 'scroll',
+  },
   paper: {
     maxWidth: 800,
     mx: 'auto',
@@ -55,7 +61,7 @@ const getStyles = (theme: any) => ({
   },
 });
 
-export default function SigInPage(): React.ReactElement {
+export default function SignInPage(): React.ReactElement {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { isFetching, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
@@ -121,10 +127,18 @@ export default function SigInPage(): React.ReactElement {
 
           {/* Buttons */}
           <Grid2 container sx={styles.buttonWrapper}>
-            <Button variant="contained" onClick={() => router.push('/')} sx={styles.buttonBack}>
-              <ArrowBackIos /> Back
-            </Button>
-            <Button type="submit" variant="contained" sx={styles.buttonLogin} disabled={isFetching} startIcon={isFetching? <CircularProgress size={24}/>: <AccountCircle/>}>
+            <Link href="/">
+              <Button variant="contained" sx={styles.buttonBack}>
+                <ArrowBackIos /> Back
+              </Button>
+            </Link>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={styles.buttonLogin}
+              disabled={isFetching}
+              startIcon={isFetching ? <CircularProgress size={24} /> : <AccountCircle />}
+            >
               Sign In
             </Button>
           </Grid2>
