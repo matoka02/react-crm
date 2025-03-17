@@ -8,12 +8,18 @@ const bgdImage = '/assets/img/header-footer-gradient-bg.png';
 
 const getStyles = (theme: Theme) => ({
   container: {
-    height: '100vh',
+    position: 'relative',
+    minHeight: '100vh',
+    height: '100%',
     padding: 0,
     margin: 0,
     backgroundColor: '#181828',
     fontSize: '16px',
     lineHeight: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    flexGrow: 1,
   },
   topHeader: {
     '&::before': {
@@ -31,12 +37,9 @@ const getStyles = (theme: Theme) => ({
     },
   },
   error: {
-    // minHeight: '100vh',
-    // maxHeight: '100vh',
     position: 'relative',
-    // padding: '240px 0',
-    // padding: { xs: '100px 0', sm: '240px 0' },
     boxSizing: 'border-box',
+    flexGrow: 1,
     width: '100%',
     height: '100%',
     textAlign: 'center',
@@ -117,20 +120,21 @@ const getStyles = (theme: Theme) => ({
     },
   },
   eNavLink: {
+    position: 'relative',
+    overflow: 'hidden',
     height: '45px',
     lineHeight: '45px',
     width: '170px',
     display: 'inline-block',
-    verticalAlign: 'top',
+    paddingTop: 0,
     margin: '0 15px',
     border: '1px solid #181828',
-    color: '#181828',
+    verticalAlign: 'top',
     textDecoration: 'none',
     textTransform: 'uppercase',
     fontSize: '11px',
     letterSpacing: '0.1rem',
-    position: 'relative',
-    overflow: 'hidden',
+    color: '#181828',
     '&:before': {
       content: '""',
       height: '200px',
@@ -182,16 +186,16 @@ export default function NotFoundPage() {
       </Box>
 
       {/* Lamp */}
-      <div className="lamp__wrap">
-        <div className="lamp">
-          <div className="cable"></div>
-          <div className="cover"></div>
-          <div className="in-cover">
-            <div className="bulb"></div>
-          </div>
-          <div className="light"></div>
-        </div>
-      </div>
+      <Box className={CSS.lampWrap}>
+        <Box component="div" className={CSS.lamp}>
+          <Box component="div" className={CSS.cable} />
+          <Box component="div" className={CSS.cover} />
+          <Box component="div" className={CSS.inCover}>
+            <Box component="div" className={CSS.bulb} />
+          </Box>
+          <Box component="div" className={CSS.light} />
+        </Box>
+      </Box>
 
       {/* Content */}
       <Box component="section" sx={styles.error}>
