@@ -10,6 +10,19 @@ import SignInPage from 'pages/users/signIn';
 import AppNavBar from './menu/AppNavBar';
 import AppNavDrawer from './menu/AppNavDrawer';
 
+const validPaths = [
+  '/',
+  '/customers',
+  '/customers/form',
+  '/orders',
+  '/orders/form',
+  '/products',
+  '/products/form',
+  '/about',
+  '/dashboard',
+  '/users/password',
+];
+
 const drawerWidth = 250;
 
 const getStyles = (navDrawerOpen: boolean, isSmallScreen: boolean) => ({
@@ -38,6 +51,7 @@ function Layout({ children }: LayoutProps): React.ReactElement | null {
   const dispatch = useDispatch<AppDispatch>();
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
 
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
   const isSmallScreen = typeof window !== 'undefined' && window.innerWidth <= 600;
@@ -55,6 +69,10 @@ function Layout({ children }: LayoutProps): React.ReactElement | null {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    setIsNotFound(!validPaths.includes(pathname));
+  }, [pathname]);
+
   if (!isLoaded) return null;
 
   const handleDrawerToggle = () => setNavDrawerOpen((prev) => !prev);
@@ -69,8 +87,7 @@ function Layout({ children }: LayoutProps): React.ReactElement | null {
   };
 
   // Excluded routes (where we don't show navigation)
-  const excludedPaths = ['/users/signIn', '/404'];
-  const shouldShowNav = !excludedPaths.includes(pathname);
+  const shouldShowNav = !isNotFound && pathname !== '/users/signIn';
 
   return (
     <>
