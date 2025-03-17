@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import { fetchAllProducts, fetchFilteredProducts } from '@/stores/products/productSlice';
-import { AppDispatch } from '@/stores/store';
+import { useAppDispatch } from '@/stores/hooks';
+import { fetchAllProducts, fetchFilteredProducts } from '@/stores/products/productThunk';
 
 const NAME_REGEX = /^[A-Za-z0-9\s]+$/;
 
 function useProductSearch(initialSearch: { name: string }) {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [search, setLocalSearch] = useState(initialSearch);
 
   // Validation

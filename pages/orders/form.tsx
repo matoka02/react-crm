@@ -34,7 +34,7 @@ import Alert from '@/components/Alert';
 import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useOrderValidate from '@/hooks/useOrderValidate';
-import { fetchAllCategories } from '@/stores/categories/categorySlice';
+import { fetchAllCategories } from '@/stores/categories/categoryThunk';
 import { fetchAllCustomers } from '@/stores/customers/customerSlice';
 import {
   addOrder,
@@ -43,7 +43,7 @@ import {
   ORDER_DURATION,
   updateOrder,
 } from '@/stores/orders/orderSlice';
-import { fetchAllProducts } from '@/stores/products/productSlice';
+import { fetchAllProducts } from '@/stores/products/productThunk';
 import { AppDispatch, RootState } from '@/stores/store';
 import { Order, NewOrder, Product } from '@/stores/types/modelTypes';
 

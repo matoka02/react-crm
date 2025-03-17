@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
@@ -21,15 +20,11 @@ import DeleteDialog from '@/components/DeleteDialog';
 import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useProductSearch from '@/hooks/useProductSearch';
-import { fetchAllCategories } from '@/stores/categories/categorySlice';
-import {
-  fetchAllProducts,
-  clearError,
-  setSearchOpen,
-  deleteProduct,
-  PRODUCT_DURATION,
-} from '@/stores/products/productSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { fetchAllCategories } from '@/stores/categories/categoryThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { clearError, setSearchOpen, PRODUCT_DURATION } from '@/stores/products/productSlice';
+import { deleteProduct, fetchAllProducts } from '@/stores/products/productThunk';
+import { RootState } from '@/stores/store';
 
 const defaultProps = {
   model: 'products',
@@ -39,7 +34,7 @@ const defaultProps = {
 
 export default function ProductListPage(): React.ReactElement {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const {
     products,
     isLoading,
@@ -48,7 +43,7 @@ export default function ProductListPage(): React.ReactElement {
     snackbarSeverity,
     searchOpen,
     search,
-  } = useSelector((state: RootState) => state.products);
+  } = useAppSelector((state: RootState) => state.products);
   // console.table(products);
 
   useEffect(() => {

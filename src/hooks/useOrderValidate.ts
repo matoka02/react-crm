@@ -95,7 +95,7 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
 
     setValues((prev) => {
       if (name === 'customerId') {
-        const customer = customers.find((c) => c.id === value);
+        const customer = customers.find((c: { id: number; }) => c.id === value);
         return {
           ...prev,
           customerId: String(value),
