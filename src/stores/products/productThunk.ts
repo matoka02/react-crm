@@ -1,10 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { Product, NewProduct } from '@/stores/types/modelTypes';
+import { Product, NewProduct, Category } from '@/stores/types/modelTypes';
 
 import { HttpMethod } from '../types/httpTypes';
 
-import getCategoryName from './categoryUtils';
+/**
+ * Gets the category name by `categoryId`, taking data from Redux state.
+ * @param categoryId - Category ID.
+ * @param getState - Redux `getState()` function.
+ * @returns Category name, or "Unknown" if not found.
+ */
+
+interface StateWithCategories {
+  categories: { categories: Category[] };
+}
+
+const getCategoryName = (categoryId: string | number, getState: () => any) => {
+  const { categories }: StateWithCategories = getState();
+
+  const foundCategory = categories.categories.find(
+    (category) => String(category.id) === String(categoryId)
+  );
+
+  return foundCategory?.name || 'Unknown';
+};
 
 export const fetchAllProducts = createAsyncThunk<Product[], void, { rejectValue: string }>(
   'product/fetchAllProducts',
@@ -30,7 +49,7 @@ export const fetchAllProducts = createAsyncThunk<Product[], void, { rejectValue:
   }
 );
 
-export const fetchProductById = createAsyncThunk<Product, string, { rejectValue: string }>(
+export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>(
   'product/fetchProductById',
   async (productId: number, { getState, rejectWithValue }: any) => {
     try {
@@ -47,7 +66,7 @@ export const fetchProductById = createAsyncThunk<Product, string, { rejectValue:
 
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error?.message || 'Failed to fetch product');
     }
   }
 );

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ActionReducerMapBuilder, Action } from '@reduxjs/toolkit';
 
 import { Category, NewCategory } from '@/stores/types/modelTypes';
 
@@ -58,20 +58,27 @@ const handleFetchAllCategoriesRejected = (state: CategoryState, action: PayloadA
   error: action.payload,
   snackbarOpen: true,
   snackbarMessage: action.payload,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
+
 // Category by ID
-const handleFetchCategoryByIdFulfilled = (state: CategoryState, action: PayloadAction<number>) => ({
+const handleFetchCategoryByIdFulfilled = (
+  state: CategoryState,
+  action: PayloadAction<Category>
+) => ({
   ...state,
   isLoading: false,
   categories: [...state.categories, action.payload],
 });
-const handleFetchCategoryByIdRejected = (state: CategoryState, action: PayloadAction<number>) => ({
+const handleFetchCategoryByIdRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'warning',
+  snackbarSeverity: 'warning' as const,
 });
 
 // Find categories
@@ -88,14 +95,15 @@ const handleFetchFilteredCategoriesFulfilled = (
 });
 const handleFetchFilteredCategoriesRejected = (
   state: CategoryState,
-  action: PayloadAction<Category[]>
+  action: PayloadAction<string | undefined>
 ) => ({
   ...state,
   isLoading: false,
   error: action.payload,
   snackbarOpen: true,
-  snackbarMessage: action.payload,
-  snackbarSeverity: action.payload === 'No categories found' ? 'warning' : 'error',
+  snackbarMessage: action.payload ?? 'Unknown error',
+  snackbarSeverity:
+    action.payload === 'No categories found' ? ('warning' as const) : ('error' as const),
 });
 
 // Delete category
@@ -105,31 +113,37 @@ const handleDeleteCategoryFulfilled = (state: CategoryState, action: PayloadActi
   categories: state.categories.filter((category) => category.id !== String(action.payload)),
   snackbarOpen: true,
   snackbarMessage: `Category id:${action.payload} deleted successfully!`,
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleDeleteCategoryRejected = (state: CategoryState, action: PayloadAction<number>) => ({
+const handleDeleteCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `Error: ${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 // Add category
-const handleAddCategoryFulfilled = (state: CategoryState, action: PayloadAction<NewCategory>) => ({
+const handleAddCategoryFulfilled = (state: CategoryState, action: PayloadAction<Category>) => ({
   ...state,
   isLoading: false,
   categories: [...state.categories, action.payload],
   snackbarOpen: true,
   snackbarMessage: 'Category added successfully!',
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleAddCategoryRejected = (state: CategoryState, action: PayloadAction<NewCategory>) => ({
+const handleAddCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 // Update category
@@ -141,14 +155,17 @@ const handleUpdateCategoryFulfilled = (state: CategoryState, action: PayloadActi
   ),
   snackbarOpen: true,
   snackbarMessage: `Category id:${action.payload.id} updated successfully!`,
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleUpdateCategoryRejected = (state: CategoryState, action: PayloadAction<Category>) => ({
+const handleUpdateCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 const categorySlice = createSlice({
@@ -188,10 +205,7 @@ const categorySlice = createSlice({
       .addCase(updateCategory.fulfilled, handleUpdateCategoryFulfilled)
       .addCase(updateCategory.rejected, handleUpdateCategoryRejected)
       // pending
-      .addMatcher(
-        (action: PayloadAction<any>) => action.type.endsWith('/pending'),
-        handleCategoryPending
-      );
+      .addMatcher((action: Action) => action.type.endsWith('/pending'), handleCategoryPending);
   },
 });
 

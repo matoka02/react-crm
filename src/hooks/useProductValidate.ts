@@ -55,7 +55,7 @@ function useProductValidate(initialValues?: NewProduct) {
       [name]: value,
       categoryName:
         name === 'categoryId'
-          ? categories.find((category: { id: number }) => category.id === value)?.name || ''
+          ? categories.find((category) => category.id === value)?.name || ''
           : prev.categoryName,
     }));
   };

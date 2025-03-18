@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ActionReducerMapBuilder, Action } from '@reduxjs/toolkit';
 
 import { Product, NewProduct } from '@/stores/types/modelTypes';
 
@@ -56,17 +56,20 @@ const handleFetchProductsRejected = (state: ProductState, action: PayloadAction<
 });
 
 // Product by ID
-const handleFetchProductByIdFulfilled = (state: ProductState, action: PayloadAction<number>) => ({
+const handleFetchProductByIdFulfilled = (state: ProductState, action: PayloadAction<Product>) => ({
   ...state,
   isLoading: false,
   products: [...state.products, action.payload],
 });
-const handleFetchProductByIdRejected = (state: ProductState, action: PayloadAction<number>) => ({
+const handleFetchProductByIdRejected = (
+  state: ProductState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
-  snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'warning',
+  snackbarMessage: action.payload ?? 'Unknown error',
+  snackbarSeverity: 'warning' as const,
 });
 
 // Find products
@@ -81,13 +84,17 @@ const handleFilteredProductsFulfilled = (
   snackbarMessage: action.payload.length === 0 ? 'No products found' : state.snackbarMessage,
   snackbarSeverity: action.payload.length === 0 ? 'warning' : state.snackbarSeverity,
 });
-const handleFilteredProductsRejected = (state: ProductState, action: PayloadAction<Product[]>) => ({
+const handleFilteredProductsRejected = (
+  state: ProductState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   error: action.payload,
   snackbarOpen: true,
-  snackbarMessage: action.payload,
-  snackbarSeverity: action.payload === 'No products found' ? 'warning' : 'error',
+  snackbarMessage: action.payload ?? 'Unknown error',
+  snackbarSeverity:
+    action.payload === 'No products found' ? ('warning' as const) : ('error' as const),
 });
 
 // Delete product
@@ -97,31 +104,37 @@ const handleDeleteProductFulfilled = (state: ProductState, action: PayloadAction
   products: state.products.filter((product) => product.id !== String(action.payload)),
   snackbarOpen: true,
   snackbarMessage: `Product id:${action.payload} deleted successfully!`,
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleDeleteProductRejected = (state: ProductState, action: PayloadAction<number>) => ({
+const handleDeleteProductRejected = (
+  state: ProductState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `Error: ${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 // Add product
-const handleAddProductFulfilled = (state: ProductState, action: PayloadAction<NewProduct>) => ({
+const handleAddProductFulfilled = (state: ProductState, action: PayloadAction<Product>) => ({
   ...state,
   isLoading: false,
   products: [...state.products, action.payload],
   snackbarOpen: true,
   snackbarMessage: 'Product added successfully!',
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleAddProductRejected = (state: ProductState, action: PayloadAction<NewProduct>) => ({
+const handleAddProductRejected = (
+  state: ProductState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 // Update product
@@ -133,14 +146,17 @@ const handleUpdateProductFulfilled = (state: ProductState, action: PayloadAction
   ),
   snackbarOpen: true,
   snackbarMessage: `Product id:${action.payload.id} updated successfully!`,
-  snackbarSeverity: 'success',
+  snackbarSeverity: 'success' as const,
 });
-const handleUpdateProductRejected = (state: ProductState, action: PayloadAction<Product>) => ({
+const handleUpdateProductRejected = (
+  state: ProductState,
+  action: PayloadAction<string | undefined>
+) => ({
   ...state,
   isLoading: false,
   snackbarOpen: true,
   snackbarMessage: `${action.payload}`,
-  snackbarSeverity: 'error',
+  snackbarSeverity: 'error' as const,
 });
 
 const productSlice = createSlice({
@@ -180,10 +196,7 @@ const productSlice = createSlice({
       .addCase(updateProduct.fulfilled, handleUpdateProductFulfilled)
       .addCase(updateProduct.rejected, handleUpdateProductRejected)
       // pending
-      .addMatcher(
-        (action: PayloadAction<any>) => action.type.endsWith('/pending'),
-        handleProductPending
-      );
+      .addMatcher((action: Action) => action.type.endsWith('/pending'), handleProductPending);
   },
 });
 

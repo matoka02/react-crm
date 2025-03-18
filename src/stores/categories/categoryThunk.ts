@@ -10,6 +10,8 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
     try {
       const response = await fetch('/api/categories', { method: HttpMethod.GET });
 
+      if (!response.ok) throw new Error('Error loading categories');
+
       const categories: Category[] = await response.json();
 
       if (!categories) throw new Error('Invalid category data from API');
@@ -21,7 +23,7 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
   }
 );
 
-export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValue: string }>(
+export const fetchCategoryById = createAsyncThunk<Category, number, { rejectValue: string }>(
   'category/fetchCategoryById',
   async (categoryId: number, { rejectWithValue }: any) => {
     try {
@@ -32,7 +34,7 @@ export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValu
       const data: Category = await response.json();
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error?.message || 'Failed to fetch product');
     }
   }
 );
