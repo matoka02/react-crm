@@ -1,20 +1,8 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  ActionReducerMapBuilder,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ActionReducerMapBuilder, Action } from '@reduxjs/toolkit';
 
-// import { User } from '@/stores/types/userTypes';
+import { User } from '@/stores/types/userTypes';
 
-import { HttpMethod } from '../types/httpTypes';
-
-export interface User {
-  email: string;
-  password: string;
-  firstName?: string;
-  lastName?: string;
-}
+import { signIn, signOut } from './authThunk';
 
 export interface AuthState {
   user: User | null;
@@ -27,21 +15,6 @@ export interface AuthState {
   snackbarSeverity: 'success' | 'error' | 'warning' | 'info';
 }
 
-const isBrowser = typeof window !== 'undefined';
-
-const setTokenUser = (token: string, user: User) => {
-  if (isBrowser) {
-    localStorage.setItem('react-crm-token', token.toString());
-    localStorage.setItem('react-crm-user', JSON.stringify(user));
-  }
-};
-const removeTokenUser = () => {
-  if (isBrowser) {
-    localStorage.removeItem('react-crm-token');
-    localStorage.removeItem('react-crm-user');
-  }
-};
-
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -52,50 +25,54 @@ const initialState: AuthState = {
   snackbarSeverity: 'info',
 };
 
-export const signIn = createAsyncThunk<
-  { user: User; token: string },
-  { email: string; password: string },
-  { rejectValue: string }
->('auth/signIn', async (credentials, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/auth', {
-      method: HttpMethod.POST,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return rejectWithValue(data.message || 'Authorization error');
-    }
-
-    setTokenUser(data.accessToken, data.user);
-    return data;
-  } catch (error: any) {
-    return rejectWithValue('Network error, please try again');
-  }
+// pending
+const handleAuthPending = (state: AuthState) => ({
+  ...state,
+  isLoading: true,
+  error: undefined,
 });
 
-export const signOut = createAsyncThunk<
-  // string,
-  void,
-  void,
-  { rejectValue: string }
->('auth/signOut', async (_, { rejectWithValue }) => {
-  try {
-    // const response = await fetch('/api/auth', { method: 'POST' });
+// LogIn
+const handleLogInFulfilled = (
+  state: AuthState,
+  action: PayloadAction<{ user: User; token: string }>
+) => ({
+  ...state,
+  isFetching: false,
+  isAuthenticated: true,
+  user: action.payload.user,
+  token: action.payload.token,
+  snackbarOpen: true,
+  snackbarMessage: 'Successfully signed in!',
+  snackbarSeverity: 'success' as const,
+});
+const handleLogInRejected = (state: AuthState, action: PayloadAction<string | undefined>) => ({
+  ...state,
+  isFetching: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload || 'Sign-in failed',
+  snackbarSeverity: 'error' as const,
+});
 
-    // if (!response.ok) {
-    //   return rejectWithValue('Failed to sign out. Please try again.');
-    // }
-
-    removeTokenUser();
-    // return 'Successfully signed out';
-    return Promise.resolve();
-  } catch (error: any) {
-    return rejectWithValue('Network error, please try again.');
-  }
+// LogOut
+const handleLogOutFulfilled = (state: AuthState) => ({
+  ...state,
+  isFetching: false,
+  isAuthenticated: false,
+  user: null,
+  token: null,
+  snackbarOpen: true,
+  snackbarMessage: 'Successfully signed out!',
+  snackbarSeverity: 'info' as const,
+});
+const handleLogOutRejected = (state: AuthState, action: PayloadAction<string | undefined>) => ({
+  ...state,
+  isAuthenticated: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload || 'Sign-out failed',
+  snackbarSeverity: 'error' as const,
 });
 
 const authSlice = createSlice({
@@ -118,54 +95,13 @@ const authSlice = createSlice({
   extraReducers: (builder: ActionReducerMapBuilder<AuthState>) => {
     builder
       // LogIn
-      .addCase(signIn.pending, (state: AuthState) => ({
-        ...state,
-        isFetching: true,
-        error: undefined,
-      }))
-      .addCase(signIn.fulfilled, (state: AuthState, action: PayloadAction<any>) => ({
-        ...state,
-        isFetching: false,
-        isAuthenticated: true,
-        user: action.payload.user,
-        token: action.payload.token,
-        snackbarOpen: true,
-        snackbarMessage: 'Successfully signed in!',
-        snackbarSeverity: 'success',
-      }))
-      .addCase(signIn.rejected, (state: AuthState, action: PayloadAction<any>) => ({
-        ...state,
-        isFetching: false,
-        error: action.payload,
-        snackbarOpen: true,
-        snackbarMessage: action.payload || 'Sign-in failed',
-        snackbarSeverity: 'error',
-      }))
+      .addCase(signIn.fulfilled, handleLogInFulfilled)
+      .addCase(signIn.rejected, handleLogInRejected)
       // LogOut
-      .addCase(signOut.pending, (state: AuthState) => ({
-        ...state,
-        isFetching: true,
-        error: undefined,
-      }))
-      // to process login
-      .addCase(signOut.fulfilled, (state: AuthState) => ({
-        ...state,
-        isFetching: false,
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        snackbarOpen: true,
-        snackbarMessage: 'Successfully signed out!',
-        snackbarSeverity: 'info',
-      }))
-      .addCase(signOut.rejected, (state: AuthState, action: PayloadAction<any>) => ({
-        ...state,
-        isAuthenticated: false,
-        error: action.payload,
-        snackbarOpen: true,
-        snackbarMessage: action.payload || 'Sign-out failed',
-        snackbarSeverity: 'error',
-      }));
+      .addCase(signOut.fulfilled, handleLogOutFulfilled)
+      .addCase(signOut.rejected, handleLogOutRejected)
+      // pending
+      .addMatcher((action: Action) => action.type.endsWith('/pending'), handleAuthPending);
   },
 });
 
