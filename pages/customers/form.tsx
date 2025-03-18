@@ -17,28 +17,23 @@ import {
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useCustomerForm from '@/hooks/useCustomerValidate';
-import {
-  addCustomer,
-  clearError,
-  fetchCustomerById,
-  CUSTOMER_DURATION,
-  updateCustomer,
-} from '@/stores/customers/customerSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { clearError, CUSTOMER_DURATION } from '@/stores/customers/customerSlice';
+import { addCustomer, fetchCustomerById, updateCustomer } from '@/stores/customers/customerThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { RootState } from '@/stores/store';
 import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
 export default function CustomerFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const customerId = searchParams.get('id') ?? '';
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
+  const dispatch = useAppDispatch;
+  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useAppSelector(
     (state: RootState) => state.customers
   );
 

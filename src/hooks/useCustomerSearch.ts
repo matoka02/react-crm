@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import {
-  fetchAllCustomers,
-  fetchFilteredCustomers,
-  setSearch,
-} from '@/stores/customers/customerSlice';
-import { AppDispatch } from '@/stores/store';
+import { setSearch } from '@/stores/customers/customerSlice';
+import { fetchAllCustomers, fetchFilteredCustomers } from '@/stores/customers/customerThunk';
+import { useAppDispatch } from '@/stores/hooks';
 
 const NAME_REGEX = /^[A-Za-z\s]+$/;
 
 function useCustomerSearch(initialSearch: { firstName: string; lastName: string }) {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [search, setLocalSearch] = useState(initialSearch);
 
   // Validation
