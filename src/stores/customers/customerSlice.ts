@@ -1,13 +1,15 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  ActionReducerMapBuilder,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ActionReducerMapBuilder, Action } from '@reduxjs/toolkit';
 
 import { Customer, NewCustomer } from '@/stores/types/modelTypes';
 
-import { HttpMethod } from '../types/httpTypes';
+import {
+  addCustomer,
+  deleteCustomer,
+  fetchAllCustomers,
+  fetchCustomerById,
+  fetchFilteredCustomers,
+  updateCustomer,
+} from './customerThunk';
 
 interface CustomerState {
   customers: Customer[];
@@ -38,125 +40,137 @@ const initialState: CustomerState = {
   },
 };
 
-export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValue: string }>(
-  'customer/fetchAllCustomers',
-  async (_: any, { rejectWithValue }: any) => {
-    try {
-      const response = await fetch('/api/customers', { method: HttpMethod.GET });
+// pending
+const handleCustomerPending = (state: CustomerState) => ({
+  ...state,
+  isLoading: true,
+  error: undefined,
+});
 
-      if (!response.ok) throw new Error('Error loading customers');
+// All customers
+const handleFetchAllCustomersFulfilled = (
+  state: CustomerState,
+  action: PayloadAction<Customer[]>
+) => ({
+  ...state,
+  isLoading: false,
+  customers: action.payload,
+});
+const handleFetchAllCustomersRejected = (state: CustomerState, action: PayloadAction<any>) => ({
+  ...state,
+  isLoading: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload,
+  snackbarSeverity: 'error' as const,
+});
 
-      const customers: Customer[] = await response.json();
+// Customer by ID
+const handleFetchCustomerByIdFulfilled = (
+  state: CustomerState,
+  action: PayloadAction<Customer>
+) => ({
+  ...state,
+  isLoading: false,
+  customers: [...state.customers, action.payload],
+});
+const handleFetchCustomerByIdRejected = (
+  state: CustomerState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'warning' as const,
+});
 
-      if (!customers) throw new Error('Invalid customer data from API');
+// Find customers
+const handleFilteredCustomersFulfilled = (
+  state: CustomerState,
+  action: PayloadAction<Customer[]>
+) => ({
+  ...state,
+  isLoading: false,
+  customers: action.payload,
+  snackbarOpen: action.payload.length === 0 ? true : state.snackbarOpen,
+  snackbarMessage: action.payload.length === 0 ? 'No customers found' : state.snackbarMessage,
+  snackbarSeverity: action.payload.length === 0 ? ('warning' as const) : state.snackbarSeverity,
+});
+const handleFilteredCustomersRejected = (
+  state: CustomerState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload ?? 'Unknown error',
+  snackbarSeverity:
+    action.payload === 'No customers found' ? ('warning' as const) : ('error' as const),
+});
 
-      return customers;
-    } catch (error: any) {
-      // console.error(error.message);
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// Delete customer
+const handleDeleteCustomerFulfilled = (state: CustomerState, action: PayloadAction<number>) => ({
+  ...state,
+  isLoading: false,
+  customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
+  snackbarOpen: true,
+  snackbarMessage: `Customer id:${action.payload} deleted successfully!`,
+  snackbarSeverity: 'success' as const,
+});
+const handleDeleteCustomerRejected = (
+  state: CustomerState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `Error: ${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
-export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValue: string }>(
-  'customer/fetchCustomerById',
-  async (customerId, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
+// Add customer
+const handleAddCustomerFulfilled = (state: CustomerState, action: PayloadAction<Customer>) => ({
+  ...state,
+  isLoading: false,
+  customers: [...state.customers, action.payload],
+  snackbarOpen: true,
+  snackbarMessage: 'Customer added successfully!',
+  snackbarSeverity: 'success' as const,
+});
+const handleAddCustomerRejected = (
+  state: CustomerState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
-      if (!response.ok) throw new Error('Customer not found');
-
-      const data: Customer = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const fetchFilteredCustomers = createAsyncThunk<
-  Customer[],
-  { firstName: string; lastName: string },
-  { rejectValue: string }
->(
-  'customer/fetchFilteredCustomers',
-  async (filters: { firstName: string; lastName: string }, { rejectWithValue }: any) => {
-    try {
-      const query = new URLSearchParams(filters).toString();
-
-      const response = await fetch(`/api/customers?${query}`, { method: HttpMethod.GET });
-
-      const data: Customer[] = await response.json();
-
-      if (data.length === 0) return rejectWithValue('No customers found');
-
-      return data;
-    } catch (error: any) {
-      // console.error(error.message);
-      return rejectWithValue('Error fetching filtered customers');
-    }
-  }
-);
-
-export const deleteCustomer = createAsyncThunk<number, number, { rejectValue: string }>(
-  'customer/deleteCustomer',
-  async (customerId: number, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/customers`, {
-        method: HttpMethod.DELETE,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: customerId }),
-      });
-
-      if (!response.ok) throw new Error('Error deleting customer');
-
-      const data = await response.json();
-      return data.id;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addCustomer = createAsyncThunk<Customer, NewCustomer, { rejectValue: string }>(
-  'customer/addCustomer',
-  async (newCustomer, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/customers`, {
-        method: HttpMethod.POST,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCustomer),
-      });
-
-      if (!response.ok) throw new Error('Error adding customer');
-
-      const data: Customer = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const updateCustomer = createAsyncThunk<Customer, Customer, { rejectValue: string }>(
-  'customer/updateCustomer',
-  async (updatedCustomer, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/customers/${updatedCustomer.id}`, {
-        method: HttpMethod.PUT,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCustomer),
-      });
-
-      if (!response.ok) throw new Error('Error updating customer');
-
-      const data: Customer = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// Update customer
+const handleUpdateCustomerFulfilled = (state: CustomerState, action: PayloadAction<Customer>) => ({
+  ...state,
+  isLoading: false,
+  customers: state.customers.map((customer) =>
+    customer.id === action.payload.id ? action.payload : customer
+  ),
+  snackbarOpen: true,
+  snackbarMessage: `Customer id:${action.payload.id} updated successfully!`,
+  snackbarSeverity: 'success' as const,
+});
+const handleUpdateCustomerRejected = (
+  state: CustomerState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
 const customerSlice = createSlice({
   name: 'customer',
@@ -180,139 +194,25 @@ const customerSlice = createSlice({
   extraReducers: (builder: ActionReducerMapBuilder<CustomerState>) => {
     builder
       // All customers
-      .addCase(fetchAllCustomers.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(
-        fetchAllCustomers.fulfilled,
-        (state: CustomerState, action: PayloadAction<Customer[]>) => ({
-          ...state,
-          isLoading: false,
-          customers: action.payload,
-        })
-      )
-      .addCase(fetchAllCustomers.rejected, (state: CustomerState, action: PayloadAction<any>) => ({
-        ...state,
-        isLoading: false,
-        error: action.payload,
-        snackbarOpen: true,
-        snackbarMessage: action.payload,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(fetchAllCustomers.fulfilled, handleFetchAllCustomersFulfilled)
+      .addCase(fetchAllCustomers.rejected, handleFetchAllCustomersRejected)
       // Customer by ID
-      .addCase(fetchCustomerById.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(fetchCustomerById.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        customers: [...state.customers, action.payload],
-      }))
-      .addCase(fetchCustomerById.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'warning',
-      }))
+      .addCase(fetchCustomerById.fulfilled, handleFetchCustomerByIdFulfilled)
+      .addCase(fetchCustomerById.rejected, handleFetchCustomerByIdRejected)
       // Find customers
-      .addCase(fetchFilteredCustomers.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(
-        fetchFilteredCustomers.fulfilled,
-        (state: CustomerState, action: PayloadAction<Customer[]>) => ({
-          ...state,
-          isLoading: false,
-          customers: action.payload,
-          snackbarOpen: action.payload.length === 0 ? true : state.snackbarOpen,
-          snackbarMessage:
-            action.payload.length === 0 ? 'No customers found' : state.snackbarMessage,
-          snackbarSeverity: action.payload.length === 0 ? 'warning' : state.snackbarSeverity,
-        })
-      )
-      .addCase(
-        fetchFilteredCustomers.rejected,
-        (state: CustomerState, action: PayloadAction<any>) => ({
-          ...state,
-          isLoading: false,
-          error: action.payload,
-          snackbarOpen: true,
-          snackbarMessage: action.payload,
-          snackbarSeverity: action.payload === 'No customers found' ? 'warning' : 'error',
-        })
-      )
+      .addCase(fetchFilteredCustomers.fulfilled, handleFilteredCustomersFulfilled)
+      .addCase(fetchFilteredCustomers.rejected, handleFilteredCustomersRejected)
       // Delete customer
-      .addCase(deleteCustomer.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(deleteCustomer.fulfilled, (state, action: PayloadAction<number>) => ({
-        ...state,
-        isLoading: false,
-        customers: state.customers.filter((customer) => customer.id !== String(action.payload)),
-        snackbarOpen: true,
-        snackbarMessage: `Customer id:${action.payload} deleted successfully!`,
-        snackbarSeverity: 'success',
-      }))
-      .addCase(deleteCustomer.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `Error: ${action.payload}`,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(deleteCustomer.fulfilled, handleDeleteCustomerFulfilled)
+      .addCase(deleteCustomer.rejected, handleDeleteCustomerRejected)
       // Add customer
-      .addCase(addCustomer.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(addCustomer.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        customers: [...state.customers, action.payload],
-        snackbarOpen: true,
-        snackbarMessage: 'Customer added successfully!',
-        snackbarSeverity: 'success',
-      }))
-      .addCase(addCustomer.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(addCustomer.fulfilled, handleAddCustomerFulfilled)
+      .addCase(addCustomer.rejected, handleAddCustomerRejected)
       // Update customer
-      .addCase(updateCustomer.pending, (state: CustomerState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(updateCustomer.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        customers: state.customers.map((customer) =>
-          customer.id === action.payload.id ? action.payload : customer
-        ),
-        snackbarOpen: true,
-        snackbarMessage: `Customer id:${action.payload.id} updated successfully!`,
-        snackbarSeverity: 'success',
-      }))
-      .addCase(updateCustomer.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'error',
-      }));
+      .addCase(updateCustomer.fulfilled, handleUpdateCustomerFulfilled)
+      .addCase(updateCustomer.rejected, handleUpdateCustomerRejected)
+      // pending
+      .addMatcher((action: Action) => action.type.endsWith('/pending'), handleCustomerPending);
   },
 });
 

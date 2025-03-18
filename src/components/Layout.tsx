@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { setAuthState, signOut } from '@/stores/auth/authSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { setAuthState } from '@/stores/auth/authSlice';
+import { signOut } from '@/stores/auth/authThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { RootState } from '@/stores/store';
 import SignInPage from 'pages/users/signIn';
 
 import AppNavBar from './menu/AppNavBar';
@@ -48,8 +49,8 @@ interface LayoutProps {
 function Layout({ children }: LayoutProps): React.ReactElement | null {
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, user } = useAppSelector((state: RootState) => state.auth);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
 

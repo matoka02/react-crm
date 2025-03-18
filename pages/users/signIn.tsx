@@ -14,12 +14,13 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import useUserValidate from '@/hooks/useUserValidate';
-import { clearError, signIn, USER_DURATION } from '@/stores/auth/authSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { clearError, USER_DURATION } from '@/stores/auth/authSlice';
+import { signIn } from '@/stores/auth/authThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { RootState } from '@/stores/store';
 
 const getStyles = (theme: any) => ({
   container: {
@@ -63,8 +64,8 @@ const getStyles = (theme: any) => ({
 
 export default function SignInPage(): React.ReactElement {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { isFetching, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
+  const dispatch = useAppDispatch();
+  const { isFetching, snackbarOpen, snackbarMessage, snackbarSeverity } = useAppSelector(
     (state: RootState) => state.auth
   );
 

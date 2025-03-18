@@ -13,30 +13,25 @@ import {
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useProductValidate from '@/hooks/useProductValidate';
-import { fetchAllCategories } from '@/stores/categories/categorySlice';
-import {
-  addProduct,
-  clearError,
-  fetchProductById,
-  PRODUCT_DURATION,
-  updateProduct,
-} from '@/stores/products/productSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { fetchAllCategories } from '@/stores/categories/categoryThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { clearError, PRODUCT_DURATION } from '@/stores/products/productSlice';
+import { addProduct, fetchProductById, updateProduct } from '@/stores/products/productThunk';
+import { RootState } from '@/stores/store';
 import { Product, NewProduct } from '@/stores/types/modelTypes';
 
 export default function ProductFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams.get('id') ?? '';
-  const dispatch = useDispatch<AppDispatch>();
-  const { categories } = useSelector((state: RootState) => state.categories);
-  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
+  const dispatch = useAppDispatch();
+  const { categories } = useAppSelector((state: RootState) => state.categories);
+  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useAppSelector(
     (state: RootState) => state.products
   );
 

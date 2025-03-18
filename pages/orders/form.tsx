@@ -28,34 +28,29 @@ import {
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import PageContainer from '@/components/PageContainer';
 import SkeletonForm from '@/components/SkeletonForm';
 import useOrderValidate from '@/hooks/useOrderValidate';
-import { fetchAllCategories } from '@/stores/categories/categorySlice';
-import { fetchAllCustomers } from '@/stores/customers/customerSlice';
-import {
-  addOrder,
-  clearError,
-  fetchOrderById,
-  ORDER_DURATION,
-  updateOrder,
-} from '@/stores/orders/orderSlice';
-import { fetchAllProducts } from '@/stores/products/productSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { fetchAllCategories } from '@/stores/categories/categoryThunk';
+import { fetchAllCustomers } from '@/stores/customers/customerThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { clearError, ORDER_DURATION } from '@/stores/orders/orderSlice';
+import { addOrder, fetchOrderById, updateOrder } from '@/stores/orders/orderThunk';
+import { fetchAllProducts } from '@/stores/products/productThunk';
+import { RootState } from '@/stores/store';
 import { Order, NewOrder, Product } from '@/stores/types/modelTypes';
 
 export default function OrderFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('id') || '';
-  const dispatch = useDispatch<AppDispatch>();
-  const { customers } = useSelector((state: RootState) => state.customers);
-  const { categories } = useSelector((state: RootState) => state.categories);
-  const { products } = useSelector((state: RootState) => state.products);
-  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useSelector(
+  const dispatch = useAppDispatch();
+  const { customers } = useAppSelector((state: RootState) => state.customers);
+  const { categories } = useAppSelector((state: RootState) => state.categories);
+  const { products } = useAppSelector((state: RootState) => state.products);
+  const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useAppSelector(
     (state: RootState) => state.orders
   );
 

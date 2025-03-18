@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
-import { fetchAllOrders, fetchFilteredOrders } from '@/stores/orders/orderSlice';
-import { AppDispatch } from '@/stores/store';
+import { useAppDispatch } from '@/stores/hooks';
+import { fetchAllOrders, fetchFilteredOrders } from '@/stores/orders/orderThunk';
 
 export const REFERENCE_REGEX = /^[a-zA-Z0-9-]+$/;
 
 function useOrderSearch(initialSearch: { reference: string }) {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [search, setLocalSearch] = useState(initialSearch);
 
   // Validation

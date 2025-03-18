@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
@@ -21,14 +20,10 @@ import DeleteDialog from '@/components/DeleteDialog';
 import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useCustomerSearch from '@/hooks/useCustomerSearch';
-import {
-  fetchAllCustomers,
-  clearError,
-  setSearchOpen,
-  deleteCustomer,
-  CUSTOMER_DURATION,
-} from '@/stores/customers/customerSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { clearError, setSearchOpen, CUSTOMER_DURATION } from '@/stores/customers/customerSlice';
+import { fetchAllCustomers, deleteCustomer } from '@/stores/customers/customerThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { RootState } from '@/stores/store';
 
 const defaultProps = {
   model: 'customers',
@@ -38,7 +33,7 @@ const defaultProps = {
 
 export default function CustomerListPage(): React.ReactElement {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const {
     customers,
     isLoading,
@@ -47,7 +42,7 @@ export default function CustomerListPage(): React.ReactElement {
     snackbarSeverity,
     searchOpen,
     search,
-  } = useSelector((state: RootState) => state.customers);
+  } = useAppSelector((state: RootState) => state.customers);
   // console.table(customers);
 
   useEffect(() => {

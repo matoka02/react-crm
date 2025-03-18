@@ -1,13 +1,15 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  ActionReducerMapBuilder,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ActionReducerMapBuilder, Action } from '@reduxjs/toolkit';
 
 import { Category, NewCategory } from '@/stores/types/modelTypes';
 
-import { HttpMethod } from '../types/httpTypes';
+import {
+  addCategory,
+  deleteCategory,
+  fetchAllCategories,
+  fetchCategoryById,
+  fetchFilteredCategories,
+  updateCategory,
+} from './categoryThunk';
 
 interface CategoryState {
   categories: Category[];
@@ -34,129 +36,144 @@ const initialState: CategoryState = {
   search: { name: '' },
 };
 
-export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectValue: string }>(
-  'category/fetchAllCategories',
-  async (_: any, { rejectWithValue }: any) => {
-    try {
-      const response = await fetch('/api/categories', { method: HttpMethod.GET });
+// pending
+const handleCategoryPending = (state: CategoryState) => ({
+  ...state,
+  isLoading: true,
+  error: undefined,
+});
 
-      const categories: Category[] = await response.json();
+// All categories
+const handleFetchAllCategoriesFulfilled = (
+  state: CategoryState,
+  action: PayloadAction<Category[]>
+) => ({
+  ...state,
+  isLoading: false,
+  categories: action.payload,
+});
+const handleFetchAllCategoriesRejected = (state: CategoryState, action: PayloadAction<any>) => ({
+  ...state,
+  isLoading: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload,
+  snackbarSeverity: 'error' as const,
+});
 
-      if (!categories) throw new Error('Invalid category data from API');
+// Category by ID
+const handleFetchCategoryByIdFulfilled = (
+  state: CategoryState,
+  action: PayloadAction<Category>
+) => ({
+  ...state,
+  isLoading: false,
+  categories: [...state.categories, action.payload],
+});
+const handleFetchCategoryByIdRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'warning' as const,
+});
 
-      return categories;
-    } catch (error: any) {
-      return rejectWithValue('Error loading categories');
-    }
-  }
-);
+// Find categories
+const handleFetchFilteredCategoriesFulfilled = (
+  state: CategoryState,
+  action: PayloadAction<Category[]>
+) => ({
+  ...state,
+  isLoading: false,
+  categories: action.payload,
+  snackbarOpen: action.payload.length === 0 ? true : state.snackbarOpen,
+  snackbarMessage: action.payload.length === 0 ? 'No categories found' : state.snackbarMessage,
+  snackbarSeverity: action.payload.length === 0 ? 'warning' : state.snackbarSeverity,
+});
+const handleFetchFilteredCategoriesRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  error: action.payload,
+  snackbarOpen: true,
+  snackbarMessage: action.payload ?? 'Unknown error',
+  snackbarSeverity:
+    action.payload === 'No categories found' ? ('warning' as const) : ('error' as const),
+});
 
-export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValue: string }>(
-  'category/fetchCategoryById',
-  async (categoryId, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/categories/${categoryId}`, { method: HttpMethod.GET });
+// Delete category
+const handleDeleteCategoryFulfilled = (state: CategoryState, action: PayloadAction<number>) => ({
+  ...state,
+  isLoading: false,
+  categories: state.categories.filter((category) => category.id !== String(action.payload)),
+  snackbarOpen: true,
+  snackbarMessage: `Category id:${action.payload} deleted successfully!`,
+  snackbarSeverity: 'success' as const,
+});
+const handleDeleteCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `Error: ${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
-      if (!response.ok) throw new Error('Category not found');
+// Add category
+const handleAddCategoryFulfilled = (state: CategoryState, action: PayloadAction<Category>) => ({
+  ...state,
+  isLoading: false,
+  categories: [...state.categories, action.payload],
+  snackbarOpen: true,
+  snackbarMessage: 'Category added successfully!',
+  snackbarSeverity: 'success' as const,
+});
+const handleAddCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
-      const data: Category = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const fetchFilteredCategories = createAsyncThunk<
-  Category[],
-  { name: string },
-  { rejectValue: string }
->(
-  'category/fetchFilteredCategories',
-  async (filters: { name: string }, { rejectWithValue }: any) => {
-    try {
-      const query = new URLSearchParams(filters).toString();
-
-      const response = await fetch(`/api/categories?${query}`, { method: HttpMethod.GET });
-
-      const data: Category[] = await response.json();
-
-      if (data.length === 0) return rejectWithValue('No categories found');
-
-      return data;
-    } catch (error: any) {
-      // console.error(error.message);
-      return rejectWithValue('Error fetching filtered categories');
-    }
-  }
-);
-
-export const deleteCategory = createAsyncThunk<number, number, { rejectValue: string }>(
-  'category/deleteCategory',
-  async (categoryId: number, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/categories`, {
-        method: HttpMethod.DELETE,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: categoryId }),
-      });
-
-      if (!response.ok) throw new Error('Error deleting category');
-
-      const data = await response.json();
-      return data.id;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addCategory = createAsyncThunk<Category, NewCategory, { rejectValue: string }>(
-  'category/addCategory',
-  async (newCategory, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/categories`, {
-        method: HttpMethod.POST,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCategory),
-      });
-
-      if (!response.ok) throw new Error('Error adding category');
-
-      const data: Category = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const updateCategory = createAsyncThunk<Category, Category, { rejectValue: string }>(
-  'category/updateCategory',
-  async (updatedCategory, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/categories/${updatedCategory.id}`, {
-        method: HttpMethod.PUT,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCategory),
-      });
-
-      if (!response.ok) throw new Error('Error updating category');
-
-      const data: Category = await response.json();
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// Update category
+const handleUpdateCategoryFulfilled = (state: CategoryState, action: PayloadAction<Category>) => ({
+  ...state,
+  isLoading: false,
+  categories: state.categories.map((category) =>
+    category.id === action.payload.id ? action.payload : category
+  ),
+  snackbarOpen: true,
+  snackbarMessage: `Category id:${action.payload.id} updated successfully!`,
+  snackbarSeverity: 'success' as const,
+});
+const handleUpdateCategoryRejected = (
+  state: CategoryState,
+  action: PayloadAction<string | undefined>
+) => ({
+  ...state,
+  isLoading: false,
+  snackbarOpen: true,
+  snackbarMessage: `${action.payload}`,
+  snackbarSeverity: 'error' as const,
+});
 
 const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
     // error & snackbar
-    clearError(state) {
+    clearError(state: CategoryState) {
       return { ...state, error: undefined, snackbarOpen: false };
     },
     // searchbar
@@ -170,139 +187,25 @@ const categorySlice = createSlice({
   extraReducers: (builder: ActionReducerMapBuilder<CategoryState>) => {
     builder
       // All categories
-      .addCase(fetchAllCategories.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(
-        fetchAllCategories.fulfilled,
-        (state: CategoryState, action: PayloadAction<Category[]>) => ({
-          ...state,
-          isLoading: false,
-          categories: action.payload,
-        })
-      )
-      .addCase(fetchAllCategories.rejected, (state: CategoryState, action: PayloadAction<any>) => ({
-        ...state,
-        isLoading: false,
-        error: action.payload,
-        snackbarOpen: true,
-        snackbarMessage: action.payload,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(fetchAllCategories.fulfilled, handleFetchAllCategoriesFulfilled)
+      .addCase(fetchAllCategories.rejected, handleFetchAllCategoriesRejected)
       // Category by ID
-      .addCase(fetchCategoryById.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(fetchCategoryById.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        categories: [...state.categories, action.payload],
-      }))
-      .addCase(fetchCategoryById.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'warning',
-      }))
+      .addCase(fetchCategoryById.fulfilled, handleFetchCategoryByIdFulfilled)
+      .addCase(fetchCategoryById.rejected, handleFetchCategoryByIdRejected)
       // Find categories
-      .addCase(fetchFilteredCategories.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(
-        fetchFilteredCategories.fulfilled,
-        (state: CategoryState, action: PayloadAction<Category[]>) => ({
-          ...state,
-          isLoading: false,
-          categories: action.payload,
-          snackbarOpen: action.payload.length === 0 ? true : state.snackbarOpen,
-          snackbarMessage:
-            action.payload.length === 0 ? 'No categories found' : state.snackbarMessage,
-          snackbarSeverity: action.payload.length === 0 ? 'warning' : state.snackbarSeverity,
-        })
-      )
-      .addCase(
-        fetchFilteredCategories.rejected,
-        (state: CategoryState, action: PayloadAction<any>) => ({
-          ...state,
-          isLoading: false,
-          error: action.payload,
-          snackbarOpen: true,
-          snackbarMessage: action.payload,
-          snackbarSeverity: action.payload === 'No categories found' ? 'warning' : 'error',
-        })
-      )
+      .addCase(fetchFilteredCategories.fulfilled, handleFetchFilteredCategoriesFulfilled)
+      .addCase(fetchFilteredCategories.rejected, handleFetchFilteredCategoriesRejected)
       // Delete category
-      .addCase(deleteCategory.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(deleteCategory.fulfilled, (state, action: PayloadAction<number>) => ({
-        ...state,
-        isLoading: false,
-        categories: state.categories.filter((category) => category.id !== String(action.payload)),
-        snackbarOpen: true,
-        snackbarMessage: `Category id:${action.payload} deleted successfully!`,
-        snackbarSeverity: 'success',
-      }))
-      .addCase(deleteCategory.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `Error: ${action.payload}`,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(deleteCategory.fulfilled, handleDeleteCategoryFulfilled)
+      .addCase(deleteCategory.rejected, handleDeleteCategoryRejected)
       // Add category
-      .addCase(addCategory.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(addCategory.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        categories: [...state.categories, action.payload],
-        snackbarOpen: true,
-        snackbarMessage: 'Category added successfully!',
-        snackbarSeverity: 'success',
-      }))
-      .addCase(addCategory.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'error',
-      }))
+      .addCase(addCategory.fulfilled, handleAddCategoryFulfilled)
+      .addCase(addCategory.rejected, handleAddCategoryRejected)
       // Update category
-      .addCase(updateCategory.pending, (state: CategoryState) => ({
-        ...state,
-        isLoading: true,
-        error: undefined,
-      }))
-      .addCase(updateCategory.fulfilled, (state, action) => ({
-        ...state,
-        isLoading: false,
-        categories: state.categories.map((category) =>
-          category.id === action.payload.id ? action.payload : category
-        ),
-        snackbarOpen: true,
-        snackbarMessage: `Category id:${action.payload.id} updated successfully!`,
-        snackbarSeverity: 'success',
-      }))
-      .addCase(updateCategory.rejected, (state, action) => ({
-        ...state,
-        isLoading: false,
-        snackbarOpen: true,
-        snackbarMessage: `${action.payload}`,
-        snackbarSeverity: 'error',
-      }));
+      .addCase(updateCategory.fulfilled, handleUpdateCategoryFulfilled)
+      .addCase(updateCategory.rejected, handleUpdateCategoryRejected)
+      // pending
+      .addMatcher((action: Action) => action.type.endsWith('/pending'), handleCategoryPending);
   },
 });
 
