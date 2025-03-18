@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '@/components/Alert';
 import DataTable from '@/components/DataTable';
@@ -21,15 +20,11 @@ import DeleteDialog from '@/components/DeleteDialog';
 import PageContainer from '@/components/PageContainer';
 import SkeletonList from '@/components/SkeletonList';
 import useOrderSearch from '@/hooks/useOrderSearch';
-import { fetchAllCustomers } from '@/stores/customers/customerSlice';
-import {
-  fetchAllOrders,
-  clearError,
-  setSearchOpen,
-  deleteOrder,
-  ORDER_DURATION,
-} from '@/stores/orders/orderSlice';
-import { AppDispatch, RootState } from '@/stores/store';
+import { fetchAllCustomers } from '@/stores/customers/customerThunk';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { clearError, setSearchOpen, ORDER_DURATION } from '@/stores/orders/orderSlice';
+import { fetchAllOrders, deleteOrder } from '@/stores/orders/orderThunk';
+import { RootState } from '@/stores/store';
 
 const defaultProps = {
   model: 'orders',
@@ -55,9 +50,9 @@ const defaultProps = {
 
 export default function OrderListPage(): React.ReactElement {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { orders, isLoading, snackbarOpen, snackbarMessage, snackbarSeverity, searchOpen, search } =
-    useSelector((state: RootState) => state.orders);
+    useAppSelector((state: RootState) => state.orders);
   // console.table(orders);
 
   useEffect(() => {

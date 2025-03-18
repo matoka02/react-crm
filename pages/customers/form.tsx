@@ -32,7 +32,7 @@ export default function CustomerFormPage(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const customerId = searchParams.get('id') ?? '';
-  const dispatch = useAppDispatch;
+  const dispatch = useAppDispatch();
   const { isLoading, snackbarOpen, snackbarMessage, snackbarSeverity } = useAppSelector(
     (state: RootState) => state.customers
   );

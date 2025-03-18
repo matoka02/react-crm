@@ -23,9 +23,9 @@ export const fetchAllCategories = createAsyncThunk<Category[], void, { rejectVal
   }
 );
 
-export const fetchCategoryById = createAsyncThunk<Category, number, { rejectValue: string }>(
+export const fetchCategoryById = createAsyncThunk<Category, string, { rejectValue: string }>(
   'category/fetchCategoryById',
-  async (categoryId: number, { rejectWithValue }: any) => {
+  async (categoryId: string, { rejectWithValue }: any) => {
     try {
       const response = await fetch(`/api/categories/${categoryId}`, { method: HttpMethod.GET });
 

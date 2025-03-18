@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
+import { useAppSelector } from '@/stores/hooks';
 import { RootState } from '@/stores/store';
 import { NewProduct } from '@/stores/types/modelTypes';
 
@@ -26,7 +26,7 @@ const productSchema = Yup.object({
 });
 
 function useProductValidate(initialValues?: NewProduct) {
-  const categories = useSelector((state: RootState) => state.categories.categories);
+  const categories = useAppSelector((state: RootState) => state.categories.categories);
 
   const [values, setValues] = useState<NewProduct>(
     initialValues || {

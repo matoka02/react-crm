@@ -1,8 +1,8 @@
 import { SelectChangeEvent } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
+import { useAppSelector } from '@/stores/hooks';
 import { RootState } from '@/stores/store';
 import { Category, NewOrder, Product } from '@/stores/types/modelTypes';
 
@@ -54,7 +54,7 @@ const orderSchema = Yup.object({
 });
 
 function useOrderValidate(categories: Category[], products: Product[], initialValues?: NewOrder) {
-  const customers = useSelector((state: RootState) => state.customers.customers);
+  const customers = useAppSelector((state: RootState) => state.customers.customers);
 
   const [values, setValues] = useState<NewOrder>(
     initialValues || {
@@ -95,7 +95,7 @@ function useOrderValidate(categories: Category[], products: Product[], initialVa
 
     setValues((prev) => {
       if (name === 'customerId') {
-        const customer = customers.find((c: { id: number; }) => c.id === value);
+        const customer = customers.find((c) => c.id === value);
         return {
           ...prev,
           customerId: String(value),

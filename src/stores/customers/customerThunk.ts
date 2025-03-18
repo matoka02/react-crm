@@ -24,9 +24,9 @@ export const fetchAllCustomers = createAsyncThunk<Customer[], void, { rejectValu
   }
 );
 
-export const fetchCustomerById = createAsyncThunk<Customer, number, { rejectValue: string }>(
+export const fetchCustomerById = createAsyncThunk<Customer, string, { rejectValue: string }>(
   'customer/fetchCustomerById',
-  async (customerId: number, { rejectWithValue }) => {
+  async (customerId: string, { rejectWithValue }) => {
     try {
       const response = await fetch(`/api/customers/${customerId}`, { method: HttpMethod.GET });
 
