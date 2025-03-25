@@ -101,7 +101,7 @@ export default function OrderFormPage(): React.ReactElement {
 
   // Opening/closing a dialog
   const handleDialogOpen = () => {
-    dispatch(fetchAllProducts());
+    // dispatch(fetchAllProducts());
     setOpen(true);
   };
   const handleDialogClose = () => setOpen(false);

@@ -59,7 +59,8 @@ const handleFetchAllOrdersRejected = (state: OrderState, action: PayloadAction<a
 const handleFetchOrderByIdFulfilled = (state: OrderState, action: PayloadAction<Order>) => ({
   ...state,
   isLoading: false,
-  orders: [...state.orders, action.payload],
+  // orders: [...state.orders, action.payload],
+  orders: state.orders.map((order) => (order.id === action.payload.id ? action.payload : order)),
 });
 const handleFetchOrderByIdRejected = (
   state: OrderState,
