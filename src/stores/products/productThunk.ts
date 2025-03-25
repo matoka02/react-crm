@@ -49,9 +49,9 @@ export const fetchAllProducts = createAsyncThunk<Product[], void, { rejectValue:
   }
 );
 
-export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>(
+export const fetchProductById = createAsyncThunk<Product, string, { rejectValue: string }>(
   'product/fetchProductById',
-  async (productId: number, { getState, rejectWithValue }: any) => {
+  async (productId: string, { getState, rejectWithValue }: any) => {
     try {
       const response = await fetch(`/api/products/${productId}`, { method: HttpMethod.GET });
 
