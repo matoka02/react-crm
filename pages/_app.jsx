@@ -10,9 +10,13 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import i18n from '../i18n';
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 import { store } from '@/stores/store';
 import themeDefault from '@/theme-default';
 import Layout from '@/components/Layout';
+/* eslint-enable import/no-unresolved */
+/* eslint-enable import/extensions */
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN_KEY,
