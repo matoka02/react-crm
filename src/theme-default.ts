@@ -1,23 +1,9 @@
 import { grey } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
-// const pantone2022 = {
-//   primaryLight: '#8383bb',
-//   primaryMain: '#6868ab',
-//   primaryDark: '#464677',
-//   secondaryLight: '#f5ebff',
-//   secondaryMain: '#e0c2ff',
-//   secondaryDark: '#9c87b2',
-//   contrastText: '#47008F',
-// };
-
 declare module '@mui/material/styles' {
   interface Theme {
     customStyles: {
-      // navigation: object;
-      // title: object;
-      // paper: object;
-      // clear: object;
       listPage: {
         fabAdd: (theme: Theme) => React.CSSProperties;
         fabSearch: (theme: Theme) => React.CSSProperties;
@@ -66,29 +52,6 @@ const themeDefault = createTheme({
     },
   },
   components: {
-    // MuiAppBar: {
-    //   styleOverrides: {
-    //     root: {
-    //       height: 57,
-    //       backgroundColor: blue600,
-    //     },
-    //   },
-    // },
-    // MuiDrawer: {
-    //   styleOverrides: {
-    //     root: {
-    //       width: 230,
-    //       backgroundColor: lightgrey,
-    //     },
-    //   },
-    // },
-    // MuiButton: {
-    //   styleOverrides: {
-    //     root: {
-    //       color: blue600,
-    //     },
-    //   },
-    // },
     MuiSnackbar: {
       defaultProps: {
         anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
@@ -103,21 +66,6 @@ const themeDefault = createTheme({
     },
   },
   customStyles: {
-    // navigation: {
-    //   fontSize: 15,
-    //   fontWeight: 500,
-    //   color: grey600,
-    //   paddingBottom: 15,
-    //   display: 'block',
-    // },
-    // title: {
-    //   fontSize: 24,
-    //   fontWeight: 500,
-    //   marginBottom: 20,
-    // },
-    // paper: { padding: 30 },
-    // clear: { clear: 'both' },
-
     // listPageStyle
     listPage: {
       fabAdd: (theme) => ({
